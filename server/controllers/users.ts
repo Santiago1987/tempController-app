@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import { connection } from "mongoose";
+//import { connection } from "mongoose";
 import bcrypt from "bcrypt";
 import { UserFromBD } from "../../types";
 import jwt from "jsonwebtoken";
@@ -23,7 +23,7 @@ export const saveUser = async (request: Request, response: Response) => {
 
   const savedUser = await user.save();
 
-  connection.close();
+  //connection.close();
 
   response.json(savedUser);
 };
@@ -34,17 +34,26 @@ export const loginUser = async (request: Request, response: Response) => {
   const { userName, password } = body;
 
   const user = (await User.findOne({ userName })) as UserFromBD;
+
+  if (!user) {
+    response.status(401).json({
+      error: "invalid user or password",
+    });
+    return;
+  }
+
   const { name, passwordHash, _id } = user;
 
   const isPasswordCorrect =
     user === null ? false : await bcrypt.compare(password, passwordHash);
 
-  connection.close();
+  //connection.close();
 
-  if (!(user && isPasswordCorrect)) {
+  if (!isPasswordCorrect) {
     response.status(401).json({
       error: "invalid user or password",
     });
+    return;
   }
 
   const userForToken = {

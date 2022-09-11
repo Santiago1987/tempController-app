@@ -1,7 +1,15 @@
-import "./App.css";
+//import React from "react";
+import Login from "./containers/Login/Login";
+import UserContextProvider from "./containers/context/UserContext";
 
 function App() {
-  return <div></div>;
+  return (
+    <UserContextProvider>
+      <div>
+        <Login />
+      </div>
+    </UserContextProvider>
+  );
 }
 
 export default App;

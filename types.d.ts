@@ -18,3 +18,8 @@ import { Request } from "express";
 interface extreq extends Request {
   userID?: string;
 }
+
+export type userContextType = {
+  jwt: string;
+  setJWT: React.Dispatch<React.SetStateAction<string>>;
+};
