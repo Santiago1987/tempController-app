@@ -43,4 +43,4 @@ const login = async (
   return res;
 };
 
-export default { login };
+export default login;

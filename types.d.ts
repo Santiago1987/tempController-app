@@ -20,6 +20,6 @@ interface extreq extends Request {
 }
 
 export type userContextType = {
-  jwt: string;
-  setJWT: React.Dispatch<React.SetStateAction<string>>;
+  jwt: string | null;
+  setJWT: React.Dispatch<React.SetStateAction<string | null>>;
 };

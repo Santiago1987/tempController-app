@@ -1,19 +1,47 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { userContextType } from "../../../types";
+import loginService from "../../services/loginService";
 
 const useUser = () => {
   const { jwt, setJWT } = useContext<userContextType | null>(
     UserContext
   ) as userContextType;
+  const [logState, setLogState] = useState({
+    loading: false,
+    error: false,
+  });
 
-  const login = useCallback(() => {
-    setJWT("");
+  const login = useCallback(
+    (username: string, password: string): void => {
+      setLogState({ loading: true, error: false });
+
+      loginService(username, password)
+        .then((res) => {
+          if (res?.token) {
+            setLogState({ loading: false, error: false });
+            setJWT(res?.token);
+            return;
+          }
+        })
+        .catch((err) => {
+          setLogState({ loading: false, error: true });
+          console.error(err);
+        });
+    },
+    [setJWT]
+  );
+
+  const logout = useCallback(() => {
+    setJWT(null);
   }, [setJWT]);
 
   return {
-    isLoggedIn: Boolean(jwt),
+    isLogged: Boolean(jwt),
     login,
+    logout,
+    isLogingLoading: logState.loading,
+    hasLoadingError: logState.error,
   };
 };
 
