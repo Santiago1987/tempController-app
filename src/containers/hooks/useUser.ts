@@ -19,12 +19,14 @@ const useUser = () => {
       loginService(username, password)
         .then((res) => {
           if (res?.token) {
+            window.localStorage.setItem("token", res.token);
             setLogState({ loading: false, error: false });
-            setJWT(res?.token);
+            setJWT(res.token);
             return;
           }
         })
         .catch((err) => {
+          window.localStorage.removeItem("token");
           setLogState({ loading: false, error: true });
           console.error(err);
         });
@@ -33,6 +35,7 @@ const useUser = () => {
   );
 
   const logout = useCallback(() => {
+    window.localStorage.removeItem("token");
     setJWT(null);
   }, [setJWT]);
 

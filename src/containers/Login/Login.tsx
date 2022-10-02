@@ -13,7 +13,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isLogged) navigate("/");
-  }, [isLogged]);
+  }, [isLogged, navigate]);
 
   const handleLogin = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
