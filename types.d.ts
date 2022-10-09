@@ -10,6 +10,7 @@ export interface LoginUser extends User {
 export interface UserFromBD extends User {
   passwordHash: string;
   _id: string;
+  email: string;
 }
 
 // adding a new property to Request type from express

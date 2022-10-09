@@ -6,13 +6,39 @@ const Header = () => {
   const { isLogged, logout } = useUser();
 
   return (
-    <header>
-      <div className="header">
-        {isLogged ? (
-          <button onClick={logout}>Logout</button>
-        ) : (
-          <Link to="/login">Login</Link>
-        )}
+    <header className="site-header">
+      <div className="wrapper site-header__wrapper">
+        <a className="brand">C.I.D.I.F</a>
+        <nav className="nav">
+          <button
+            className="nav_toggle"
+            aria-aria-expanded="false"
+            type="button"
+            aria-label="menu"
+          >
+            Menu
+          </button>
+          <ul className="nav_wrapper">
+            {isLogged ? (
+              <li className="nav_item">
+                <a onClick={logout}>Logout</a>
+              </li>
+            ) : (
+              <>
+                <li className="nav_item">
+                  <Link to="/login">
+                    <a>Login</a>
+                  </Link>
+                </li>
+                <li className="nav_item">
+                  <Link to="/register">
+                    <a>Register</a>
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </nav>
       </div>
     </header>
   );

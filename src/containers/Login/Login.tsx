@@ -3,7 +3,7 @@ import ErrorMsg from "../../components/errorMsg/ErrorMsg";
 import useLoging from "../hooks/useLoging";
 import useUser from "../hooks/useUser";
 import { useNavigate } from "react-router-dom";
-import LogingComponent from "../../components/Loging/LogingComponent";
+import LogingComponent from "../../components/Loggin/LoginComponent";
 
 const Login = () => {
   const navigate = useNavigate();

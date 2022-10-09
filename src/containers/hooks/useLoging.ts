@@ -29,6 +29,7 @@ const logReducer = (state: Login, { type, payload }: logReducerAction) => {
   }
 };
 
+//REDUCER FOR LOGGING FORM
 const useLoging = () => {
   const [logValues, setLogValues] = useReducer(logReducer, iniStateLog);
 
