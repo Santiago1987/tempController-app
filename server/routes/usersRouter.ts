@@ -6,6 +6,7 @@ import {
   updateEmailUser,
   deleteUser,
 } from "../controllers/users";
+import userExtractor from "../middleware/userExtractor";
 
 const usersRouter = Router();
 
@@ -16,12 +17,12 @@ usersRouter.post("/register", saveUser);
 usersRouter.post("/login", loginUser);
 
 // lista de usuario
-usersRouter.get("/list", listUsers);
+usersRouter.get("/list", userExtractor, listUsers);
 
-usersRouter.put("/upd/email", updateEmailUser);
+usersRouter.put("/upd/email", userExtractor, updateEmailUser);
 
-usersRouter.put("/upd/password", updateEmailUser);
+usersRouter.put("/upd/password", userExtractor, updateEmailUser);
 
-usersRouter.delete("/delete/:id", deleteUser);
+usersRouter.delete("/delete/:id", userExtractor, deleteUser);
 
 export default usersRouter;

@@ -1,75 +1,91 @@
-import { NextFunction, Response, Request } from "express";
-import Module from "../models/module";
-
-interface module {
+import { Request, Response, NextFunction } from "express";
+import moment from "moment";
+import Sensor from "../models/sensor";
+interface sensorReading {
+  sensorNumber: number;
+  date: Date;
+  temperature: number;
   chipID: string;
-  name?: string;
-  active: boolean;
-  ubication?: string;
 }
 
-interface req {
-  body: module;
-}
-
-// REGISTRO DE LOS MODULOS
-export const registerModule = (
+export const resgiterTemp = (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const { body } = request as req;
-  let savedModule = undefined;
+  let reading = request.body as sensorReading;
+  let result = undefined;
 
-  let { chipID, name, active, ubication } = body;
+  let { sensorNumber, date, temperature, chipID } = reading;
 
-  if (!chipID) {
-    response.status(401).send({ error: "no chipID" }).end();
+  if (!(sensorNumber && date && temperature && chipID)) {
+    response.status(401).send({ error: "missing data" }).end();
   }
 
-  Module.findOne({ chipID })
-    .then((res) => {
-      if (res) {
-        response.status(401).send({ error: "module already exists" }).end();
-      }
-    })
-    .catch((err) => next(err));
-
-  name ??= "Modulo de sensores";
-  active ??= true;
-
-  const module = new Module({
+  const regis = new Sensor({
+    sensorNumber,
+    date,
+    temperature,
     chipID,
-    name,
-    active,
-    ubication,
   });
 
-  module
+  regis
     .save()
     .then((res) => {
-      savedModule = res;
+      result = res;
     })
     .catch((err) => next(err));
 
-  response.status(200).send(savedModule).end();
+  response.status(200).send(result).end();
 };
 
-//LISTA DE MODULOS
-export const listModules = (response: Response, next: NextFunction) => {
-  let list: module[] = [];
-  let result: module[] = [];
+// LISTA DE TEMPERATURAS REGISTRADA POR UN DETERMINADO MODULO EN UN PERIODO
+interface tempModuleList {
+  frdate?: Date;
+  todate?: Date;
+}
+export const tempModuleList = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  let { frdate, todate } = request.body as tempModuleList;
+  let { chipID } = request.params;
+  let result = undefined;
 
-  Module.find()
+  if (!chipID) {
+    response.status(401).send({ error: "missing parameters" }).end();
+  }
+
+  if (!todate) todate = new Date();
+  if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
+
+  Sensor.find({ chipID, fecha: { $gte: frdate, $lte: todate } })
     .then((res) => {
-      list = res;
+      result = res;
     })
     .catch((err) => next(err));
 
-  list.map((mod) => {
-    let { chipID, name, active, ubication } = mod;
-    result.push({ chipID, name, active, ubication });
-  });
+  response.status(200).send(result).end();
+};
+
+//LISTA DE TEMPERATURAS REGISTRADAS POR TODOS LOS MODULOS EN UN DETERMINADO PERIODO
+export const temperatureList = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  let { frdate, todate } = request.body as tempModuleList;
+  let result = undefined;
+
+  if (!todate) todate = new Date();
+  if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
+
+  Sensor.find({ fecha: { $gte: frdate, $lte: todate } })
+    .then((res) => {
+      result = res;
+    })
+    .catch((err) => next(err));
 
   response.status(200).send(result).end();
 };

@@ -5,17 +5,6 @@ const moduleSchema = new Schema({
   name: { type: String, required: true },
   active: { type: Boolean, required: true },
   ubication: { type: String, required: true },
-  sensors: [
-    {
-      sensorNumber: { type: Number, require: true },
-      readings: [
-        {
-          date: { type: Date, required: true },
-          temperature: { type: Number, required: true },
-        },
-      ],
-    },
-  ],
 });
 
 moduleSchema.set("toJSON", {

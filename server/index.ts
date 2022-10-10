@@ -4,8 +4,10 @@ import connectiondb from "./mongodb";
 import { config } from "dotenv";
 import notFound from "./middleware/notFound";
 import usersRouter from "./routes/usersRouter";
-import sensorsRouter from "./routes/sensorsRoute";
 import handleErrors from "./middleware/handleErrors";
+import modulesRouter from "./routes/modulesRouter";
+import userExtractor from "./middleware/userExtractor";
+import sensorsRouter from "./routes/sensorsRouter";
 
 const app = express();
 config();
@@ -17,9 +19,11 @@ connectiondb(connectionString); //database connection
 //MIDDELWARE
 app.use(cors());
 app.use(express.json());
+app.use("/api/module", userExtractor);
 
 //Routes
 app.use("/api/user", usersRouter);
+app.use("/api/module", modulesRouter);
 app.use("/api/sensor", sensorsRouter);
 
 //ERROR MIDDELWARE

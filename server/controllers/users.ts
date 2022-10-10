@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 //import { connection } from "mongoose";
 import bcrypt from "bcrypt";
@@ -131,7 +131,11 @@ export const loginUser = (
 };
 
 // LISTA DE USUARIOS
-export const listUsers = (res: Response, next: NextFunction) => {
+export const listUsers = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   let result: user[] = [];
 
   User.find()
@@ -145,8 +149,8 @@ export const listUsers = (res: Response, next: NextFunction) => {
 
 // ACTUALIZAR USUARIO
 export const updateEmailUser = (
-  response: Response,
   request: extreq,
+  response: Response,
   next: NextFunction
 ) => {
   let { userID, body } = request;
@@ -168,8 +172,8 @@ export const updateEmailUser = (
 
 // ACTUALIZAR PASSWORD
 export const updatePassUser = (
-  response: Response,
   request: extreq,
+  response: Response,
   next: NextFunction
 ) => {
   let { userID, body } = request;
