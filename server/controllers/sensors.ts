@@ -8,35 +8,38 @@ interface sensorReading {
   chipID: string;
 }
 
-export const resgiterTemp = (
+export const resgiterTemp = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
   let reading = request.body as sensorReading;
   let result = undefined;
-
   let { sensorNumber, date, temperature, chipID } = reading;
 
-  if (!(sensorNumber && date && temperature && chipID)) {
-    response.status(401).send({ error: "missing data" }).end();
+  try {
+    if (!(sensorNumber && date && temperature && chipID)) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    const regis = new Sensor({
+      sensorNumber,
+      date,
+      temperature,
+      chipID,
+    });
+
+    result = await regis.save();
+
+    response.status(200).send(result).end();
+  } catch (err) {
+    next(err);
+    return;
   }
 
-  const regis = new Sensor({
-    sensorNumber,
-    date,
-    temperature,
-    chipID,
-  });
-
-  regis
-    .save()
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => next(err));
-
-  response.status(200).send(result).end();
+  return;
 };
 
 // LISTA DE TEMPERATURAS REGISTRADA POR UN DETERMINADO MODULO EN UN PERIODO
@@ -44,7 +47,7 @@ interface tempModuleList {
   frdate?: Date;
   todate?: Date;
 }
-export const tempModuleList = (
+export const tempModuleList = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -53,24 +56,32 @@ export const tempModuleList = (
   let { chipID } = request.params;
   let result = undefined;
 
-  if (!chipID) {
-    response.status(401).send({ error: "missing parameters" }).end();
+  try {
+    if (!chipID) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    if (!todate) todate = new Date();
+    if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
+
+    result = await Sensor.find({
+      chipID,
+      fecha: { $gte: frdate, $lte: todate },
+    });
+
+    response.status(200).send(result).end();
+  } catch (err) {
+    next(err);
+    return;
   }
 
-  if (!todate) todate = new Date();
-  if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
-
-  Sensor.find({ chipID, fecha: { $gte: frdate, $lte: todate } })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => next(err));
-
-  response.status(200).send(result).end();
+  return;
 };
 
 //LISTA DE TEMPERATURAS REGISTRADAS POR TODOS LOS MODULOS EN UN DETERMINADO PERIODO
-export const temperatureList = (
+export const temperatureList = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -80,12 +91,12 @@ export const temperatureList = (
 
   if (!todate) todate = new Date();
   if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
+  try {
+    result = await Sensor.find({ fecha: { $gte: frdate, $lte: todate } });
 
-  Sensor.find({ fecha: { $gte: frdate, $lte: todate } })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => next(err));
-
-  response.status(200).send(result).end();
+    response.status(200).send(result).end();
+  } catch (err) {
+    next(err);
+  }
+  return;
 };

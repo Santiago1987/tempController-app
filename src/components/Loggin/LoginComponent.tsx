@@ -1,4 +1,5 @@
 import React from "react";
+import "../../styles/login.css";
 
 type Props = {
   logValues: { username: string; password: string };
@@ -8,27 +9,29 @@ type Props = {
 
 const LogingComponent = ({ logValues, handleLogin, handleOnChange }: Props) => {
   return (
-    <form onSubmit={handleLogin}>
-      <label>
-        Name
+    <form className="longin_form" onSubmit={handleLogin}>
+      <h3>Login</h3>
+      <div>
+        <label>Nombre</label>
         <input
           type="text"
           value={logValues.username}
           name="Username"
-          placeholder="User name"
+          placeholder="Nombre de usuario"
           onChange={handleOnChange}
         />
-      </label>
-      <label>
-        Password
+      </div>
+      <div>
+        <label>Contraseña</label>
         <input
           type="password"
           value={logValues.password}
           name="Password"
-          placeholder="Password"
+          placeholder="Contraseña"
           onChange={handleOnChange}
         />
-      </label>
+      </div>
+
       <button>Login</button>
     </form>
   );

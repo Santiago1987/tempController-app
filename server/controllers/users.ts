@@ -6,145 +6,132 @@ import { UserFromBD } from "../../types";
 import jwt from "jsonwebtoken";
 import { extreq } from "../../types";
 
-interface user {
-  id: string;
-  userName: string;
-  email: string;
-}
-
 // register new user
-export const saveUser = (
+export const saveUser = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
   const { body } = request;
   let { userName, password, email } = body;
-  password = password.toString();
-  let passwordHash = null;
-  let savedUser = undefined;
 
-  // controlar que el user name no exista
-  User.findOne({ userName })
-    .then((res) => {
-      if (res) {
-        response.status(401).send({ error: "name already exists" }).end();
-      }
-    })
-    .catch((err) => {
-      next(err);
+  try {
+    if (!(userName && password)) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    password = password.toString();
+    let passwordHash = undefined;
+    let savedUser = undefined;
+    let findUser = undefined;
+
+    // controlar que el user name no exista
+
+    findUser = await User.findOne({ userName });
+
+    if (findUser) {
+      response.status(401).send({ error: "name already exists" }).end();
+      return;
+    }
+
+    // encryptado de password
+    passwordHash = await bcrypt.hash(password, 10);
+
+    // guardado de usuario
+    const user = new User({
+      userName,
+      email,
+      passwordHash,
     });
+    savedUser = await user.save();
 
-  // encryptado de password
-  bcrypt
-    .hash(password, 10)
-    .then((res) => {
-      passwordHash = res;
-    })
-    .catch((err) => next(err));
-
-  // guardado de usuario
-  const user = new User({
-    userName,
-    email,
-    passwordHash,
-  });
-
-  user
-    .save()
-    .then((res) => {
-      savedUser = res;
-    })
-    .catch((err) => next(err));
-
-  response.status(200).json(savedUser).end();
+    response.status(200).json(savedUser).end();
+  } catch (err) {
+    next(err);
+    return;
+  }
+  return;
 };
 
 // user login
-export const loginUser = (
+export const loginUser = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
   const { body } = request;
   const { userName, password } = body;
-  let user = undefined;
+  let user: UserFromBD | null = null;
 
-  User.findOne({ userName })
-    .then((res) => {
-      user = res;
-    })
-    .catch((err) => {
-      next(err);
-    });
-
-  if (!user) {
-    response
-      .status(401)
-      .json({
-        error: "invalid user or password",
-      })
-      .end();
-    return;
+  if (!(password && userName)) {
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
   }
 
-  const { email, passwordHash, _id } = user as UserFromBD;
+  try {
+    user = await User.findOne({ userName });
 
-  let isPasswordCorrect = false;
+    if (!user) {
+      response.status(401).json({ error: "invalid user or password" }).end();
+      return;
+    }
 
-  bcrypt
-    .compare(password, passwordHash)
-    .then((res) => {
-      isPasswordCorrect = res;
-    })
-    .catch((err) => next(err));
+    const { email, passwordHash, _id } = user;
 
-  if (!isPasswordCorrect) {
-    response.status(401).json({
-      error: "invalid user or password",
-    });
-    return;
-  }
+    let isPasswordCorrect = await bcrypt.compare(password, passwordHash);
 
-  const userForToken = {
-    id: _id,
-    userName,
-  };
+    if (!isPasswordCorrect) {
+      response
+        .status(401)
+        .json({
+          error: "invalid user or password",
+        })
+        .end();
+      return;
+    }
 
-  const secretword = process.env.TOKEN_WORLD;
-  const token = secretword
-    ? jwt.sign(userForToken, secretword, {
-        expiresIn: 60 * 60,
-      })
-    : undefined;
-
-  if (!token) return response.status(500).end();
-
-  return response
-    .send({
-      email,
+    const userForToken = {
+      id: _id,
       userName,
-      token,
-    })
-    .status(200)
-    .end();
+    };
+
+    const secretword = process.env.TOKEN_WORLD;
+    const token = secretword
+      ? jwt.sign(userForToken, secretword, {
+          expiresIn: 60 * 60,
+        })
+      : undefined;
+
+    if (!token) {
+      response.status(500).send({ error: "token invalid" }).end();
+      return;
+    }
+
+    response.send({ email, userName, token }).status(200).end();
+    return;
+  } catch (err) {
+    next(err);
+    return;
+  }
 };
 
 // LISTA DE USUARIOS
-export const listUsers = (
+export const listUsers = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  let result: user[] = [];
+  try {
+    let result = await User.find();
+    response.status(200).send(result).end();
+  } catch (err) {
+    next(err);
+  }
 
-  User.find()
-    .then((res) => {
-      result = res as user[];
-    })
-    .catch((err) => next(err));
-
-  response.status(200).send(result).end();
+  return;
 };
 
 // ACTUALIZAR USUARIO
@@ -155,51 +142,53 @@ export const updateEmailUser = (
 ) => {
   let { userID, body } = request;
   let { email } = body;
-  let data = undefined;
 
   if (!userID || !email) {
-    response.status(401).send({ error: "missing data" }).end();
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
   }
 
   User.findOneAndUpdate({ userID }, { $set: { email } }, { new: true })
     .then((res) => {
-      data = res;
+      response.status(200).send(res).end();
     })
     .catch((err) => next(err));
 
-  response.status(200).send(data).end();
+  return;
 };
 
 // ACTUALIZAR PASSWORD
-export const updatePassUser = (
+export const updatePassUser = async (
   request: extreq,
   response: Response,
   next: NextFunction
 ) => {
   let { userID, body } = request;
   let { password } = body;
-  let data = undefined;
-  let passwordHash = null;
 
-  if (!userID || !password) {
-    response.status(401).send({ error: "missing data" }).end();
+  if (!(userID && password)) {
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
   }
 
-  // encryptado de password
-  bcrypt
-    .hash(password, 10)
-    .then((res) => {
-      passwordHash = res;
-    })
-    .catch((err) => next(err));
+  try {
+    // encryptado de password
+    let passwordHash = await bcrypt.hash(password, 10);
 
-  User.findOneAndUpdate({ userID }, { $set: { passwordHash } }, { new: true })
-    .then((res) => {
-      data = res;
-    })
-    .catch((err) => next(err));
+    let data = await User.findOneAndUpdate(
+      { userID },
+      { $set: { passwordHash } },
+      { new: true }
+    );
 
-  response.status(200).send(data).end();
+    response.status(200).send(data).end();
+  } catch (err) {
+    next(err);
+  }
+
+  return;
 };
 
 //DELETE USER
@@ -209,15 +198,17 @@ export const deleteUser = (
   next: NextFunction
 ) => {
   let { id } = request.params;
-  let result = null;
+  if (!id) {
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
+  }
 
   User.deleteOne({ _id: id })
     .then((res) => {
-      result = res;
+      response.status(200).send(res).end();
     })
     .catch((err) => next(err));
-
-  response.status(200).send(result).end();
 
   return;
 };

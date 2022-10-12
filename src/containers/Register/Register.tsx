@@ -15,7 +15,7 @@ const Register = () => {
   useEffect(() => {
     if (isLogged) navigate("/");
     if (registerSucsess) navigate("/login");
-  }, [registerSucsess]);
+  }, [registerSucsess, isLogged]);
 
   const handleRegister = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();

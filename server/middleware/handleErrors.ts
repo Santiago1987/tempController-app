@@ -2,13 +2,19 @@ import { ErrorRequestHandler, Response, Request, NextFunction } from "express";
 
 const ERROR_HANDLERS: any = {
   CastError: (res: Response) =>
-    res.status(400).send({ error: "id used is malformed" }),
+    res.status(401).send({ error: "id used is malformed" }),
 
   ValidationError: (res: Response, err: ErrorRequestHandler) =>
-    res.status(409).send({ error: err.toString() }),
+    res.status(401).send({ error: err.toString() }),
 
   JsonWebTokenError: (res: Response) =>
     res.status(401).json({ error: "token missing or invalid" }),
+
+  missingParameters: (res: Response) =>
+    res.status(401).send({ error: "missing parameters" }).end(),
+
+  TokenExpiredError: (res: Response) =>
+    res.status(401).send({ error: "token expired" }).end(),
 
   defaultError: (res: Response) => res.status(500).end(),
 };
@@ -23,4 +29,5 @@ export default (
   const handler = ERROR_HANDLERS[error.name] || ERROR_HANDLERS.defaultError;
 
   handler(res, error);
+  return;
 };

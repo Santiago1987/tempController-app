@@ -5,40 +5,32 @@ import "../../styles/header.css";
 const Header = () => {
   const { isLogged, logout } = useUser();
 
+  const handleOnClick = (): string => {
+    return "";
+  };
+
   return (
-    <header className="site-header">
-      <div className="wrapper site-header__wrapper">
-        <a className="brand">C.I.D.I.F</a>
-        <nav className="nav">
-          <button
-            className="nav_toggle"
-            aria-aria-expanded="false"
-            type="button"
-            aria-label="menu"
-          >
-            Menu
-          </button>
-          <ul className="nav_wrapper">
-            {isLogged ? (
-              <li className="nav_item">
-                <a onClick={logout}>Logout</a>
-              </li>
-            ) : (
-              <>
-                <li className="nav_item">
-                  <Link to="/login">
-                    <a>Login</a>
-                  </Link>
-                </li>
-                <li className="nav_item">
-                  <Link to="/register">
-                    <a>Register</a>
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
+    <header>
+      <div className="topnav">
+        <div className="brand">
+          <h3>C.I.D.I.F</h3>
+        </div>
+        <div>
+          {isLogged ? (
+            <div className="nav-button">
+              <a onClick={logout}>Logout</a>
+            </div>
+          ) : (
+            <div className="nav-button">
+              <Link to="/register">Register</Link>
+              <Link to="/login">Login</Link>
+            </div>
+          )}
+
+          <a className="icon" onClick={handleOnClick}>
+            <i className="">ICONO</i>
+          </a>
+        </div>
       </div>
     </header>
   );

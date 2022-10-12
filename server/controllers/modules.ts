@@ -13,50 +13,54 @@ interface req {
 }
 
 // REGISTRO DE LOS MODULOS
-export const registerModule = (
+export const registerModule = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
   const { body } = request as req;
   let savedModule = undefined;
+  let modexists = false;
 
   let { chipID, name, active, ubication } = body;
 
-  if (!chipID) {
-    response.status(401).send({ error: "no chipID" }).end();
+  try {
+    if (!chipID) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    modexists = Boolean(await Module.findOne({ chipID }));
+
+    if (modexists) {
+      response.status(401).send({ error: "module already exists" }).end();
+      return;
+    }
+
+    name ??= "Modulo de sensores";
+    active ??= true;
+
+    const module = new Module({
+      chipID,
+      name,
+      active,
+      ubication,
+    });
+
+    savedModule = await module.save();
+
+    response.status(200).send(savedModule).end();
+    return;
+  } catch (err) {
+    next(err);
+    return;
   }
-
-  Module.findOne({ chipID })
-    .then((res) => {
-      if (res) {
-        response.status(401).send({ error: "module already exists" }).end();
-      }
-    })
-    .catch((err) => next(err));
-
-  name ??= "Modulo de sensores";
-  active ??= true;
-
-  const module = new Module({
-    chipID,
-    name,
-    active,
-    ubication,
-  });
-
-  module
-    .save()
-    .then((res) => {
-      savedModule = res;
-    })
-    .catch((err) => next(err));
-
-  response.status(200).send(savedModule).end();
+  return;
 };
 
 //LISTA DE MODULOS
-export const listModules = (
+export const listModules = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -64,22 +68,25 @@ export const listModules = (
   let list: module[] = [];
   let result: module[] = [];
 
-  Module.find()
-    .then((res) => {
-      list = res;
-    })
-    .catch((err) => next(err));
+  try {
+    list = await Module.find();
 
-  list.map((mod) => {
-    let { chipID, name, active, ubication } = mod;
-    result.push({ chipID, name, active, ubication });
-  });
+    list.map((mod) => {
+      let { chipID, name, active, ubication } = mod;
+      result.push({ chipID, name, active, ubication });
+    });
 
-  response.status(200).send(result).end();
+    response.status(200).send(result).end();
+    return;
+  } catch (err) {
+    next(err);
+    return;
+  }
+  return;
 };
 
 //ACTUALIZAR MODULOS
-export const updateModule = (
+export const updateModule = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -88,23 +95,27 @@ export const updateModule = (
   let data = undefined;
 
   if (!chipID) {
-    response.status(4001).send({ error: "missing chip id" }).end();
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
   }
 
-  Module.findOneAndUpdate(
-    { chipID },
-    { $set: { name, active, ubication } },
-    { new: true }
-  )
-    .then((res) => {
-      data = res;
-    })
-    .catch((err) => next(err));
+  try {
+    data = await Module.findOneAndUpdate(
+      { chipID },
+      { $set: { name, active, ubication } },
+      { new: true }
+    );
 
-  response.status(200).send(data).end();
+    response.status(200).send(data).end();
+    return;
+  } catch (err) {
+    next(err);
+  }
+  return;
 };
 
-export const deleteModule = (
+export const deleteModule = async (
   request: Request,
   response: Response,
   next: NextFunction
@@ -113,12 +124,19 @@ export const deleteModule = (
   let result = undefined;
 
   if (!id) {
-    response.status(401).send({ error: "missing module id" }).end();
+    let err = new Error();
+    err.name = "missingParameters";
+    throw err;
   }
 
-  Module.deleteOne({ chipID: id }).then((res) => {
-    result = res;
-  });
+  try {
+    result = await Module.deleteOne({ chipID: id });
 
-  response.status(200).send(result).end();
+    response.status(200).send(result).end();
+    return;
+  } catch (err) {
+    next(err);
+    return;
+  }
+  return;
 };

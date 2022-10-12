@@ -36,7 +36,6 @@ const Login = () => {
 
   return (
     <>
-      <h2>Login</h2>
       {isLogingLoading && <strong>Checking credentials</strong>}
       {!isLogingLoading && (
         <LogingComponent

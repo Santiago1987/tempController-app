@@ -1,6 +1,7 @@
 //import React from "react";
 import UserContextProvider from "./containers/context/UserContext";
 import { Routes, Route } from "react-router-dom";
+import "./styles/app.css";
 
 import Home from "./components/Home/Home";
 import Header from "./components/header/Header";
@@ -14,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/resister" element={<Register />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </UserContextProvider>
   );

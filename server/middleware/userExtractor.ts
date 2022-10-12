@@ -17,6 +17,7 @@ export default (req: extreq, res: Response, next: NextFunction) => {
     decodedToken = secretword && token ? jwt.verify(token, secretword) : null;
   } catch (error) {
     next(error);
+    return;
   }
 
   if (!decodedToken) {
