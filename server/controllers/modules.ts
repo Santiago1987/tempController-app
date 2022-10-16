@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import Module from "../models/module";
+import { loadModulelist } from "../utils/moduleList";
 
 interface module {
   chipID: string;
@@ -51,6 +52,7 @@ export const registerModule = async (
     savedModule = await module.save();
 
     response.status(200).send(savedModule).end();
+    loadModulelist();
     return;
   } catch (err) {
     next(err);
@@ -133,6 +135,7 @@ export const deleteModule = async (
     result = await Module.deleteOne({ chipID: id });
 
     response.status(200).send(result).end();
+    loadModulelist();
     return;
   } catch (err) {
     next(err);

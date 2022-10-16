@@ -3,13 +3,11 @@ import axios from "axios";
 const serverUrl = process.env.REACT_APP_SERVER_URL;
 const registerUrl = process.env.REACT_APP_REGISTER_URL;
 
-const registerService = async (
+const registerService = (
   username: string,
   password: string,
   email: string
 ): Promise<boolean> => {
-  let isok = false;
-
   if (!username || !password) {
     console.error("missing parameters");
     throw new Error("missing parameters");
@@ -20,22 +18,16 @@ const registerService = async (
     throw new Error("missing server URL");
   }
 
-  axios
+  return axios
     .post(`${serverUrl}${registerUrl}`, {
       username,
       password,
       email,
     })
     .then((res) => {
-      if (res.status === 200) isok = true;
-      if (res.status > 300) isok = false;
-    })
-    .catch((err) => {
-      console.error(err);
-      throw new Error("Resgister problems");
+      if (res.status !== 200) return false;
+      return true;
     });
-
-  return isok;
 };
 
 export default registerService;

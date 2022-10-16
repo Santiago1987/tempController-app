@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const moduleSchema = new Schema({
-  chipID: { type: String, required: true },
+  chipID: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   active: { type: Boolean, required: true },
   ubication: { type: String, required: true },

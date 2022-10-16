@@ -9,7 +9,7 @@ const sensorsRouter = Router();
 
 sensorsRouter
   .post("/register", resgiterTemp)
-  .get("/:chipID", tempModuleList)
+  .get("/module/:chipID", tempModuleList)
   .get("/list", temperatureList);
 
 export default sensorsRouter;

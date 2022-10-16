@@ -9,9 +9,9 @@ import {
 const modulesRouter = Router();
 
 modulesRouter
-  .post("/resiter", registerModule)
+  .post("/register", registerModule)
   .get("/list", listModules)
   .put("/update", updateModule)
-  .delete("/delete", deleteModule);
+  .delete("/delete/:id", deleteModule);
 
 export default modulesRouter;

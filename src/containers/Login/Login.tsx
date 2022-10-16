@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import ErrorMsg from "../../components/errorMsg/ErrorMsg";
 import useLoging from "../hooks/useLoging";
-import useUser from "../hooks/useUser";
+import useUser from "../hooks/User/useUser";
 import { useNavigate } from "react-router-dom";
 import LogingComponent from "../../components/Loggin/LoginComponent";
 

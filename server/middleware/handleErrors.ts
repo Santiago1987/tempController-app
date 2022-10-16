@@ -16,6 +16,9 @@ const ERROR_HANDLERS: any = {
   TokenExpiredError: (res: Response) =>
     res.status(401).send({ error: "token expired" }).end(),
 
+  moduleNotExists: (res: Response) =>
+    res.status(401).send({ error: "module does not exists" }).end(),
+
   defaultError: (res: Response) => res.status(500).end(),
 };
 

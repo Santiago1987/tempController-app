@@ -8,9 +8,11 @@ import handleErrors from "./middleware/handleErrors";
 import modulesRouter from "./routes/modulesRouter";
 import userExtractor from "./middleware/userExtractor";
 import sensorsRouter from "./routes/sensorsRouter";
+import { loadModulelist } from "./utils/moduleList";
 
 const app = express();
 config();
+loadModulelist(); //function to get preload of modules list
 
 const connectionString = process.env.MONGODB_URI || "";
 

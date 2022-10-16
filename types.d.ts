@@ -1,6 +1,7 @@
 export interface User {
-  username: string;
-  name: string;
+  userName: string;
+  id: string;
+  email: string;
 }
 
 export interface LoginUser extends User {
@@ -9,7 +10,7 @@ export interface LoginUser extends User {
 
 export interface UserFromBD extends User {
   passwordHash: string;
-  _id: string;
+  id: string;
   email: string;
 }
 
@@ -23,4 +24,31 @@ interface extreq extends Request {
 export type userContextType = {
   jwt: string | null;
   setJWT: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+export interface Module {
+  chipID: string;
+  name: string;
+  active: boolean;
+  ubication: string;
+}
+
+export interface Sensor {
+  sensorNumber: number;
+  date: Date;
+  temperature: number;
+  chipID: string;
+}
+
+export interface MapSensorList {
+  chipID: {
+    sensorNumber: number;
+    date: Date;
+    temperature;
+  };
+}
+
+export type moduleContextType = {
+  moduleList: string[] | [];
+  setModuleList: React.Dispatch<React.SetStateAction<string[]>>;
 };

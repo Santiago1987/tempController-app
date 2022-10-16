@@ -1,5 +1,6 @@
 //import React from "react";
 import UserContextProvider from "./containers/context/UserContext";
+import ModuleProvider from "./containers/context/ModuleContext";
 import { Routes, Route } from "react-router-dom";
 import "./styles/app.css";
 
@@ -13,9 +14,11 @@ function App() {
     <UserContextProvider>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <ModuleProvider>
+          <Route path="/" element={<Home />} />
+        </ModuleProvider>
       </Routes>
     </UserContextProvider>
   );

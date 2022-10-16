@@ -79,7 +79,7 @@ export const loginUser = async (
       return;
     }
 
-    const { email, passwordHash, _id } = user;
+    const { email, passwordHash, id } = user;
 
     let isPasswordCorrect = await bcrypt.compare(password, passwordHash);
 
@@ -94,7 +94,7 @@ export const loginUser = async (
     }
 
     const userForToken = {
-      id: _id,
+      id,
       userName,
     };
 

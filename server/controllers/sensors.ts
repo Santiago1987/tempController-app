@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import Sensor from "../models/sensor";
+import { moduleList } from "../utils/moduleList";
+
 interface sensorReading {
   sensorNumber: number;
   date: Date;
@@ -24,6 +26,11 @@ export const resgiterTemp = async (
       throw err;
     }
 
+    if (!Boolean(moduleList.find((id) => id === chipID))) {
+      let err = new Error();
+      err.name = "moduleNotExists";
+      throw err;
+    }
     const regis = new Sensor({
       sensorNumber,
       date,
@@ -46,14 +53,14 @@ export const resgiterTemp = async (
 interface tempModuleList {
   frdate?: Date;
   todate?: Date;
+  chipID?: string;
 }
 export const tempModuleList = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  let { frdate, todate } = request.body as tempModuleList;
-  let { chipID } = request.params;
+  let { chipID, frdate, todate } = request.params as tempModuleList;
   let result = undefined;
 
   try {
@@ -86,7 +93,7 @@ export const temperatureList = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { frdate, todate } = request.body as tempModuleList;
+  let { frdate, todate } = request.params as tempModuleList;
   let result = undefined;
 
   if (!todate) todate = new Date();

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RegisterComponent from "../../components/Register/RegisterComponent";
 
 import useRegister from "../hooks/useRegister";
-import useUser from "../hooks/useUser";
+import useUser from "../hooks/User/useUser";
 
 const Register = () => {
   const navigate = useNavigate();
