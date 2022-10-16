@@ -1,17 +1,13 @@
 import { Sensor, MapSensorList } from "../../types";
 
-type elemts = {
-  sensorNumber: number;
-  date: Date;
-  temperature: number;
-};
+type result = { [modID: string]: MapSensorList[] };
 
-const mapTempListFromBD = (listTemp: Sensor[], modList: string[]) => {
-  let result = {};
+const mapTempListFromBD = (listTemp: Sensor[], modList: string[] | []) => {
+  let result: result | [] = [];
 
   for (let index in modList) {
-    let list: elemts[] = [];
-    let modID = modList[index];
+    let list: MapSensorList[] = [];
+    let modID: string = modList[index];
 
     listTemp.map((sensor) => {
       let { sensorNumber, date, temperature, chipID } = sensor;

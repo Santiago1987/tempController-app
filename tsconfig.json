@@ -22,6 +22,7 @@
     "outDir": "./build",
     "noUnusedLocals": true,
     "noImplicitReturns": true,
+    "noImplicitAny": false
   },
   "include": [
     "src",

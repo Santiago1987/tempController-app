@@ -66,9 +66,14 @@ const useUser = () => {
   );
 
   //User list
-  const getUserList = useCallback((jwt: string): User[] => {
+  const getUserList = useCallback((): User[] => {
     setLogState({ loading: true, error: false });
     let result: User[] = [];
+
+    if (!jwt) {
+      setLogState({ loading: false, error: true });
+      return [];
+    }
 
     listUserService(jwt)
       .then((res) => {
@@ -83,49 +88,58 @@ const useUser = () => {
   }, []);
 
   //UPDATE EMAIL
-  const updUserEmail = useCallback(
-    (jwt: string, email: string): User | undefined => {
-      setLogState({ loading: true, error: false });
-      let result: User | undefined = undefined;
+  const updUserEmail = useCallback((email: string): User | undefined => {
+    setLogState({ loading: true, error: false });
+    let result: User | undefined = undefined;
 
-      updEmailUserService(jwt, email)
-        .then((res) => {
-          result = res;
-          setLogState({ loading: false, error: false });
-        })
-        .catch((err) => {
-          setLogState({ loading: false, error: true });
-        });
+    if (!jwt) {
+      setLogState({ loading: false, error: true });
+      return undefined;
+    }
 
-      return result;
-    },
-    []
-  );
+    updEmailUserService(jwt, email)
+      .then((res) => {
+        result = res;
+        setLogState({ loading: false, error: false });
+      })
+      .catch((err) => {
+        setLogState({ loading: false, error: true });
+      });
+
+    return result;
+  }, []);
 
   //UPDATE PASSWORD
-  const updUserPassword = useCallback(
-    (jwt: string, password: string): User | undefined => {
-      setLogState({ loading: true, error: false });
-      let result: User | undefined = undefined;
+  const updUserPassword = useCallback((password: string): User | undefined => {
+    setLogState({ loading: true, error: false });
+    let result: User | undefined = undefined;
 
-      updPassUserService(jwt, password)
-        .then((res) => {
-          result = res;
-          setLogState({ loading: false, error: false });
-        })
-        .catch((err) => {
-          setLogState({ loading: false, error: true });
-        });
+    if (!jwt) {
+      setLogState({ loading: false, error: true });
+      return undefined;
+    }
 
-      return result;
-    },
-    []
-  );
+    updPassUserService(jwt, password)
+      .then((res) => {
+        result = res;
+        setLogState({ loading: false, error: false });
+      })
+      .catch((err) => {
+        setLogState({ loading: false, error: true });
+      });
+
+    return result;
+  }, []);
 
   //DELETE USER
-  const deleteUser = useCallback((jwt: string, id: string): boolean => {
+  const deleteUser = useCallback((id: string): boolean => {
     setLogState({ loading: true, error: false });
     let result = false;
+
+    if (!jwt) {
+      setLogState({ loading: false, error: true });
+      return false;
+    }
 
     deleteUserService(jwt, id)
       .then((res) => {

@@ -16,6 +16,7 @@ export interface UserFromBD extends User {
 
 // adding a new property to Request type from express
 import { Request } from "express";
+import { type } from "os";
 
 interface extreq extends Request {
   userID?: string;
@@ -41,11 +42,9 @@ export interface Sensor {
 }
 
 export interface MapSensorList {
-  chipID: {
-    sensorNumber: number;
-    date: Date;
-    temperature;
-  };
+  sensorNumber: number;
+  date: Date;
+  temperature: number;
 }
 
 export type moduleContextType = {
