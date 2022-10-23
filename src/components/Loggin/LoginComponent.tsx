@@ -1,5 +1,17 @@
 import React from "react";
-import "../../styles/login.css";
+import {
+  Container,
+  Form,
+  Input,
+  LoginLogo,
+  LoginTitle,
+  Wrapper,
+  WrapperInput,
+  SpanInput,
+  ButtonContainner,
+  Button,
+} from "./LoginComponentSyles";
+import { FaThermometerHalf } from "react-icons/fa";
 
 type Props = {
   logValues: { username: string; password: string };
@@ -9,31 +21,40 @@ type Props = {
 
 const LogingComponent = ({ logValues, handleLogin, handleOnChange }: Props) => {
   return (
-    <form className="longin_form" onSubmit={handleLogin}>
-      <h3>Login</h3>
-      <div>
-        <label>Nombre</label>
-        <input
-          type="text"
-          value={logValues.username}
-          name="Username"
-          placeholder="Nombre de usuario"
-          onChange={handleOnChange}
-        />
-      </div>
-      <div>
-        <label>Contraseña</label>
-        <input
-          type="password"
-          value={logValues.password}
-          name="Password"
-          placeholder="Contraseña"
-          onChange={handleOnChange}
-        />
-      </div>
-
-      <button>Login</button>
-    </form>
+    <Container>
+      <Wrapper>
+        <Form onSubmit={handleLogin}>
+          <LoginLogo>
+            <FaThermometerHalf />
+          </LoginLogo>
+          <LoginTitle>Log in</LoginTitle>
+          <div>
+            <WrapperInput>
+              <Input
+                type="text"
+                value={logValues.username}
+                name="Username"
+                placeholder="Nombre de usuario"
+                onChange={handleOnChange}
+              />
+              <SpanInput></SpanInput>
+            </WrapperInput>
+            <WrapperInput>
+              <Input
+                type="password"
+                value={logValues.password}
+                name="Password"
+                placeholder="Contraseña"
+                onChange={handleOnChange}
+              />
+            </WrapperInput>
+          </div>
+          <ButtonContainner>
+            <Button>Login</Button>
+          </ButtonContainner>
+        </Form>
+      </Wrapper>
+    </Container>
   );
 };
 

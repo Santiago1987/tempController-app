@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from "react";
-import { Module } from "../../../../types";
+import { ModuleFromBD } from "../../../../types";
 
 type moduleReducerAction =
   | {
@@ -27,7 +27,7 @@ const iniStateModule = {
 };
 
 const moduleReducer = (
-  state: Module,
+  state: ModuleFromBD,
   { type, payload }: moduleReducerAction
 ) => {
   switch (type) {

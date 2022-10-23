@@ -1,5 +1,5 @@
 import { useCallback, useContext, useState } from "react";
-import { Module, userContextType } from "../../../../types";
+import { ModuleFromBD, userContextType } from "../../../../types";
 import deleteModuleService from "../../../services/modulesServices/deleteModuleService";
 import listModuleService from "../../../services/modulesServices/listModuleService";
 import registerModuleService from "../../../services/modulesServices/registerModuleService";
@@ -16,31 +16,34 @@ const useModuleActions = () => {
   });
 
   //REGISTRO DE MODULO
-  const registerModule = useCallback((module: Module): Module | undefined => {
-    setLogState({ loading: true, error: false });
-    let result = undefined;
+  const registerModule = useCallback(
+    (module: ModuleFromBD): ModuleFromBD | undefined => {
+      setLogState({ loading: true, error: false });
+      let result: ModuleFromBD | undefined = undefined;
 
-    if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return undefined;
-    }
-
-    registerModuleService(jwt, module)
-      .then((res) => {
-        result = res;
-        setLogState({ loading: false, error: false });
-      })
-      .catch((err) => {
+      if (!jwt) {
         setLogState({ loading: false, error: true });
-        console.error(err);
-      });
-    return result;
-  }, []);
+        return undefined;
+      }
+
+      registerModuleService(jwt, module)
+        .then((res) => {
+          result = res;
+          setLogState({ loading: false, error: false });
+        })
+        .catch((err) => {
+          setLogState({ loading: false, error: true });
+          console.error(err);
+        });
+      return result;
+    },
+    []
+  );
 
   //LIST OF MODULES
-  const getModuleList = useCallback((): Module | undefined => {
+  const getModuleList = useCallback((): ModuleFromBD | undefined => {
     setLogState({ loading: true, error: false });
-    let result = undefined;
+    let result: ModuleFromBD[] | undefined = undefined;
 
     if (!jwt) {
       setLogState({ loading: false, error: true });
@@ -49,8 +52,8 @@ const useModuleActions = () => {
 
     listModuleService(jwt)
       .then((res) => {
-        result = res;
         setLogState({ loading: false, error: false });
+        return res;
       })
       .catch((err) => {
         setLogState({ loading: false, error: true });
@@ -61,27 +64,30 @@ const useModuleActions = () => {
   }, []);
 
   //UPDATE MODULE
-  const updateModule = useCallback((module: Module): Module | undefined => {
-    setLogState({ loading: true, error: false });
-    let result = undefined;
+  const updateModule = useCallback(
+    (module: ModuleFromBD): ModuleFromBD | undefined => {
+      setLogState({ loading: true, error: false });
+      let result: ModuleFromBD | undefined = undefined;
 
-    if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return undefined;
-    }
-
-    updModuleService(jwt, module)
-      .then((res) => {
-        result = res;
-        setLogState({ loading: false, error: false });
-      })
-      .catch((err) => {
+      if (!jwt) {
         setLogState({ loading: false, error: true });
-        console.error(err);
-      });
+        return undefined;
+      }
 
-    return result;
-  }, []);
+      updModuleService(jwt, module)
+        .then((res) => {
+          result = res;
+          setLogState({ loading: false, error: false });
+        })
+        .catch((err) => {
+          setLogState({ loading: false, error: true });
+          console.error(err);
+        });
+
+      return result;
+    },
+    []
+  );
 
   //DELETE MODULE
   const deleteModule = useCallback((id: string): boolean => {

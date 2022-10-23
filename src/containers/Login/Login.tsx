@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ErrorMsg from "../../components/errorMsg/ErrorMsg";
-import useLoging from "../hooks/useLoging";
+import useLoging from "../hooks/User/useLoging";
 import useUser from "../hooks/User/useUser";
 import { useNavigate } from "react-router-dom";
 import LogingComponent from "../../components/Loggin/LoginComponent";
@@ -10,9 +10,10 @@ const Login = () => {
 
   const { logValues, setUsername, setPassword } = useLoging();
   const { login, isLogged, isLogingLoading, hasLoadingError } = useUser();
+  //const [errorMsg, setErrorMsg] = useState();
 
   useEffect(() => {
-    if (isLogged) navigate("/");
+    if (isLogged) navigate("/home");
   }, [isLogged, navigate]);
 
   const handleLogin = (ev: React.FormEvent<HTMLFormElement>): void => {

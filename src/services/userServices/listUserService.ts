@@ -1,10 +1,10 @@
 import axios from "axios";
-import { User } from "../../../types";
+import { UserFromBDFilter } from "../../../types";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
 const listUsersURL = process.env.REACT_APP_USER_LIST_URL;
 
-const listUserService = (jwt: string): Promise<User[]> => {
+const listUserService = (jwt: string): Promise<UserFromBDFilter[]> => {
   if (!jwt) {
     console.error("missing jwt");
     throw new Error("missing URL");

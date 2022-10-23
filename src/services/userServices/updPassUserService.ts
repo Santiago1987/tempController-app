@@ -1,10 +1,13 @@
 import axios from "axios";
-import { User } from "../../../types";
+import { UserFromBDFilter } from "../../../types";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
 const updPassUsersURL = process.env.REACT_APP_USER_UPD_PASSWPRD;
 
-const updPassUserService = (jwt: string, password: string): Promise<User> => {
+const updPassUserService = (
+  jwt: string,
+  password: string
+): Promise<UserFromBDFilter> => {
   if (!(jwt && password)) {
     console.error("missing parameter");
     throw new Error("missing parameter");

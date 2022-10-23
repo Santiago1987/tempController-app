@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
-import { userContextType, User } from "../../../../types";
+import { userContextType, UserFromBDFilter } from "../../../../types";
 import loginService from "../../../services/userServices/loginService";
 import registerService from "../../../services/userServices/registerService";
 import listUserService from "../../../services/userServices/listUserService";
@@ -35,7 +35,7 @@ const useUser = () => {
         .catch((err) => {
           window.localStorage.removeItem("token");
           setLogState({ loading: false, error: true });
-          console.error(err);
+          console.error(err.name);
         });
     },
     [setJWT]
@@ -66,9 +66,9 @@ const useUser = () => {
   );
 
   //User list
-  const getUserList = useCallback((): User[] => {
+  const getUserList = useCallback((): UserFromBDFilter[] => {
     setLogState({ loading: true, error: false });
-    let result: User[] = [];
+    let result: UserFromBDFilter[] = [];
 
     if (!jwt) {
       setLogState({ loading: false, error: true });
@@ -88,48 +88,54 @@ const useUser = () => {
   }, []);
 
   //UPDATE EMAIL
-  const updUserEmail = useCallback((email: string): User | undefined => {
-    setLogState({ loading: true, error: false });
-    let result: User | undefined = undefined;
+  const updUserEmail = useCallback(
+    (email: string): UserFromBDFilter | undefined => {
+      setLogState({ loading: true, error: false });
+      let result: UserFromBDFilter | undefined = undefined;
 
-    if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return undefined;
-    }
-
-    updEmailUserService(jwt, email)
-      .then((res) => {
-        result = res;
-        setLogState({ loading: false, error: false });
-      })
-      .catch((err) => {
+      if (!jwt) {
         setLogState({ loading: false, error: true });
-      });
+        return undefined;
+      }
 
-    return result;
-  }, []);
+      updEmailUserService(jwt, email)
+        .then((res) => {
+          result = res;
+          setLogState({ loading: false, error: false });
+        })
+        .catch((err) => {
+          setLogState({ loading: false, error: true });
+        });
+
+      return result;
+    },
+    []
+  );
 
   //UPDATE PASSWORD
-  const updUserPassword = useCallback((password: string): User | undefined => {
-    setLogState({ loading: true, error: false });
-    let result: User | undefined = undefined;
+  const updUserPassword = useCallback(
+    (password: string): UserFromBDFilter | undefined => {
+      setLogState({ loading: true, error: false });
+      let result: UserFromBDFilter | undefined = undefined;
 
-    if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return undefined;
-    }
-
-    updPassUserService(jwt, password)
-      .then((res) => {
-        result = res;
-        setLogState({ loading: false, error: false });
-      })
-      .catch((err) => {
+      if (!jwt) {
         setLogState({ loading: false, error: true });
-      });
+        return undefined;
+      }
 
-    return result;
-  }, []);
+      updPassUserService(jwt, password)
+        .then((res) => {
+          result = res;
+          setLogState({ loading: false, error: false });
+        })
+        .catch((err) => {
+          setLogState({ loading: false, error: true });
+        });
+
+      return result;
+    },
+    []
+  );
 
   //DELETE USER
   const deleteUser = useCallback((id: string): boolean => {

@@ -35,15 +35,15 @@ const login = async (
         password,
       }
     );
-    console.log("status", status);
     if (status > 300) {
       console.log("invalid user or password");
       throw new Error("invalid user or password");
     }
     res = data;
-  } catch (err) {
-    console.error(err);
-    throw new Error("login problems");
+  } catch (error: any) {
+    let err = new Error();
+    err.name = "NETWORK_ERROR";
+    throw err;
   }
 
   return res;

@@ -1,5 +1,9 @@
 import { useCallback, useContext, useState } from "react";
-import { moduleContextType, Sensor, userContextType } from "../../../../types";
+import {
+  moduleContextType,
+  sensorReading,
+  userContextType,
+} from "../../../../types";
 import tempListService from "../../../services/sesorsServices/tempListService";
 import tempModuleListService from "../../../services/sesorsServices/tempModuleListService";
 import mapTempListFromBD from "../../../utils/mapTempListFromBD";
@@ -20,9 +24,9 @@ const useSensorActions = () => {
 
   // GET LIST TEMPERATURES FOR A SENSOR
   const getTempModuleList = useCallback(
-    (id: string, frDate: Date, toDate: Date): Sensor[] | undefined => {
+    (id: string, frDate: Date, toDate: Date): sensorReading[] | undefined => {
       setLogState({ loading: true, error: false });
-      let result: Sensor[] | undefined = undefined;
+      let result: sensorReading[] | undefined = undefined;
 
       if (!jwt) {
         setLogState({ loading: false, error: true });

@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Module } from "../../../types";
+import { ModuleFromBD } from "../../../types";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
 const moduleListURL = process.env.REACT_APP_MODULE_LIST;
 
-const listModuleService = (jwt: string): Promise<Module[]> => {
+const listModuleService = (jwt: string): Promise<ModuleFromBD[]> => {
   if (!jwt) {
     console.error("missing parameters");
     throw new Error("missing parameters");

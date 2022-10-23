@@ -1,18 +1,11 @@
-export interface User {
+export interface UserFromBD {
   userName: string;
   id: string;
   email: string;
-}
-
-export interface LoginUser extends User {
-  password: string;
-}
-
-export interface UserFromBD extends User {
   passwordHash: string;
-  id: string;
-  email: string;
 }
+
+export type UserFromBDFilter = Omit<UserFromBD, "passwordHash">;
 
 // adding a new property to Request type from express
 import { Request } from "express";
@@ -27,24 +20,24 @@ export type userContextType = {
   setJWT: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-export interface Module {
+export interface ModuleFromBD {
   chipID: string;
   name: string;
   active: boolean;
   ubication: string;
 }
 
-export interface Sensor {
+export interface sensorReading {
   sensorNumber: number;
   date: Date;
-  temperature: number;
+  temperature: number[];
   chipID: string;
 }
 
 export interface MapSensorList {
   sensorNumber: number;
   date: Date;
-  temperature: number;
+  temperature: number[];
 }
 
 export type moduleContextType = {

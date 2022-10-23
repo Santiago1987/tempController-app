@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import Module from "../models/module";
 import { loadModulelist } from "../utils/moduleList";
+import { ModuleFromBD } from "../../types";
 
 interface module {
   chipID: string;
@@ -20,7 +21,7 @@ export const registerModule = async (
   next: NextFunction
 ) => {
   const { body } = request as req;
-  let savedModule = undefined;
+  let savedModule: ModuleFromBD | undefined = undefined;
   let modexists = false;
 
   let { chipID, name, active, ubication } = body;
@@ -94,7 +95,7 @@ export const updateModule = async (
   next: NextFunction
 ) => {
   let { chipID, name, active, ubication } = request.body;
-  let data = undefined;
+  let data: ModuleFromBD | undefined | null = undefined;
 
   if (!chipID) {
     let err = new Error();
@@ -123,7 +124,7 @@ export const deleteModule = async (
   next: NextFunction
 ) => {
   let { id } = request.params;
-  let result = undefined;
+  let result: any = undefined;
 
   if (!id) {
     let err = new Error();

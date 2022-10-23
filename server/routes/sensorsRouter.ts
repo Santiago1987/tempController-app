@@ -4,12 +4,13 @@ import {
   tempModuleList,
   temperatureList,
 } from "../controllers/sensors";
+import userExtractor from "../middleware/userExtractor";
 
 const sensorsRouter = Router();
 
 sensorsRouter
   .post("/register", resgiterTemp)
-  .get("/module/:chipID", tempModuleList)
-  .get("/list", temperatureList);
+  .get("/module", userExtractor, tempModuleList)
+  .get("/list", userExtractor, temperatureList);
 
 export default sensorsRouter;

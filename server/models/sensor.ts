@@ -3,8 +3,8 @@ import { model, Schema } from "mongoose";
 const sensorSchema = new Schema({
   sensorNumber: { type: Number, required: true },
   date: { type: Date, required: true },
-  temperature: { type: Number, required: true },
-  chipID: { type: String, ref: "Module" },
+  temperature: [Number],
+  chipID: { type: String, ref: "Module", required: true },
 });
 
 sensorSchema.set("toJSON", {

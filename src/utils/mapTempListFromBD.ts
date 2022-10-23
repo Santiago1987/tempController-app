@@ -1,8 +1,11 @@
-import { Sensor, MapSensorList } from "../../types";
+import { sensorReading, MapSensorList } from "../../types";
 
 type result = { [modID: string]: MapSensorList[] };
 
-const mapTempListFromBD = (listTemp: Sensor[], modList: string[] | []) => {
+const mapTempListFromBD = (
+  listTemp: sensorReading[],
+  modList: string[] | []
+) => {
   let result: result | [] = [];
 
   for (let index in modList) {

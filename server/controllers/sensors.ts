@@ -2,13 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import moment from "moment";
 import Sensor from "../models/sensor";
 import { moduleList } from "../utils/moduleList";
-
-interface sensorReading {
-  sensorNumber: number;
-  date: Date;
-  temperature: number;
-  chipID: string;
-}
+import { sensorReading } from "../../types";
 
 export const resgiterTemp = async (
   request: Request,
@@ -16,7 +10,7 @@ export const resgiterTemp = async (
   next: NextFunction
 ) => {
   let reading = request.body as sensorReading;
-  let result = undefined;
+  let result: undefined | sensorReading = undefined;
   let { sensorNumber, date, temperature, chipID } = reading;
 
   try {
@@ -38,7 +32,7 @@ export const resgiterTemp = async (
       chipID,
     });
 
-    result = await regis.save();
+    await regis.save().then((res) => (result = res));
 
     response.status(200).send(result).end();
   } catch (err) {
@@ -60,8 +54,8 @@ export const tempModuleList = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { chipID, frdate, todate } = request.params as tempModuleList;
-  let result = undefined;
+  let { chipID, frdate, todate } = request.query as tempModuleList;
+  let result: sensorReading | undefined = undefined;
 
   try {
     if (!chipID) {
@@ -73,10 +67,10 @@ export const tempModuleList = async (
     if (!todate) todate = new Date();
     if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
 
-    result = await Sensor.find({
+    result = (await Sensor.find({
       chipID,
       fecha: { $gte: frdate, $lte: todate },
-    });
+    })) as any;
 
     response.status(200).send(result).end();
   } catch (err) {
@@ -94,12 +88,14 @@ export const temperatureList = async (
   next: NextFunction
 ) => {
   let { frdate, todate } = request.params as tempModuleList;
-  let result = undefined;
+  let result: sensorReading | undefined = undefined;
 
   if (!todate) todate = new Date();
   if (!frdate) frdate = moment(todate).add(-1, "day").toDate();
   try {
-    result = await Sensor.find({ fecha: { $gte: frdate, $lte: todate } });
+    result = (await Sensor.find({
+      fecha: { $gte: frdate, $lte: todate },
+    })) as any;
 
     response.status(200).send(result).end();
   } catch (err) {

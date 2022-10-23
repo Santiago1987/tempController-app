@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 //import { connection } from "mongoose";
 import bcrypt from "bcrypt";
-import { UserFromBD } from "../../types";
+import { UserFromBD, UserFromBDFilter } from "../../types";
 import jwt from "jsonwebtoken";
 import { extreq } from "../../types";
 
@@ -23,15 +23,15 @@ export const saveUser = async (
     }
 
     password = password.toString();
-    let passwordHash = undefined;
-    let savedUser = undefined;
-    let findUser = undefined;
+    let passwordHash: string | undefined = undefined;
+    let savedUser: UserFromBDFilter | undefined = undefined;
+    let findUser: UserFromBDFilter | undefined = undefined;
 
     // controlar que el user name no exista
 
-    findUser = await User.findOne({ userName });
+    findUser = (await User.findOne({ userName })) as UserFromBDFilter;
 
-    if (findUser) {
+    if (!findUser) {
       response.status(401).send({ error: "name already exists" }).end();
       return;
     }
@@ -45,7 +45,7 @@ export const saveUser = async (
       email,
       passwordHash,
     });
-    savedUser = await user.save();
+    savedUser = (await user.save()) as UserFromBDFilter;
 
     response.status(200).json(savedUser).end();
   } catch (err) {
@@ -72,7 +72,7 @@ export const loginUser = async (
   }
 
   try {
-    user = await User.findOne({ userName });
+    user = (await User.findOne({ userName })) as UserFromBD;
 
     if (!user) {
       response.status(401).json({ error: "invalid user or password" }).end();

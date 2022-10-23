@@ -2,9 +2,9 @@
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(23,41,199,1) 35%, rgba(0,69,255,1) 100%);
+    overflow-x: hidden;
 }
