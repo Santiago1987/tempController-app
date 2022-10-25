@@ -10,14 +10,22 @@ export const resgiterTemp = async (
   next: NextFunction
 ) => {
   let reading = request.body as sensorReading;
-  let result: undefined | sensorReading = undefined;
-  let { sensorNumber, date, temperature, chipID } = reading;
+  let result: any = undefined;
+  let { date, temperature, chipID } = reading;
+
+  if (!date) date = new Date();
 
   try {
-    if (!(sensorNumber && date && temperature && chipID)) {
+    if (!(temperature && chipID)) {
       let err = new Error();
       err.name = "missingParameters";
       throw err;
+    }
+
+    let listStr = temperature.replaceAll("'", "").split(" ");
+    let TArr: number[] = [];
+    for (let n of listStr) {
+      TArr.push(parseFloat(n));
     }
 
     if (!Boolean(moduleList.find((id) => id === chipID))) {
@@ -26,9 +34,8 @@ export const resgiterTemp = async (
       throw err;
     }
     const regis = new Sensor({
-      sensorNumber,
       date,
-      temperature,
+      temperature: TArr,
       chipID,
     });
 

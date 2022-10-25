@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { ModuleFromBD, userContextType } from "../../../../types";
 import deleteModuleService from "../../../services/modulesServices/deleteModuleService";
 import listModuleService from "../../../services/modulesServices/listModuleService";
@@ -10,109 +10,50 @@ const useModuleActions = () => {
   const { jwt } = useContext<userContextType | null>(
     UserContext
   ) as userContextType;
-  const [logState, setLogState] = useState({
-    loading: false,
-    error: false,
-  });
 
   //REGISTRO DE MODULO
   const registerModule = useCallback(
-    (module: ModuleFromBD): ModuleFromBD | undefined => {
-      setLogState({ loading: true, error: false });
-      let result: ModuleFromBD | undefined = undefined;
-
+    (module: ModuleFromBD): Promise<ModuleFromBD> => {
       if (!jwt) {
-        setLogState({ loading: false, error: true });
-        return undefined;
+        return Promise.reject(undefined);
       }
 
-      registerModuleService(jwt, module)
-        .then((res) => {
-          result = res;
-          setLogState({ loading: false, error: false });
-        })
-        .catch((err) => {
-          setLogState({ loading: false, error: true });
-          console.error(err);
-        });
-      return result;
+      return registerModuleService(jwt, module);
     },
     []
   );
 
   //LIST OF MODULES
-  const getModuleList = useCallback((): ModuleFromBD | undefined => {
-    setLogState({ loading: true, error: false });
-    let result: ModuleFromBD[] | undefined = undefined;
-
+  const getModuleList = useCallback((): Promise<ModuleFromBD[]> => {
     if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return undefined;
+      return Promise.reject(undefined);
     }
 
-    listModuleService(jwt)
-      .then((res) => {
-        setLogState({ loading: false, error: false });
-        return res;
-      })
-      .catch((err) => {
-        setLogState({ loading: false, error: true });
-        console.error(err);
-      });
-
-    return result;
+    return listModuleService(jwt);
   }, []);
 
   //UPDATE MODULE
   const updateModule = useCallback(
-    (module: ModuleFromBD): ModuleFromBD | undefined => {
-      setLogState({ loading: true, error: false });
-      let result: ModuleFromBD | undefined = undefined;
-
+    (module: ModuleFromBD): Promise<ModuleFromBD> => {
       if (!jwt) {
-        setLogState({ loading: false, error: true });
-        return undefined;
+        return Promise.reject(undefined);
       }
 
-      updModuleService(jwt, module)
-        .then((res) => {
-          result = res;
-          setLogState({ loading: false, error: false });
-        })
-        .catch((err) => {
-          setLogState({ loading: false, error: true });
-          console.error(err);
-        });
-
-      return result;
+      return updModuleService(jwt, module);
     },
     []
   );
 
   //DELETE MODULE
-  const deleteModule = useCallback((id: string): boolean => {
-    setLogState({ loading: true, error: false });
-    let result = false;
-
+  const deleteModule = useCallback((id: string): Promise<boolean> => {
     if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return false;
+      return Promise.reject(undefined);
     }
 
-    deleteModuleService(jwt, id)
-      .then((res) => {
-        result = res;
-        setLogState({ loading: false, error: res });
-      })
-      .catch((err) => {
-        setLogState({ loading: false, error: true });
-        console.error(err);
-      });
-    return result;
+    return deleteModuleService(jwt, id);
   }, []);
 
   return {
-    logState,
     registerModule,
     getModuleList,
     updateModule,

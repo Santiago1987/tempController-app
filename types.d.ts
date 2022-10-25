@@ -27,16 +27,26 @@ export interface ModuleFromBD {
   ubication: string;
 }
 
+//------------------------Sensores--------
+export interface Sensor {
+  temperature: number;
+  date: Date;
+}
+
 export interface sensorReading {
-  sensorNumber: number;
+  date: Date;
+  temperature: string;
+  chipID: string;
+}
+
+export interface sensorAfterReading {
   date: Date;
   temperature: number[];
   chipID: string;
 }
 
 export interface MapSensorList {
-  sensorNumber: number;
-  date: Date;
+  dateformat: string;
   temperature: number[];
 }
 
@@ -44,3 +54,11 @@ export type moduleContextType = {
   moduleList: string[] | [];
   setModuleList: React.Dispatch<React.SetStateAction<string[]>>;
 };
+
+export interface sensorMappingResult {
+  [modID: string]: MapSensorList[];
+}
+
+export interface moduleData {
+  [sensor: number]: [{ date: Date; temperature: number }];
+}

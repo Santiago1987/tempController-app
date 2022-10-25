@@ -1,27 +1,18 @@
-import { sensorReading, MapSensorList } from "../../types";
+import moment from "moment";
+import { sensorAfterReading, sensorMappingResult } from "../../types";
 
-type result = { [modID: string]: MapSensorList[] };
+const mapTempListFromBD = (listTemp: sensorAfterReading[]) => {
+  let result: sensorMappingResult = {};
 
-const mapTempListFromBD = (
-  listTemp: sensorReading[],
-  modList: string[] | []
-) => {
-  let result: result | [] = [];
+  for (let temps of listTemp) {
+    let { chipID, date, temperature } = temps;
 
-  for (let index in modList) {
-    let list: MapSensorList[] = [];
-    let modID: string = modList[index];
+    let dateformat = moment(date).format();
 
-    listTemp.map((sensor) => {
-      let { sensorNumber, date, temperature, chipID } = sensor;
-      if (chipID !== modID) return;
+    if (!result[chipID]) result[chipID] = [];
 
-      list.push({ sensorNumber, date, temperature });
-    });
-
-    result[modID] = list;
+    result[chipID].push({ dateformat, temperature });
   }
-
   return result;
 };
 

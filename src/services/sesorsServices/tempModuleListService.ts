@@ -1,5 +1,5 @@
 import axios from "axios";
-import { sensorReading } from "../../../types";
+import { sensorAfterReading } from "../../../types";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
 const listSensorModuleURL = process.env.REACT_APP_SENSOR_MODULE_LIST;
@@ -9,7 +9,7 @@ const tempModuleListService = (
   id: string,
   frDate: Date,
   toDate: Date
-): Promise<sensorReading[]> => {
+): Promise<sensorAfterReading[]> => {
   if (!jwt) {
     console.error("missing jwt");
     throw new Error("missing URL");
