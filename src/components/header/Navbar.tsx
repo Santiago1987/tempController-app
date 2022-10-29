@@ -46,12 +46,34 @@ const Header = () => {
               <>
                 <MenuItem>
                   <MenuItemLink
-                    to="/"
+                    to="/home"
                     onClick={() => setShotMobileMenu(!showMobileMenu)}
                   >
                     <div>
                       <FaHome />
                       HOME
+                    </div>
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink
+                    to="/modules"
+                    onClick={() => setShotMobileMenu(!showMobileMenu)}
+                  >
+                    <div>
+                      <FaDoorClosed />
+                      MODULOS
+                    </div>
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink
+                    to="/users"
+                    onClick={() => setShotMobileMenu(!showMobileMenu)}
+                  >
+                    <div>
+                      <FaDoorClosed />
+                      USUARIOS
                     </div>
                   </MenuItemLink>
                 </MenuItem>

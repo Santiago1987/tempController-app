@@ -13,7 +13,7 @@ export const saveUser = async (
   next: NextFunction
 ) => {
   const { body } = request;
-  let { userName, password, email } = body;
+  let { userName, password, email, administrator } = body;
 
   try {
     if (!(userName && password)) {
@@ -22,16 +22,16 @@ export const saveUser = async (
       throw err;
     }
 
+    if (administrator === undefined) administrator = false;
     password = password.toString();
     let passwordHash: string | undefined = undefined;
     let savedUser: UserFromBDFilter | undefined = undefined;
     let findUser: UserFromBDFilter | undefined = undefined;
 
     // controlar que el user name no exista
-
     findUser = (await User.findOne({ userName })) as UserFromBDFilter;
 
-    if (!findUser) {
+    if (findUser) {
       response.status(401).send({ error: "name already exists" }).end();
       return;
     }
@@ -44,6 +44,7 @@ export const saveUser = async (
       userName,
       email,
       passwordHash,
+      administrator,
     });
     savedUser = (await user.save()) as UserFromBDFilter;
 
@@ -79,7 +80,7 @@ export const loginUser = async (
       return;
     }
 
-    const { email, passwordHash, id } = user;
+    const { email, passwordHash, id, administrator } = user;
 
     let isPasswordCorrect = await bcrypt.compare(password, passwordHash);
 
@@ -110,7 +111,7 @@ export const loginUser = async (
       return;
     }
 
-    response.send({ email, userName, token }).status(200).end();
+    response.send({ email, userName, token, administrator }).status(200).end();
     return;
   } catch (err) {
     next(err);
@@ -192,23 +193,41 @@ export const updatePassUser = async (
 };
 
 //DELETE USER
-export const deleteUser = (
+export const deleteUser = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  let { id } = request.params;
-  if (!id) {
-    let err = new Error();
-    err.name = "missingParameters";
-    throw err;
-  }
+  let { id } = request.query;
+  let res: any = undefined;
 
-  User.deleteOne({ _id: id })
-    .then((res) => {
-      response.status(200).send(res).end();
-    })
-    .catch((err) => next(err));
+  try {
+    if (!id) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    let result = (await User.findOne({ _id: id })) as any;
+
+    if (!result) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    if (result.administrator) {
+      let err = new Error();
+      err.name = "administratorUser";
+      throw err;
+    }
+
+    res = await User.deleteOne({ _id: id });
+
+    response.status(200).send(res).end();
+  } catch (err) {
+    next(err);
+  }
 
   return;
 };

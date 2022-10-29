@@ -12,7 +12,7 @@ const useModuleActions = () => {
   ) as userContextType;
 
   //REGISTRO DE MODULO
-  const registerModule = useCallback(
+  const registerModuleOnBD = useCallback(
     (module: ModuleFromBD): Promise<ModuleFromBD> => {
       if (!jwt) {
         return Promise.reject(undefined);
@@ -54,7 +54,7 @@ const useModuleActions = () => {
   }, []);
 
   return {
-    registerModule,
+    registerModuleOnBD,
     getModuleList,
     updateModule,
     deleteModule,

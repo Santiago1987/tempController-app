@@ -22,9 +22,11 @@ const DateSelection = ({
           <DatePicker
             selected={new Date(frDate)}
             onChange={handleOnChangeFrDate}
-            dateFormat="dd/MM/yyyy"
+            dateFormat="dd/MM/yyyy HH:mm"
+            timeIntervals={10}
             maxDate={new Date(toDate)}
             startDate={new Date(frDate)}
+            showTimeSelect
           />
         </div>
         <div>
@@ -32,9 +34,11 @@ const DateSelection = ({
           <DatePicker
             selected={new Date(toDate)}
             onChange={handleOnChangeToDate}
-            dateFormat="dd/MM/yyyy"
+            dateFormat="dd/MM/yyyy HH:mm"
+            timeIntervals={10}
             minDate={new Date(frDate)}
             enDate={new Date(toDate)}
+            showTimeSelect
           />
         </div>
       </div>

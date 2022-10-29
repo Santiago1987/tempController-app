@@ -8,6 +8,7 @@ interface module {
   name?: string;
   active: boolean;
   ubication?: string;
+  sensors?: [{ name: string; active: string }];
 }
 
 interface req {
@@ -21,7 +22,7 @@ export const registerModule = async (
   next: NextFunction
 ) => {
   const { body } = request as req;
-  let savedModule: ModuleFromBD | undefined = undefined;
+  let savedModule: any = undefined;
   let modexists = false;
 
   let { chipID, name, active, ubication } = body;
@@ -75,8 +76,8 @@ export const listModules = async (
     list = await Module.find();
 
     list.map((mod) => {
-      let { chipID, name, active, ubication } = mod;
-      result.push({ chipID, name, active, ubication });
+      let { chipID, name, active, ubication, sensors } = mod;
+      result.push({ chipID, name, active, ubication, sensors });
     });
 
     response.status(200).send(result).end();
@@ -123,16 +124,15 @@ export const deleteModule = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { id } = request.params;
+  let { id } = request.body;
   let result: any = undefined;
-
-  if (!id) {
-    let err = new Error();
-    err.name = "missingParameters";
-    throw err;
-  }
-
   try {
+    if (!id) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
     result = await Module.deleteOne({ chipID: id });
 
     response.status(200).send(result).end();

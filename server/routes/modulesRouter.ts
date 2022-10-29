@@ -12,6 +12,6 @@ modulesRouter
   .post("/register", registerModule)
   .get("/list", listModules)
   .put("/update", updateModule)
-  .delete("/delete/:id", deleteModule);
+  .delete("/delete", deleteModule);
 
 export default modulesRouter;

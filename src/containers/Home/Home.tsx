@@ -11,17 +11,23 @@ import { sensorMappingResult } from "../../../types";
 import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
 
-type modules = { chipID: string; name: string }[] | [];
+type modules =
+  | {
+      chipID: string;
+      name: string;
+      sensors: [{ name: string; active: boolean }] | [];
+    }[]
+  | [];
 type selecModule = { chipID: string; sensors: boolean[] };
 
 const Home: React.FC = () => {
-  const { isLogged } = useUser();
+  const { isLogged, logout } = useUser();
   const navigate = useNavigate();
   const { getModuleList } = useModuleActions();
   const { getTempList } = useSensorActions();
 
   const [dates, setDates] = useState({
-    frDate: moment().subtract(1, "day").format(),
+    frDate: moment().format(),
     toDate: moment().format(),
   });
 
@@ -42,13 +48,19 @@ const Home: React.FC = () => {
     getModuleList()
       .then((res) => {
         let result = res.map((m) => {
-          let { chipID, name } = m;
-          return { chipID, name };
+          let { chipID, name, sensors } = m;
+          return { chipID, name, sensors };
         });
+
         setModules(result);
+        setDates({
+          frDate: moment().subtract(1, "day").format(),
+          toDate: moment().format(),
+        });
       })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
+          logout();
           navigate("/login");
           return;
         }
@@ -59,16 +71,26 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (modules.length < 1) return;
     let { frDate, toDate } = dates;
-    getTempList(frDate, toDate).then(mapTempListFromBd).then(setTemps);
-  }, [dates, modules]);
+
+    getTempList(frDate, toDate)
+      .then(mapTempListFromBd)
+      .then(setTemps)
+      .catch((err) => {
+        if (err.response.data.error === "token expired") {
+          logout();
+          navigate("/login");
+          return;
+        }
+      });
+  }, [dates]);
 
   // DATE FUNCTIONS
   const handleOnChangeFrDate = (date) => {
-    setDates({ ...dates, frDate: date });
+    setDates({ ...dates, frDate: moment(date).format() });
   };
 
   const handleOnChangeToDate = (date) => {
-    setDates({ ...dates, toDate: date });
+    setDates({ ...dates, toDate: moment(date).format() });
   };
 
   return (

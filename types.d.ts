@@ -3,9 +3,12 @@ export interface UserFromBD {
   id: string;
   email: string;
   passwordHash: string;
+  administrator: boolean;
 }
 
 export type UserFromBDFilter = Omit<UserFromBD, "passwordHash">;
+
+export type UserManag = Omit<UserFromBD, "passwordHash" | "administrator">;
 
 // adding a new property to Request type from express
 import { Request } from "express";
@@ -25,6 +28,7 @@ export interface ModuleFromBD {
   name: string;
   active: boolean;
   ubication: string;
+  sensors: [{ name: string; active: boolean }] | [];
 }
 
 //------------------------Sensores--------

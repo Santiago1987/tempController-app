@@ -21,13 +21,16 @@ const updModuleService = (
   let { chipID, name, active, ubication } = module;
 
   return axios
-    .put(`${serverURL}${updModuleURL}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: { chipID, name, active, ubication },
-    })
+    .put(
+      `${serverURL}${updModuleURL}`,
+      { chipID, name, active, ubication },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    )
     .then((res) => {
       if (res.status !== 200) throw new Error("Response is not ok");
       return res.data;

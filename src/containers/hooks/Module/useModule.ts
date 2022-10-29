@@ -1,6 +1,8 @@
 import { useCallback, useReducer } from "react";
 import { ModuleFromBD } from "../../../../types";
 
+type stateMod = Omit<ModuleFromBD, "sensors">;
+
 type moduleReducerAction =
   | {
       type: "set_chipID";
@@ -27,7 +29,7 @@ const iniStateModule = {
 };
 
 const moduleReducer = (
-  state: ModuleFromBD,
+  state: stateMod,
   { type, payload }: moduleReducerAction
 ) => {
   switch (type) {
@@ -49,14 +51,17 @@ const useModule = () => {
   );
 
   const setChipID = useCallback((id: string) => {
+    // checkear longitud de chip id
     setRegisterModule({ type: "set_chipID", payload: id });
   }, []);
 
   const setName = useCallback((name: string) => {
+    if (name.length > 20) return;
     setRegisterModule({ type: "set_name", payload: name });
   }, []);
 
   const setUbication = useCallback((ubication: string) => {
+    if (ubication.length > 20) return;
     setRegisterModule({ type: "set_ubication", payload: ubication });
   }, []);
 

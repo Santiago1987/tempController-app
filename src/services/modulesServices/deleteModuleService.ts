@@ -14,18 +14,13 @@ const deleteModuleService = (jwt: string, id: string): Promise<boolean> => {
     throw new Error("missing server URL");
   }
 
-  return axios
-    .delete(`${serverURL}${deleteModuleURL}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-      params: { id },
-    })
-    .then((res) => {
-      if (res.status !== 200) false;
-      return true;
-    });
+  return axios.delete(`${serverURL}${deleteModuleURL}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+    data: { id },
+  });
 };
 
 export default deleteModuleService;

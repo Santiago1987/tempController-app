@@ -21,7 +21,9 @@ export default (req: extreq, res: Response, next: NextFunction) => {
   }
 
   if (!decodedToken) {
-    return res.status(500).json({ error: "missing token or invalid" });
+    let err = new Error();
+    err.name = "JsonWebTokenError";
+    throw err;
   }
 
   const { id: userID } = decodedToken as any;

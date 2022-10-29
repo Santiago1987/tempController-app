@@ -24,6 +24,6 @@ usersRouter.put("/upd/email", userExtractor, updateEmailUser);
 
 usersRouter.put("/upd/password", userExtractor, updatePassUser);
 
-usersRouter.delete("/delete/:id", userExtractor, deleteUser);
+usersRouter.delete("/delete", userExtractor, deleteUser);
 
 export default usersRouter;

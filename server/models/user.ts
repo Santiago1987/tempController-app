@@ -3,7 +3,8 @@ import { Schema, model } from "mongoose";
 const userSchema = new Schema({
   email: { type: String, require: true },
   userName: { type: String, required: true },
-  passwordHash: { type: String, require: true },
+  passwordHash: { type: String, required: true },
+  administrator: { type: Boolean, required: true },
 });
 
 userSchema.set("toJSON", {

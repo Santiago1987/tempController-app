@@ -19,6 +19,12 @@ const ERROR_HANDLERS: any = {
   moduleNotExists: (res: Response) =>
     res.status(401).send({ error: "module does not exists" }).end(),
 
+  administratorUser: (res: Response) =>
+    res
+      .status(401)
+      .send({ error: "administrator user can't be deleted" })
+      .end(),
+
   defaultError: (res: Response) => res.status(500).end(),
 };
 

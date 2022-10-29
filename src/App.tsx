@@ -9,6 +9,8 @@ import Header from "./components/header/Navbar";
 import Login from "./containers/Login/Login";
 import Register from "./containers/Register/Register";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
+import Module from "./containers/Module/Module";
+import User from "./containers/Users/User";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/modules" element={<Module />} />
+          <Route path="/users" element={<User />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </ModuleProvider>
