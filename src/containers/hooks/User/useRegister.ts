@@ -1,9 +1,10 @@
 import { useCallback, useReducer } from "react";
 
 interface Register {
-  username: string;
+  userName: string;
   password: string;
   email: string;
+  telephone: string;
 }
 
 type registerReducerAction =
@@ -12,12 +13,14 @@ type registerReducerAction =
       type: "set_password";
       payload: string;
     }
-  | { type: "set_email"; payload: string };
+  | { type: "set_email"; payload: string }
+  | { type: "set_telephone"; payload: string };
 
 const initStateRegister = {
-  username: "",
+  userName: "",
   password: "",
   email: "",
+  telephone: "",
 };
 
 const registerReducer = (
@@ -26,11 +29,13 @@ const registerReducer = (
 ) => {
   switch (type) {
     case "set_username":
-      return { ...state, username: payload };
+      return { ...state, userName: payload };
     case "set_password":
       return { ...state, password: payload };
     case "set_email":
       return { ...state, email: payload };
+    case "set_telephone":
+      return { ...state, telephone: payload };
   }
 };
 
@@ -40,8 +45,8 @@ const useRegister = () => {
     initStateRegister
   );
 
-  const setUsername = useCallback((username: string): void => {
-    setRegisterValues({ type: "set_username", payload: username });
+  const setUsername = useCallback((userName: string): void => {
+    setRegisterValues({ type: "set_username", payload: userName });
   }, []);
 
   const setPassword = useCallback((password: string): void => {
@@ -52,7 +57,11 @@ const useRegister = () => {
     setRegisterValues({ type: "set_email", payload: email });
   }, []);
 
-  return { registerValues, setUsername, setPassword, setEmail };
+  const setTelephone = useCallback((telephone: string) => {
+    setRegisterValues({ type: "set_telephone", payload: telephone });
+  }, []);
+
+  return { registerValues, setUsername, setPassword, setEmail, setTelephone };
 };
 
 export default useRegister;

@@ -1,10 +1,15 @@
 import { useCallback, useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
-import { userContextType, UserFromBDFilter } from "../../../../types";
+import {
+  userContextType,
+  UserFromBDFilter,
+  UserUpd,
+  UserRegisterUpdInterface,
+} from "../../../../types";
 import loginService from "../../../services/userServices/loginService";
 import registerService from "../../../services/userServices/registerService";
 import listUserService from "../../../services/userServices/listUserService";
-import updEmailUserService from "../../../services/userServices/updEmlService";
+import updEmailUserService from "../../../services/userServices/updUserInfo";
 import updPassUserService from "../../../services/userServices/updPassUserService";
 import deleteUserService from "../../../services/userServices/deleteUserService";
 
@@ -48,15 +53,18 @@ const useUser = () => {
   }, [setJWT]);
 
   // Register
-  const register = useCallback(
-    (username: string, password: string, email: string): Promise<boolean> => {
-      return registerService(username, password, email);
+  const registerUser = useCallback(
+    (user: UserRegisterUpdInterface): Promise<UserRegisterUpdInterface> => {
+      if (!jwt) {
+        return Promise.reject(undefined);
+      }
+      return registerService(jwt, user);
     },
     []
   );
 
   //User list
-  const getUserList = useCallback((): Promise<UserFromBDFilter[]> => {
+  const getUserList = useCallback((): Promise<UserRegisterUpdInterface[]> => {
     if (!jwt) {
       setLogState({ loading: false, error: true });
       return Promise.reject(undefined);
@@ -66,27 +74,24 @@ const useUser = () => {
   }, []);
 
   //UPDATE EMAIL
-  const updUserEmail = useCallback(
-    (email: string): Promise<UserFromBDFilter> => {
+  const updUserInfo = useCallback(
+    (user: UserUpd): Promise<UserFromBDFilter> => {
       if (!jwt) {
-        setLogState({ loading: false, error: true });
         return Promise.reject(undefined);
       }
-
-      return updEmailUserService(jwt, email);
+      return updEmailUserService(jwt, user);
     },
     []
   );
 
   //UPDATE PASSWORD
   const updUserPassword = useCallback(
-    (password: string): Promise<UserFromBDFilter> => {
+    (id: string, password: string): Promise<UserFromBDFilter> => {
       if (!jwt) {
-        setLogState({ loading: false, error: true });
         return Promise.reject(undefined);
       }
 
-      return updPassUserService(jwt, password);
+      return updPassUserService(jwt, password, id);
     },
     []
   );
@@ -109,9 +114,9 @@ const useUser = () => {
     logout,
     isLogingLoading: logState.loading,
     hasLoadingError: logState.error,
-    register,
+    registerUser,
     getUserList,
-    updUserEmail,
+    updUserInfo,
     updUserPassword,
     deleteUser,
   };

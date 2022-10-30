@@ -67,7 +67,7 @@ export const WrapperInput = styled.div`
 `;
 
 export const Input = styled.input`
-  font-size: 16px;
+  font-size: 20px;
   color: #fff;
   line-height: 1.2;
   display: block;

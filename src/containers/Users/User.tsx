@@ -1,23 +1,37 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { UserManag } from "../../../types";
+import { UserRegisterUpdInterface } from "../../../types";
 import UserComponent from "../../components/Users/UserComponent";
 import useUser from "../hooks/User/useUser";
+import UserUpdatePass from "./UserUpdatePass";
+import UserRegisterUpd from "../Register/UserRegisterUpd";
 
 const User = () => {
   //LIST DE USUARIOS
-  const [userList, setUserList] = useState<UserManag[]>([]);
+  const [userList, setUserList] = useState<UserRegisterUpdInterface[]>([]);
 
   //COTROL DE LOGEO
-  const { isLogged, logout, getUserList } = useUser();
+  const { isLogged, logout, getUserList, deleteUser } = useUser();
   const navigate = useNavigate();
 
   //BANDERA PARA INDICAR CUANDO ESTA BUSCANDO EN BD
   const [isLoading, seIsLoading] = useState(false);
 
-  //TOOGLE PARA OCULTAR O NO EL FORMA DE REGISTRO
-  const [hiddRegBut, setHiddRegBut] = useState(false);
+  const [reloadUserList, setReloadUserList] = useState(false);
+
+  const [passwordHide, setPasswordHide] = useState(true);
+
+  const [selectedUser, setSelectedUser] = useState<UserRegisterUpdInterface>({
+    id: "",
+    userName: "",
+    email: "",
+    telephone: "",
+    password: "",
+  });
+
+  //BANDERA PARA SAVER SI ESTA EN EDITING MODE
+  const [isRegister, setIsRegister] = useState(false);
 
   useEffect(() => {
     if (!isLogged) {
@@ -29,8 +43,8 @@ const User = () => {
     getUserList()
       .then((res) => {
         let result = res.map((us) => {
-          let { userName, email, id } = us;
-          return { userName, email, id };
+          let { userName, email, id, telephone } = us;
+          return { userName, email, id, telephone, password: "" };
         });
 
         setUserList(result);
@@ -43,48 +57,78 @@ const User = () => {
         }
       })
       .finally(() => seIsLoading(false));
-  }, []);
+  }, [reloadUserList]);
+
+  const handleOnClickEdit = (id) => {
+    let selus = userList.find((us) => us.id === id);
+    if (!selus) return;
+
+    setSelectedUser(selus);
+    setIsRegister(false);
+  };
+
+  const handleOnClickDelete = (id) => {
+    if (!id) return;
+
+    deleteUser(id)
+      .then((res) => reloadUsers())
+      .catch((err) => {
+        if (err.response.data.error === "token expired") {
+          logout();
+          navigate("/login");
+          return;
+        }
+        console.log("Error", err);
+      });
+  };
+
+  const reloadUsers = () => {
+    setReloadUserList(!reloadUserList);
+  };
 
   //---------------------------------------------------------
-  //BOTNONES DE REGISTRO
-  const handleOnClickRegister = (
-    ev: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
-    setHiddRegBut(true);
+  //PASSWORD MANAGER
+  const handleOnClickChangePass = (id: string): void => {
+    setPasswordHide(false);
   };
 
-  const handleOnClickCancelRegister = () => {
-    setHiddRegBut(false);
-  };
-
-  //GUARDADO EN BD
-  const handleOnClickSave = (
-    ev: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
-    setHiddRegBut(!hiddRegBut);
-    //REGISTRO DE MODULO
-  };
   //---------------------------------------------------------
-
-  const handleOnChange = () => {};
 
   return (
     <>
       <h2>Usuarios</h2>
-      <button hidden={hiddRegBut} onClick={handleOnClickRegister}>
-        Registrar nuevo usuario
-      </button>
-      <button hidden={!hiddRegBut} onClick={handleOnClickSave}>
-        Guardar cambios
-      </button>
-      <button hidden={!hiddRegBut} onClick={handleOnClickCancelRegister}>
-        Cancelar
-      </button>
+      {passwordHide ? (
+        <UserRegisterUpd
+          user={selectedUser}
+          isRegister={isRegister}
+          reloadUsers={reloadUsers}
+        />
+      ) : (
+        <></>
+      )}
+      {passwordHide ? (
+        <></>
+      ) : (
+        <UserUpdatePass
+          id={selectedUser.id}
+          setPasswordHide={setPasswordHide}
+        />
+      )}
       {isLoading ? (
         <h2>Loading....</h2>
       ) : (
         userList.map((us) => {
-          return <UserComponent user={us} handleOnChange={handleOnChange} />;
+          return (
+            <UserComponent
+              key={us.id}
+              user={{ ...us, password: "" }}
+              display={false}
+              handleOnClickEdit={handleOnClickEdit}
+              handleOnClickDelete={handleOnClickDelete}
+              hiddePass={true}
+              handleOnClickChangePass={handleOnClickChangePass}
+            />
+          );
         })
       )}
     </>

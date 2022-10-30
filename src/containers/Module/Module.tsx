@@ -84,7 +84,10 @@ const Module = () => {
     setHiddRegBut(!hiddRegBut);
     //REGISTRO DE MODULO
     if (!isEditing) {
-      registerModuleOnBD({ ...registerModule, sensors: [] })
+      registerModuleOnBD({
+        ...registerModule,
+        sensors: [{ name: "", active: false }],
+      })
         .then((res) => {
           setModuleList([...modulList, res]);
         })
@@ -101,7 +104,7 @@ const Module = () => {
     }
 
     //EDICION DE MODULO
-    updateModule({ ...registerModule, sensors: [] })
+    updateModule({ ...registerModule, sensors: [{ name: "", active: false }] })
       .then((res) => {
         let updModList = modulList.map((m) => {
           if (m.chipID === res.chipID) {
@@ -135,7 +138,6 @@ const Module = () => {
   };
 
   const handleOnClickEdit = (id) => {
-    console.log(id);
     let moduEdit = modulList.find((m) => m.chipID === id);
     if (!moduEdit) return;
 
@@ -171,7 +173,7 @@ const Module = () => {
           navigate("/login");
           return;
         }
-        console.log("errrrrrr", err);
+        console.log("Error", err);
       })
       .finally(() => seIsLoading(false));
   };

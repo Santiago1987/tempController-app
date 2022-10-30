@@ -6,7 +6,8 @@ const updPassUsersURL = process.env.REACT_APP_USER_UPD_PASSWPRD;
 
 const updPassUserService = (
   jwt: string,
-  password: string
+  password: string,
+  id: string
 ): Promise<UserFromBDFilter> => {
   if (!(jwt && password)) {
     console.error("missing parameter");
@@ -19,13 +20,16 @@ const updPassUserService = (
   }
 
   return axios
-    .put(`${serverURL}${updPassUsersURL}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: { password },
-    })
+    .put(
+      `${serverURL}${updPassUsersURL}`,
+      { password, id },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    )
     .then((res) => {
       if (res.status !== 200) throw new Error("Response is not ok");
       return res.data;

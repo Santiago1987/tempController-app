@@ -13,7 +13,7 @@ export const saveUser = async (
   next: NextFunction
 ) => {
   const { body } = request;
-  let { userName, password, email, administrator } = body;
+  let { userName, password, email, administrator, telephone } = body;
 
   try {
     if (!(userName && password)) {
@@ -25,7 +25,7 @@ export const saveUser = async (
     if (administrator === undefined) administrator = false;
     password = password.toString();
     let passwordHash: string | undefined = undefined;
-    let savedUser: UserFromBDFilter | undefined = undefined;
+    let savedUser: any = undefined;
     let findUser: UserFromBDFilter | undefined = undefined;
 
     // controlar que el user name no exista
@@ -45,8 +45,9 @@ export const saveUser = async (
       email,
       passwordHash,
       administrator,
+      telephone,
     });
-    savedUser = (await user.save()) as UserFromBDFilter;
+    savedUser = await user.save();
 
     response.status(200).json(savedUser).end();
   } catch (err) {
@@ -136,25 +137,31 @@ export const listUsers = async (
 };
 
 // ACTUALIZAR USUARIO
-export const updateEmailUser = (
+export const updUserInfo = async (
   request: extreq,
   response: Response,
   next: NextFunction
 ) => {
   let { userID, body } = request;
-  let { email } = body;
+  let { email, telephone, userName } = body;
 
-  if (!userID || !email) {
-    let err = new Error();
-    err.name = "missingParameters";
-    throw err;
+  try {
+    if (!userID) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    let result = await User.findOneAndUpdate(
+      { userID },
+      { $set: { email, telephone, userName } },
+      { new: true }
+    );
+
+    response.status(200).send(result).end();
+  } catch (err) {
+    next();
   }
-
-  User.findOneAndUpdate({ userID }, { $set: { email } }, { new: true })
-    .then((res) => {
-      response.status(200).send(res).end();
-    })
-    .catch((err) => next(err));
 
   return;
 };

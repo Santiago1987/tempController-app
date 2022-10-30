@@ -3,7 +3,7 @@ import {
   saveUser,
   loginUser,
   listUsers,
-  updateEmailUser,
+  updUserInfo,
   updatePassUser,
   deleteUser,
 } from "../controllers/users";
@@ -20,7 +20,7 @@ usersRouter.post("/login", loginUser);
 // lista de usuario
 usersRouter.get("/list", userExtractor, listUsers);
 
-usersRouter.put("/upd/email", userExtractor, updateEmailUser);
+usersRouter.put("/upd/info", userExtractor, updUserInfo);
 
 usersRouter.put("/upd/password", userExtractor, updatePassUser);
 

@@ -7,7 +7,6 @@ import "./styles/app.css";
 import Home from "./containers/Home/Home";
 import Header from "./components/header/Navbar";
 import Login from "./containers/Login/Login";
-import Register from "./containers/Register/Register";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import Module from "./containers/Module/Module";
 import User from "./containers/Users/User";
@@ -19,7 +18,6 @@ function App() {
         <Header />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/modules" element={<Module />} />
           <Route path="/users" element={<User />} />

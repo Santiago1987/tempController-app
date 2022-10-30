@@ -6,7 +6,7 @@ import moment from "moment";
 
 type props = {
   dataComplete: sensorMappingResult | [];
-  selectedModule: { chipID: string; sensors: boolean[] };
+  selectedModule: { chipID: string; sensors: boolean[] } | undefined;
 };
 
 const Graphic = ({ dataComplete, selectedModule }: props) => {
@@ -36,7 +36,7 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
 
   // DATA FORMATING
   useEffect(() => {
-    if (!(selectedModule || dataComplete)) return;
+    if (!(selectedModule && dataComplete)) return;
     setLoading(true);
     let { chipID } = selectedModule;
     let data = dataComplete[chipID];
@@ -63,6 +63,7 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
 
   useEffect(() => {
     if (loading) return;
+    if (!selectedModule) return;
     let Xcategori: string[] = [];
     let Ydata: number[] = [];
     let selectedSensor;

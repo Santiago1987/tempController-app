@@ -19,7 +19,7 @@ const deleteModuleService = (jwt: string, id: string): Promise<boolean> => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
-    data: { id },
+    params: { id },
   });
 };
 
