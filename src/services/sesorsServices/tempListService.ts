@@ -31,7 +31,6 @@ const tempListService = (
       },
     })
     .then((res) => {
-      if (res.status !== 200) throw new Error("Response is not ok");
       return res.data;
     });
 };

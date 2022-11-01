@@ -15,6 +15,9 @@ export const saveUser = async (
   const { body } = request;
   let { userName, password, email, administrator, telephone } = body;
 
+  email ??= "";
+  telephone ??= "";
+
   try {
     if (!(userName && password)) {
       let err = new Error();
@@ -142,18 +145,19 @@ export const updUserInfo = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { userID, body } = request;
-  let { email, telephone, userName } = body;
+  let { body } = request;
+  let { id, email, telephone, userName } = body;
+  console.log(id);
 
   try {
-    if (!userID) {
+    if (!id) {
       let err = new Error();
       err.name = "missingParameters";
       throw err;
     }
 
     let result = await User.findOneAndUpdate(
-      { userID },
+      { _id: id },
       { $set: { email, telephone, userName } },
       { new: true }
     );
@@ -172,10 +176,10 @@ export const updatePassUser = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { userID, body } = request;
-  let { password } = body;
+  let { body } = request;
+  let { id, password } = body;
 
-  if (!(userID && password)) {
+  if (!(id && password)) {
     let err = new Error();
     err.name = "missingParameters";
     throw err;
@@ -186,7 +190,7 @@ export const updatePassUser = async (
     let passwordHash = await bcrypt.hash(password, 10);
 
     let data = await User.findOneAndUpdate(
-      { userID },
+      { _id: id },
       { $set: { passwordHash } },
       { new: true }
     );

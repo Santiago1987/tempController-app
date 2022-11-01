@@ -16,14 +16,13 @@ import {
   FaDoorOpen,
   FaDoorClosed,
   FaHome,
-  FaPenAlt,
   FaTimes,
 } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
 const Header = () => {
   const [showMobileMenu, setShotMobileMenu] = useState(false);
-  const { isLogged, logout } = useUser();
+  const { isLogged, logout, isAdministrator } = useUser();
 
   const handleLogOut = () => {
     setShotMobileMenu(!showMobileMenu);
@@ -55,28 +54,46 @@ const Header = () => {
                     </div>
                   </MenuItemLink>
                 </MenuItem>
-                <MenuItem>
-                  <MenuItemLink
-                    to="/modules"
-                    onClick={() => setShotMobileMenu(!showMobileMenu)}
-                  >
-                    <div>
-                      <FaDoorClosed />
-                      MODULOS
-                    </div>
-                  </MenuItemLink>
-                </MenuItem>
-                <MenuItem>
-                  <MenuItemLink
-                    to="/users"
-                    onClick={() => setShotMobileMenu(!showMobileMenu)}
-                  >
-                    <div>
-                      <FaDoorClosed />
-                      USUARIOS
-                    </div>
-                  </MenuItemLink>
-                </MenuItem>
+                {isAdministrator === "true" ? (
+                  <>
+                    <MenuItem>
+                      <MenuItemLink
+                        to="/modules"
+                        onClick={() => setShotMobileMenu(!showMobileMenu)}
+                      >
+                        <div>
+                          <FaDoorClosed />
+                          MODULOS
+                        </div>
+                      </MenuItemLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink
+                        to="/users"
+                        onClick={() => setShotMobileMenu(!showMobileMenu)}
+                      >
+                        <div>
+                          <FaDoorClosed />
+                          USUARIOS
+                        </div>
+                      </MenuItemLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink
+                        to="/sensors"
+                        onClick={() => setShotMobileMenu(!showMobileMenu)}
+                      >
+                        <div>
+                          <FaDoorClosed />
+                          SENSORES
+                        </div>
+                      </MenuItemLink>
+                    </MenuItem>
+                  </>
+                ) : (
+                  <></>
+                )}
+
                 <MenuItem>
                   <MenuItemLink to="/login" onClick={handleLogOut}>
                     <div>
@@ -96,17 +113,6 @@ const Header = () => {
                     <div>
                       <FaDoorOpen />
                       LOGIN
-                    </div>
-                  </MenuItemLink>
-                </MenuItem>
-                <MenuItem>
-                  <MenuItemLink
-                    to="/register"
-                    onClick={() => setShotMobileMenu(!showMobileMenu)}
-                  >
-                    <div>
-                      <FaPenAlt />
-                      REGISTER
                     </div>
                   </MenuItemLink>
                 </MenuItem>

@@ -27,11 +27,10 @@ const ModuleSelection = ({
         ))}
       </select>
       <label>Sensores</label>
-
       <ol>
         {sensorsList.map((sen, index) => {
           let { name, active } = sen;
-          if (!active) return <></>;
+          if (!active) return <div key={index}></div>;
 
           return (
             <li key={index}>

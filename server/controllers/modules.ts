@@ -8,7 +8,7 @@ interface module {
   name?: string;
   active: boolean;
   ubication?: string;
-  sensors?: [{ name: string; active: string }];
+  sensors?: { name: string; active: string }[];
 }
 
 interface req {
@@ -70,17 +70,10 @@ export const listModules = async (
   next: NextFunction
 ) => {
   let list: module[] = [];
-  let result: module[] = [];
 
   try {
     list = await Module.find();
-
-    list.map((mod) => {
-      let { chipID, name, active, ubication, sensors } = mod;
-      result.push({ chipID, name, active, ubication, sensors });
-    });
-
-    response.status(200).send(result).end();
+    response.status(200).send(list).end();
     return;
   } catch (err) {
     next(err);
@@ -97,17 +90,44 @@ export const updateModule = async (
 ) => {
   let { chipID, name, active, ubication } = request.body;
   let data: ModuleFromBD | undefined | null = undefined;
-
-  if (!chipID) {
-    let err = new Error();
-    err.name = "missingParameters";
-    throw err;
-  }
-
   try {
+    if (!chipID) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
     data = await Module.findOneAndUpdate(
       { chipID },
       { $set: { name, active, ubication } },
+      { new: true }
+    );
+
+    response.status(200).send(data).end();
+    return;
+  } catch (err) {
+    next(err);
+  }
+  return;
+};
+
+export const updateModuleSensor = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  let { chipID, sensors } = request.body;
+  let data: ModuleFromBD | undefined | null = undefined;
+  try {
+    if (!chipID) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+    }
+
+    data = await Module.findOneAndUpdate(
+      { chipID },
+      { $set: { sensors } },
       { new: true }
     );
 

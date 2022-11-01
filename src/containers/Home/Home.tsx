@@ -51,12 +51,19 @@ const Home: React.FC = () => {
         }
 
         setModules(result);
-        console.log("result", result);
+
         setDates({
           frDate: moment().subtract(1, "day").format(),
           toDate: moment().format(),
         });
+        //DEFAULT MODULE
         setDefaultModule(result[0]);
+
+        //SELECTED MODULE INIT
+        setSelectedModule({
+          chipID: result[0].chipID,
+          sensors: [true, false, false, false, false, false],
+        });
       })
       .catch((err) => {
         if (err.response.data.error === "token expired") {

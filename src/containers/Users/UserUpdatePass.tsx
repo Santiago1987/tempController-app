@@ -22,9 +22,11 @@ const UserUpdatePass = ({ id, setPasswordHide }: props) => {
 
   //--------------------------------------------------------
   const handleOnClickSavePass = (
+    ev: React.FormEvent<HTMLFormElement>,
     passwordOne: string,
     passwordTwo: string
   ): void => {
+    ev.preventDefault();
     if (passwordOne.length < 8) return;
     if (passwordOne !== passwordTwo) return;
 

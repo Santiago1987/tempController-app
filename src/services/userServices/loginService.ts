@@ -5,6 +5,7 @@ type userResponseFromApi =
       name: string;
       userName: string;
       token: string;
+      administrator: boolean;
     }
   | undefined;
 

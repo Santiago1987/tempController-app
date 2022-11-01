@@ -5,7 +5,7 @@ const serverURL = process.env.REACT_APP_SERVER_URL;
 const updEmlUserURL = process.env.REACT_APP_USER_UPD_INFO;
 
 const updUserInfo = (jwt: string, user: UserUpd): Promise<UserFromBDFilter> => {
-  let { userName, telephone, email } = user;
+  let { id, userName, telephone, email } = user;
   if (!jwt) {
     console.error("missing parameters");
     throw new Error("missing parameters");
@@ -15,17 +15,21 @@ const updUserInfo = (jwt: string, user: UserUpd): Promise<UserFromBDFilter> => {
     console.error("missing server URL");
     throw new Error("missing server URL");
   }
-  console.log("ads", `${serverURL}${updEmlUserURL}`);
-  return axios.put(
-    `${serverURL}${updEmlUserURL}`,
-    { userName, telephone, email },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    }
-  );
+  console.log(id, userName, telephone, email);
+  return axios
+    .put(
+      `${serverURL}${updEmlUserURL}`,
+      { id, userName, telephone, email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    )
+    .then((res) => {
+      return res.data;
+    });
 };
 
 export default updUserInfo;

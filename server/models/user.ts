@@ -1,11 +1,11 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-  email: { type: String, require: true },
+  email: { type: String, require: false },
   userName: { type: String, required: true },
   passwordHash: { type: String, required: true },
   administrator: { type: Boolean, required: true },
-  telephone: { type: String, required: true },
+  telephone: { type: String, required: false },
 });
 
 userSchema.set("toJSON", {

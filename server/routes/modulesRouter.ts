@@ -4,6 +4,7 @@ import {
   listModules,
   registerModule,
   updateModule,
+  updateModuleSensor,
 } from "../controllers/modules";
 
 const modulesRouter = Router();
@@ -12,6 +13,7 @@ modulesRouter
   .post("/register", registerModule)
   .get("/list", listModules)
   .put("/update", updateModule)
-  .delete("/delete", deleteModule);
+  .delete("/delete", deleteModule)
+  .put("/update/sensors", updateModuleSensor);
 
 export default modulesRouter;

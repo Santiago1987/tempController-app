@@ -12,7 +12,8 @@ const User = () => {
   const [userList, setUserList] = useState<UserRegisterUpdInterface[]>([]);
 
   //COTROL DE LOGEO
-  const { isLogged, logout, getUserList, deleteUser } = useUser();
+  const { isLogged, logout, getUserList, deleteUser, isAdministrator } =
+    useUser();
   const navigate = useNavigate();
 
   //BANDERA PARA INDICAR CUANDO ESTA BUSCANDO EN BD
@@ -30,11 +31,8 @@ const User = () => {
     password: "",
   });
 
-  //BANDERA PARA SAVER SI ESTA EN EDITING MODE
-  const [isRegister, setIsRegister] = useState(false);
-
   useEffect(() => {
-    if (!isLogged) {
+    if (!(isLogged && isAdministrator === "true")) {
       navigate("/login");
       return;
     }
@@ -64,7 +62,6 @@ const User = () => {
     if (!selus) return;
 
     setSelectedUser(selus);
-    setIsRegister(false);
   };
 
   const handleOnClickDelete = (id) => {
@@ -89,6 +86,7 @@ const User = () => {
   //---------------------------------------------------------
   //PASSWORD MANAGER
   const handleOnClickChangePass = (id: string): void => {
+    setSelectedUser({ ...selectedUser, id });
     setPasswordHide(false);
   };
 
@@ -98,11 +96,7 @@ const User = () => {
     <>
       <h2>Usuarios</h2>
       {passwordHide ? (
-        <UserRegisterUpd
-          user={selectedUser}
-          isRegister={isRegister}
-          reloadUsers={reloadUsers}
-        />
+        <UserRegisterUpd user={selectedUser} reloadUsers={reloadUsers} />
       ) : (
         <></>
       )}

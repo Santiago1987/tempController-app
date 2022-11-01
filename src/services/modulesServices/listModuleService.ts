@@ -23,7 +23,6 @@ const listModuleService = (jwt: string): Promise<ModuleFromBD[]> => {
       },
     })
     .then((res) => {
-      if (res.status !== 200) throw new Error("Response is not ok");
       return res.data;
     });
 };

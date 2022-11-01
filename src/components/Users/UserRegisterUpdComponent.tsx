@@ -1,7 +1,7 @@
 import { UserRegisterUpdInterface } from "../../../types";
 type props = {
   handleOnClickCancelRegister: () => void;
-  handleOnClickSave: () => void;
+  handleOnClickSave: (ev: React.FormEvent<HTMLFormElement>, id: string) => void;
   handleOnChangeUser: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   userInfo: UserRegisterUpdInterface;
   isRegister: boolean;
@@ -18,9 +18,7 @@ const UserRegisterUpdComponent = ({
 
   return (
     <>
-      <button onClick={handleOnClickSave}>Guardar cambios</button>
-      <button onClick={handleOnClickCancelRegister}>Cancelar</button>
-      <div>
+      <form onSubmit={(ev) => handleOnClickSave(ev, id)}>
         <input
           type="text"
           name="id"
@@ -49,7 +47,7 @@ const UserRegisterUpdComponent = ({
           value={telephone}
           onChange={handleOnChangeUser}
         />
-        <div hidden={isRegister}>
+        <div hidden={!isRegister}>
           <label>Contraseña</label>
           <input
             type="password"
@@ -58,7 +56,9 @@ const UserRegisterUpdComponent = ({
             onChange={handleOnChangeUser}
           />
         </div>
-      </div>
+        <button>Guardar cambios</button>
+        <button onClick={handleOnClickCancelRegister}>Cancelar</button>
+      </form>
     </>
   );
 };

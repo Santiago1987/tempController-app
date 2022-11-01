@@ -5,6 +5,7 @@ import {
   UserFromBDFilter,
   UserUpd,
   UserRegisterUpdInterface,
+  AdministratorContextType,
 } from "../../../../types";
 import loginService from "../../../services/userServices/loginService";
 import registerService from "../../../services/userServices/registerService";
@@ -12,12 +13,19 @@ import listUserService from "../../../services/userServices/listUserService";
 import updEmailUserService from "../../../services/userServices/updUserInfo";
 import updPassUserService from "../../../services/userServices/updPassUserService";
 import deleteUserService from "../../../services/userServices/deleteUserService";
+import { AdministratorContext } from "../../context/AdministratorContext";
 
 // Hook para el manejo de usuarios
 const useUser = () => {
   const { jwt, setJWT } = useContext<userContextType | null>(
     UserContext
   ) as userContextType;
+
+  const { isAdministrator, setIsAdministrator } =
+    useContext<AdministratorContextType | null>(
+      AdministratorContext
+    ) as AdministratorContextType;
+
   const [logState, setLogState] = useState({
     loading: false,
     error: false,
@@ -34,6 +42,8 @@ const useUser = () => {
             window.localStorage.setItem("token", res.token);
             setLogState({ loading: false, error: false });
             setJWT(res.token);
+            setIsAdministrator(res.administrator === true ? "true" : "false");
+            window.localStorage.setItem("adm", String(res.administrator));
             return;
           }
         })
@@ -43,13 +53,15 @@ const useUser = () => {
           console.error(err.name);
         });
     },
-    [setJWT]
+    [setJWT, setIsAdministrator]
   );
 
   // logout de usuario
   const logout = useCallback(() => {
     window.localStorage.removeItem("token");
     setJWT(null);
+    setIsAdministrator("false");
+    window.localStorage.removeItem("adm");
   }, [setJWT]);
 
   // Register
@@ -60,7 +72,7 @@ const useUser = () => {
       }
       return registerService(jwt, user);
     },
-    []
+    [jwt]
   );
 
   //User list
@@ -71,7 +83,7 @@ const useUser = () => {
     }
 
     return listUserService(jwt);
-  }, []);
+  }, [jwt]);
 
   //UPDATE EMAIL
   const updUserInfo = useCallback(
@@ -81,7 +93,7 @@ const useUser = () => {
       }
       return updEmailUserService(jwt, user);
     },
-    []
+    [jwt]
   );
 
   //UPDATE PASSWORD
@@ -93,20 +105,22 @@ const useUser = () => {
 
       return updPassUserService(jwt, password, id);
     },
-    []
+    [jwt]
   );
 
   //DELETE USER
-  const deleteUser = useCallback((id: string): Promise<boolean> => {
-    setLogState({ loading: true, error: false });
+  const deleteUser = useCallback(
+    (id: string): Promise<boolean> => {
+      setLogState({ loading: true, error: false });
 
-    if (!jwt) {
-      setLogState({ loading: false, error: true });
-      return Promise.reject(false);
-    }
+      if (!jwt) {
+        return Promise.reject(false);
+      }
 
-    return deleteUserService(jwt, id);
-  }, []);
+      return deleteUserService(jwt, id);
+    },
+    [jwt]
+  );
 
   return {
     isLogged: Boolean(jwt),
@@ -119,6 +133,7 @@ const useUser = () => {
     updUserInfo,
     updUserPassword,
     deleteUser,
+    isAdministrator,
   };
 };
 

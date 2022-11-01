@@ -26,7 +26,7 @@ interface UserRegisterUpdInterface {
   telephone: string;
 }
 
-type UserUpd = Omit<UserForHook, "password">;
+type UserUpd = Omit<UserRegisterUpdInterface, "password">;
 
 // adding a new property to Request type from express
 import { Request } from "express";
@@ -46,7 +46,7 @@ export interface ModuleFromBD {
   name: string;
   active: boolean;
   ubication: string;
-  sensors: [{ name: string; active: boolean }];
+  sensors: { name: string; active: boolean }[];
 }
 
 //------------------------Sensores--------
@@ -72,9 +72,9 @@ export interface MapSensorList {
   temperature: number[];
 }
 
-export type moduleContextType = {
-  moduleList: string[] | [];
-  setModuleList: React.Dispatch<React.SetStateAction<string[]>>;
+export type AdministratorContextType = {
+  isAdministrator: string | null;
+  setIsAdministrator: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export interface sensorMappingResult {
@@ -82,5 +82,10 @@ export interface sensorMappingResult {
 }
 
 export interface moduleData {
-  [sensor: number]: [{ date: Date; temperature: number }];
+  [sensor: number]: { date: Date; temperature: number }[];
+}
+
+export interface moduleSensorsUPD {
+  chipID: string;
+  sensors: { name: string; active: boolean }[];
 }

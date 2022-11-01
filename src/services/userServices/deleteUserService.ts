@@ -23,7 +23,6 @@ const deleteUserService = (jwt: string, id: string): Promise<boolean> => {
       params: { id },
     })
     .then((res) => {
-      if (res.status !== 200) return false;
       return true;
     });
 };

@@ -1,29 +1,29 @@
 import axios from "axios";
-import { ModuleFromBD } from "../../../types";
+import { ModuleFromBD, moduleSensorsUPD } from "../../../types";
 
 const serverURL = process.env.REACT_APP_SERVER_URL;
-const updModuleURL = process.env.REACT_APP_MODULE_UPD;
+const updModuleSensorsURL = process.env.REACT_APP_MODULE_UPD_SENSORS;
 
-const updModuleService = (
+const updateModuleSensorsService = (
   jwt: string,
-  module: ModuleFromBD
+  moduleSensors: moduleSensorsUPD
 ): Promise<ModuleFromBD> => {
-  if (!(jwt && module)) {
+  if (!(jwt && moduleSensors)) {
     console.error("missing parameters");
     throw new Error("missing parameters");
   }
 
-  if (!serverURL || !updModuleURL) {
+  if (!serverURL || !updModuleSensorsURL) {
     console.error("missing server URL");
     throw new Error("missing server URL");
   }
 
-  let { chipID, name, active, ubication } = module;
+  let { chipID, sensors } = moduleSensors;
 
   return axios
     .put(
-      `${serverURL}${updModuleURL}`,
-      { chipID, name, active, ubication },
+      `${serverURL}${updModuleSensorsURL}`,
+      { chipID, sensors },
       {
         headers: {
           "Content-Type": "application/json",
@@ -36,4 +36,4 @@ const updModuleService = (
     });
 };
 
-export default updModuleService;
+export default updateModuleSensorsService;

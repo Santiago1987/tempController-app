@@ -6,14 +6,16 @@ import UserRegisterUpdComponent from "../../components/Users/UserRegisterUpdComp
 
 type props = {
   user: UserRegisterUpdInterface;
-  isRegister: boolean;
   reloadUsers: () => void;
 };
 
-const UserRegisterUpd = ({ user, isRegister, reloadUsers }: props) => {
+const UserRegisterUpd = ({ user, reloadUsers }: props) => {
   const [selectedID, setselectedID] = useState("");
   const { updUserInfo, registerUser } = useUser();
   const [display, setDiplay] = useState(false);
+
+  //BANDERA PARA SAVER SI ESTA EN EDITING MODE
+  const [isRegister, setIsRegister] = useState(false);
 
   //REGISTER AND UPDATE COMPONENT
   const { registerValues, setUsername, setEmail, setTelephone, setPassword } =
@@ -32,13 +34,14 @@ const UserRegisterUpd = ({ user, isRegister, reloadUsers }: props) => {
 
   //-------------------------------------------------------------------------
   const handleOnClickRegister = (): void => {
-    setDiplay(false);
+    setIsRegister(true);
+    setDiplay(true);
+
     setUsername("");
     setEmail("");
     setTelephone("");
     setselectedID("");
     setPassword("");
-    setDiplay(true);
   };
 
   const handleOnClickCancelRegister = () => {
@@ -50,14 +53,14 @@ const UserRegisterUpd = ({ user, isRegister, reloadUsers }: props) => {
     setPassword("");
   };
 
-  const handleOnClickSave = () => {
+  const handleOnClickSave = (
+    ev: React.FormEvent<HTMLFormElement>,
+    id: string
+  ) => {
+    ev.preventDefault();
     setDiplay(false);
-    /*let { userName, email, telephone, password } = registerValues;
-    console.log("registerValues", registerValues);
-    if (!(userName.length < 5 || email.length < 5 || telephone.length < 8))
-      return;*/
+
     //REGISTRO DE USUARIO
-    console.log("isRegister", isRegister);
     if (isRegister) {
       registerUser({ ...registerValues, id: "" })
         .then((res) => {
@@ -69,6 +72,7 @@ const UserRegisterUpd = ({ user, isRegister, reloadUsers }: props) => {
           setTelephone("");
           setselectedID("");
           setPassword("");
+          setIsRegister(false);
         })
         .catch((err) => {
           console.log("ERROR", err);
@@ -77,7 +81,7 @@ const UserRegisterUpd = ({ user, isRegister, reloadUsers }: props) => {
     }
 
     //EDICION DE USUARIO
-    updUserInfo(registerValues)
+    updUserInfo({ ...registerValues, id })
       .then((res) => {
         reloadUsers();
       })

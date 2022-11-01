@@ -62,8 +62,10 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
   }, [dataComplete, selectedModule]);
 
   useEffect(() => {
+    console.log(moduleData);
     if (loading) return;
     if (!selectedModule) return;
+
     let Xcategori: string[] = [];
     let Ydata: number[] = [];
     let selectedSensor;
@@ -82,7 +84,7 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
       Xcategori.push(moment(temp.date).format("h:mm:ss"));
       Ydata.push(temp.temperature);
     }
-    console.log("data", data);
+
     let series = [
       {
         type: "line",

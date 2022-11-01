@@ -13,7 +13,7 @@ const Module = () => {
   const [modulList, setModuleList] = useState<modList[]>([]);
 
   //CONTROL DE LOGEO
-  const { isLogged, logout } = useUser();
+  const { isLogged, logout, isAdministrator } = useUser();
   const navigate = useNavigate();
 
   //BANDERA PARA INDICAR CUANDO ESTA BUSCANDO EN BD
@@ -34,7 +34,7 @@ const Module = () => {
     useModule();
 
   useEffect(() => {
-    if (!isLogged) {
+    if (!(isLogged && isAdministrator === "true")) {
       navigate("/login");
       return;
     }

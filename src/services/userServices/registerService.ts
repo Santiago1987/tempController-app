@@ -19,21 +19,25 @@ const registerService = (
     throw new Error("missing server URL");
   }
 
-  return axios.post(
-    `${serverUrl}${registerUrl}`,
-    {
-      userName,
-      password,
-      email,
-      telephone,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
+  return axios
+    .post(
+      `${serverUrl}${registerUrl}`,
+      {
+        userName,
+        password,
+        email,
+        telephone,
       },
-    }
-  );
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    )
+    .then((res) => {
+      return res.data;
+    });
 };
 
 export default registerService;
