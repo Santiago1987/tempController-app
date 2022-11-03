@@ -34,6 +34,7 @@ export const resgiterTemp = async (
       err.name = "moduleNotExists";
       throw err;
     }
+
     const regis = new Sensor({
       date,
       temperature: TArr,

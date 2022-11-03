@@ -12,28 +12,36 @@ import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
 import ModuleSelection from "../../components/ModuleSelection/ModuleSelection";
 
-type selecModule = { chipID: string; sensors: boolean[] };
+type selecModule = { chipID: string; sensors: (boolean | undefined)[] };
 
 const Home: React.FC = () => {
+  //USUARIO
   const { isLogged, logout } = useUser();
   const navigate = useNavigate();
+
+  //FUNCIONES DE MODULOS
   const { getModuleList } = useModuleActions();
+
+  //FUNCIONES DE SENSORES
   const { getTempList } = useSensorActions();
 
+  //FECHAS
   const [dates, setDates] = useState({
     frDate: moment().format(),
     toDate: moment().format(),
   });
 
+  //LISTA DE MODULOS
   const [modules, setModules] = useState<ModuleFromBD[]>([]);
+
+  //LISTA DE TEMPERATURAS POR MODULO COMO KEY DEL JSON
   const [temps, setTemps] = useState<sensorMappingResult | []>([]);
+
+  //MODULO SELECCIONADO EN EL COMBOBOX
   const [selectedModule, setSelectedModule] = useState<selecModule | undefined>(
     undefined
   );
 
-  const [defaultModule, setDefaultModule] = useState<ModuleFromBD | undefined>(
-    undefined
-  );
   // CHECK IF USER IS LOGGED
   useEffect(() => {
     if (!isLogged) {
@@ -45,24 +53,18 @@ const Home: React.FC = () => {
     getModuleList()
       .then((res) => {
         let result: ModuleFromBD[] = [];
+
+        //SOLO MODULOS ACTIVOS
         for (let m of res) {
           let { active } = m;
           if (active) result.push({ ...m });
         }
-
         setModules(result);
 
+        //FECHAS DEFAULT
         setDates({
           frDate: moment().subtract(1, "day").format(),
           toDate: moment().format(),
-        });
-        //DEFAULT MODULE
-        setDefaultModule(result[0]);
-
-        //SELECTED MODULE INIT
-        setSelectedModule({
-          chipID: result[0].chipID,
-          sensors: [true, false, false, false, false, false],
         });
       })
       .catch((err) => {
@@ -81,7 +83,22 @@ const Home: React.FC = () => {
 
     getTempList(frDate, toDate)
       .then(mapTempListFromBd)
-      .then(setTemps)
+      .then((res) => {
+        setTemps(res);
+
+        if (!selectedModule) {
+          let { chipID, sensors } = modules[0];
+          let sen: (boolean | undefined)[] = [];
+
+          for (let s of sensors) {
+            sen.push(s.active ? true : undefined);
+          }
+          setSelectedModule({
+            chipID,
+            sensors: sen,
+          });
+        }
+      })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
           logout();
@@ -113,7 +130,7 @@ const Home: React.FC = () => {
 
     let actives = sensors.map((s) => {
       if (s.active) return true;
-      return false;
+      return undefined;
     });
 
     setSelectedModule({ chipID: value, sensors: actives });
@@ -140,7 +157,8 @@ const Home: React.FC = () => {
       <ModuleSelection
         moduleList={modules}
         handleOnChangeModule={handleOnChangeModule}
-        defaultModule={defaultModule}
+        moduleID={selectedModule?.chipID}
+        sensors={selectedModule?.sensors}
         handleOnChangeSensor={handleOnChangeSensor}
       />
       <Graphic dataComplete={temps} selectedModule={selectedModule} />

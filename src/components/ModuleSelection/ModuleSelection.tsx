@@ -1,21 +1,37 @@
 import { ModuleFromBD } from "../../../types";
+import { useState, useEffect } from "react";
 
 type props = {
   moduleList: ModuleFromBD[];
   handleOnChangeModule: (ev: React.ChangeEvent<HTMLSelectElement>) => void;
-  defaultModule: ModuleFromBD | undefined;
+  moduleID: string | undefined;
+  sensors: (boolean | undefined)[] | undefined;
   handleOnChangeSensor: (index: number) => void;
 };
 
 const ModuleSelection = ({
   moduleList,
   handleOnChangeModule,
-  defaultModule,
+  moduleID,
+  sensors,
   handleOnChangeSensor,
 }: props) => {
-  let sensorsList: { name: string; active: boolean }[] = [];
+  const [sensorsNames, setSensorsNames] = useState<string[]>([]);
 
-  if (defaultModule) sensorsList = defaultModule.sensors;
+  useEffect(() => {
+    let module = moduleList.find((m) => m.chipID === moduleID);
+    if (!module) return;
+
+    let { sensors } = module;
+
+    let senact: string[] = [];
+    for (let sen of sensors) {
+      if (sen.active) senact.push(sen.name);
+    }
+
+    setSensorsNames(senact);
+  }, [moduleID]);
+
   return (
     <>
       <label>Modulo Seleccionado</label>
@@ -26,24 +42,32 @@ const ModuleSelection = ({
           </option>
         ))}
       </select>
-      <label>Sensores</label>
-      <ol>
-        {sensorsList.map((sen, index) => {
-          let { name, active } = sen;
-          if (!active) return <div key={index}></div>;
+      {sensors ? (
+        <div>
+          <label>Sensores</label>
+          <ol>
+            {sensors.map((sen, index) => {
+              //SENSOR DESACTIVADO
+              if (sen === undefined) return <div key={index}></div>;
+              let name = sensorsNames[index];
 
-          return (
-            <li key={index}>
-              <label>{name !== "" ? name : `Sensor ${index + 1}`}</label>
-              <input
-                type="checkbox"
-                name="moduleSelection"
-                onChange={() => handleOnChangeSensor(index)}
-              />
-            </li>
-          );
-        })}
-      </ol>
+              return (
+                <li key={index}>
+                  <label>{name !== "" ? name : `Sensor ${index + 1}`}</label>
+                  <input
+                    type="checkbox"
+                    name="moduleSelection"
+                    onChange={() => handleOnChangeSensor(index)}
+                    checked={sensors[index]}
+                  />
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

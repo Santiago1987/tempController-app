@@ -81,9 +81,13 @@ export interface sensorMappingResult {
   [modID: string]: MapSensorList[];
 }
 
-export interface moduleData {
-  [sensor: number]: { date: Date; temperature: number }[];
-}
+export type moduleData = Map<
+  Date,
+  {
+    sensor: number;
+    temperature: number;
+  }[]
+>;
 
 export interface moduleSensorsUPD {
   chipID: string;
