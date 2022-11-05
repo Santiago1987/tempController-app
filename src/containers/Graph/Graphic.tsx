@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { moduleData, sensorMappingResult } from "../../../types";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-//import moment from "moment";
+import HC_brokenAxis from "highcharts/modules/broken-axis";
+import TempTable from "../../components/Table/TempTable";
+HC_brokenAxis(Highcharts);
 
 type props = {
   dataComplete: sensorMappingResult | [];
@@ -16,9 +18,19 @@ type singleModule = {
   temperature: number[];
 }[];
 
+type tableData = {
+  titles: string[];
+  moduleData: singleModule;
+};
+
 //datacomplete ===> [chipID:[{dia, temperatura: [array de sensores]]}]
 
 const Graphic = ({ dataComplete, selectedModule }: props) => {
+  const [tableData, setTableData] = useState<tableData>({
+    titles: [],
+    moduleData: [],
+  });
+  const timezone = new Date().getTimezoneOffset();
   const [options, setOptions] = useState<any>({
     chart: {
       type: "line",
@@ -27,8 +39,20 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
       text: "Temperaturas registradas",
       style: {},
     },
-    xAxis: {
-      categories: [],
+    plotOptions: {
+      series: {
+        cursor: "pointer",
+        events: {
+          click: function () {
+            alert("You just clicked the graph");
+          },
+        },
+      },
+    },
+    setOptions: {
+      global: {
+        timezoneOffset: timezone,
+      },
     },
   });
 
@@ -42,15 +66,21 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
     let data = dataComplete[chipID] as singleModule;
     let mappedData = formatData(data);
 
-    let ydata = getAxis(mappedData);
-
-    let xAxis = {
+    let xAxis: any = {
       type: "datetime",
+      //tickInterval: 3600 * 1000,
       dateTimeLabelFormats: {
         hour: "%I %p",
         minute: "%I:%M %p",
+        second: "%I:%M:%S %p",
       },
     };
+
+    let [ydata, breaks] = getAxis(mappedData);
+    console.log(ydata);
+    setTableData({ titles: Object.keys(ydata), moduleData: data });
+
+    xAxis = { ...xAxis, breaks };
     let series: any[] = [];
 
     for (let sen in ydata) {
@@ -96,26 +126,34 @@ const Graphic = ({ dataComplete, selectedModule }: props) => {
   const getAxis = (data: moduleData): any => {
     //let Xcategori: Date[] = [];
     //let Xcategori: String[] = [];
-    let Ydata: (number | Date)[][][] = [];
+    let Ydata: (number | String)[][][] = [];
+    let bfdate: number | undefined = undefined;
+    let breaks: { from: number; to: number; breakSize: number }[] = [];
 
-    if (!data.size) return [];
-
+    if (!data.size) return [[], []];
     for (const [key, value] of data) {
-      //Xcategori.push(key);
+      let date: Date | number = new Date(key);
 
+      date = date.getTime();
+      //seteos de los intervalos de breaks para que la linea no sea continua
+      if (bfdate && date - bfdate > 3600 * 1000) {
+        breaks.push({ from: bfdate, to: date, breakSize: 3600 * 1000 });
+      }
+      bfdate = date;
       for (let index in value) {
         let { sensor, temperature } = value[index];
         if (!Ydata[sensor]) Ydata[sensor] = [];
-        Ydata[sensor].push([key, temperature]);
+        Ydata[sensor].push([date, temperature]);
       }
     }
 
-    return Ydata;
+    return [Ydata, breaks];
   };
 
   return (
     <>
       <HighchartsReact highcharts={Highcharts} options={options} />
+      <TempTable tableData={tableData} />
     </>
   );
 };
