@@ -3,16 +3,18 @@ import { UserRegisterUpdInterface } from "../../../types";
 import useUser from "../hooks/User/useUser";
 import useRegister from "../hooks/User/useRegister";
 import UserRegisterUpdComponent from "../../components/Users/UserRegisterUpdComponent";
+import { useNavigate, useLocation } from "react-router-dom";
 
-type props = {
-  user: UserRegisterUpdInterface;
-  reloadUsers: () => void;
+type LocationState = {
+  state: UserRegisterUpdInterface;
 };
 
-const UserRegisterUpd = ({ user, reloadUsers }: props) => {
+const UserRegisterUpd = () => {
   const [selectedID, setselectedID] = useState("");
-  const { updUserInfo, registerUser } = useUser();
-  const [display, setDiplay] = useState(false);
+  const { isLogged, isAdministrator, updUserInfo, registerUser } = useUser();
+
+  const navigate = useNavigate();
+  const location = useLocation() as LocationState;
 
   //BANDERA PARA SAVER SI ESTA EN EDITING MODE
   const [isRegister, setIsRegister] = useState(false);
@@ -21,36 +23,36 @@ const UserRegisterUpd = ({ user, reloadUsers }: props) => {
   const { registerValues, setUsername, setEmail, setTelephone, setPassword } =
     useRegister();
 
-  useEffect(() => {
-    let { id, userName, email, telephone, password } = user;
-    setUsername(userName);
-    setEmail(email);
-    setTelephone(telephone);
-    setselectedID(id);
-    setPassword(password);
+  //Title
+  const [title, setTitle] = useState("Registro de usuarios");
 
-    if (id !== "") setDiplay(true);
-  }, [user]);
+  useEffect(() => {
+    if (!(isLogged && isAdministrator === "true")) {
+      navigate("/login");
+      return;
+    }
+
+    if (location.state) {
+      const { userName, email, telephone, id } = location.state;
+
+      setIsRegister(false);
+      setUsername(userName);
+      setEmail(email);
+      setTelephone(telephone);
+      setselectedID(id);
+      setPassword("");
+
+      setTitle("Edicion de usuario");
+      return;
+    }
+    setIsRegister(true);
+  }, []);
 
   //-------------------------------------------------------------------------
-  const handleOnClickRegister = (): void => {
-    setIsRegister(true);
-    setDiplay(true);
-
-    setUsername("");
-    setEmail("");
-    setTelephone("");
-    setselectedID("");
-    setPassword("");
-  };
 
   const handleOnClickCancelRegister = () => {
-    setDiplay(false);
-    setUsername("");
-    setEmail("");
-    setTelephone("");
-    setselectedID("");
-    setPassword("");
+    navigate("/users");
+    return;
   };
 
   const handleOnClickSave = (
@@ -58,23 +60,15 @@ const UserRegisterUpd = ({ user, reloadUsers }: props) => {
     id: string
   ) => {
     ev.preventDefault();
-    setDiplay(false);
 
     //REGISTRO DE USUARIO
     if (isRegister) {
       registerUser({ ...registerValues, id: "" })
-        .then((res) => {
-          reloadUsers();
-        })
         .then(() => {
-          setUsername("");
-          setEmail("");
-          setTelephone("");
-          setselectedID("");
-          setPassword("");
-          setIsRegister(false);
+          navigate("/users", { state: true });
         })
         .catch((err) => {
+          navigate("/users", { state: false });
           console.log("ERROR", err);
         });
       return;
@@ -83,9 +77,12 @@ const UserRegisterUpd = ({ user, reloadUsers }: props) => {
     //EDICION DE USUARIO
     updUserInfo({ ...registerValues, id })
       .then((res) => {
-        reloadUsers();
+        navigate("/users", { state: true });
       })
-      .catch((err) => console.log(`Error editing: ${err}`));
+      .catch((err) => {
+        navigate("/users", { state: false });
+        console.log(`Error editing: ${err}`);
+      });
     return;
   };
   //-------------------------------------------------------------------------
@@ -107,20 +104,14 @@ const UserRegisterUpd = ({ user, reloadUsers }: props) => {
 
   return (
     <>
-      <button onClick={handleOnClickRegister} hidden={display}>
-        Registrar nuevo usuario
-      </button>
-      {display ? (
-        <UserRegisterUpdComponent
-          handleOnClickCancelRegister={handleOnClickCancelRegister}
-          handleOnClickSave={handleOnClickSave}
-          handleOnChangeUser={handleOnChangeUser}
-          userInfo={{ ...registerValues, id: selectedID }}
-          isRegister={isRegister}
-        />
-      ) : (
-        <></>
-      )}
+      <UserRegisterUpdComponent
+        handleOnClickCancelRegister={handleOnClickCancelRegister}
+        handleOnClickSave={handleOnClickSave}
+        handleOnChangeUser={handleOnChangeUser}
+        userInfo={{ ...registerValues, id: selectedID }}
+        isRegister={isRegister}
+        title={title}
+      />
     </>
   );
 };

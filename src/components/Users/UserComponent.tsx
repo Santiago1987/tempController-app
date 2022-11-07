@@ -2,10 +2,8 @@ import { UserRegisterUpdInterface } from "../../../types";
 
 interface props {
   user: UserRegisterUpdInterface;
-  display: boolean;
   handleOnClickEdit: (id: string) => void;
   handleOnClickDelete: (id: string) => void;
-  hiddePass: boolean;
   handleOnClickChangePass: (id: string) => void;
 }
 
@@ -13,7 +11,6 @@ const UserComponent = ({
   user,
   handleOnClickEdit,
   handleOnClickDelete,
-  hiddePass,
   handleOnClickChangePass,
 }: props) => {
   let { id, userName, email, telephone } = user;
@@ -52,13 +49,9 @@ const UserComponent = ({
         onChange={() => {}}
         readOnly
       />
-      <button hidden={!hiddePass} onClick={() => handleOnClickEdit(id)}>
-        Editar
-      </button>
-      <button hidden={!hiddePass} onClick={() => handleOnClickDelete(id)}>
-        Delete
-      </button>
-      <button hidden={!hiddePass} onClick={() => handleOnClickChangePass(id)}>
+      <button onClick={() => handleOnClickEdit(id)}>Editar</button>
+      <button onClick={() => handleOnClickDelete(id)}>Delete</button>
+      <button onClick={() => handleOnClickChangePass(id)}>
         Cambiar contraseña
       </button>
     </div>

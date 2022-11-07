@@ -144,7 +144,7 @@ export const deleteModule = async (
   response: Response,
   next: NextFunction
 ) => {
-  let { id } = request.body;
+  let { id } = request.query;
   let result: any = undefined;
   try {
     if (!id) {

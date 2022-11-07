@@ -147,21 +147,30 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <h1>HOME</h1>
-      <DateSelection
-        frDate={dates.frDate}
-        toDate={dates.toDate}
-        handleOnChangeFrDate={handleOnChangeFrDate}
-        handleOnChangeToDate={handleOnChangeToDate}
-      />
-      <ModuleSelection
-        moduleList={modules}
-        handleOnChangeModule={handleOnChangeModule}
-        moduleID={selectedModule?.chipID}
-        sensors={selectedModule?.sensors}
-        handleOnChangeSensor={handleOnChangeSensor}
-      />
-      <Graphic dataComplete={temps} selectedModule={selectedModule} />
+      <div className="container">
+        <div className="row">
+          <DateSelection
+            frDate={dates.frDate}
+            toDate={dates.toDate}
+            handleOnChangeFrDate={handleOnChangeFrDate}
+            handleOnChangeToDate={handleOnChangeToDate}
+          />
+          <ModuleSelection
+            moduleList={modules}
+            handleOnChangeModule={handleOnChangeModule}
+            moduleID={selectedModule?.chipID}
+            sensors={selectedModule?.sensors}
+            handleOnChangeSensor={handleOnChangeSensor}
+          />
+        </div>
+        <div className="row">
+          <Graphic
+            dataComplete={temps}
+            selectedModule={selectedModule}
+            dates={dates}
+          />
+        </div>
+      </div>
     </>
   );
 };

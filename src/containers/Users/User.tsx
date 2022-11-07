@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { UserRegisterUpdInterface } from "../../../types";
 import UserComponent from "../../components/Users/UserComponent";
 import useUser from "../hooks/User/useUser";
-import UserUpdatePass from "./UserUpdatePass";
-import UserRegisterUpd from "../Register/UserRegisterUpd";
 
 const User = () => {
   //LIST DE USUARIOS
@@ -20,16 +18,6 @@ const User = () => {
   const [isLoading, seIsLoading] = useState(false);
 
   const [reloadUserList, setReloadUserList] = useState(false);
-
-  const [passwordHide, setPasswordHide] = useState(true);
-
-  const [selectedUser, setSelectedUser] = useState<UserRegisterUpdInterface>({
-    id: "",
-    userName: "",
-    email: "",
-    telephone: "",
-    password: "",
-  });
 
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
@@ -61,7 +49,11 @@ const User = () => {
     let selus = userList.find((us) => us.id === id);
     if (!selus) return;
 
-    setSelectedUser(selus);
+    let { userName, email, telephone } = selus;
+    navigate("/users/regedit", {
+      state: { userName, email, telephone, id },
+    });
+    return;
   };
 
   const handleOnClickDelete = (id) => {
@@ -83,11 +75,15 @@ const User = () => {
     setReloadUserList(!reloadUserList);
   };
 
+  const handleOnClickRegister = () => {
+    navigate("/users/regedit");
+    return;
+  };
+
   //---------------------------------------------------------
   //PASSWORD MANAGER
   const handleOnClickChangePass = (id: string): void => {
-    setSelectedUser({ ...selectedUser, id });
-    setPasswordHide(false);
+    navigate("/users/editpass", { state: { id } });
   };
 
   //---------------------------------------------------------
@@ -95,19 +91,7 @@ const User = () => {
   return (
     <>
       <h2>Usuarios</h2>
-      {passwordHide ? (
-        <UserRegisterUpd user={selectedUser} reloadUsers={reloadUsers} />
-      ) : (
-        <></>
-      )}
-      {passwordHide ? (
-        <></>
-      ) : (
-        <UserUpdatePass
-          id={selectedUser.id}
-          setPasswordHide={setPasswordHide}
-        />
-      )}
+      <button onClick={handleOnClickRegister}>Registrar nuevo usuario</button>
       {isLoading ? (
         <h2>Loading....</h2>
       ) : (
@@ -116,10 +100,8 @@ const User = () => {
             <UserComponent
               key={us.id}
               user={{ ...us, password: "" }}
-              display={false}
               handleOnClickEdit={handleOnClickEdit}
               handleOnClickDelete={handleOnClickDelete}
-              hiddePass={true}
               handleOnClickChangePass={handleOnClickChangePass}
             />
           );

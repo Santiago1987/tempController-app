@@ -17,6 +17,15 @@ export const Wrapper = styled.div`
     margin: auto;
 `;
 
+export const LogoLink = styled(Link)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;   
+    cursor: pointer;    
+    text-decoration: none;   
+`
+
 export const LogoContainer = styled.div`
     margin-left: 0.5rem;
     display: flex;

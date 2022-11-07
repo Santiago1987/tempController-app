@@ -34,40 +34,65 @@ const ModuleSelection = ({
 
   return (
     <>
-      <label>Modulo Seleccionado</label>
-      <select name="moduleComboBox" onChange={handleOnChangeModule}>
-        {moduleList.map((m) => (
-          <option key={m.chipID} value={m.chipID}>
-            {m.name}
-          </option>
-        ))}
-      </select>
-      {sensors ? (
+      <div className="col shadow bg-white rounded mt-1 ms-1">
+        <p className="h4 fw-bold mt-2 px-2">Seleccion de modulos y sensores</p>
         <div>
-          <label>Sensores</label>
-          <ol>
-            {sensors.map((sen, index) => {
-              //SENSOR DESACTIVADO
-              if (sen === undefined) return <div key={index}></div>;
-              let name = sensorsNames[index];
+          <div className="d-flex align-items-center">
+            <label htmlFor="modCombo" className="p-2 fw-bold">
+              Modulo Seleccionado:
+            </label>
+            <select
+              id="modCombo"
+              name="moduleComboBox"
+              className="form-select w-50"
+              onChange={handleOnChangeModule}
+            >
+              {moduleList.map((m) => (
+                <option key={m.chipID} value={m.chipID}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="d-flex align-items-center">
+            {sensors ? (
+              <div>
+                <label className="px-2 fw-bold fs-5">Sensores</label>
+                <ul className="list-inline px-2">
+                  {sensors.map((sen, index) => {
+                    //SENSOR DESACTIVADO
+                    if (sen === undefined) return <div key={index}></div>;
+                    let name = sensorsNames[index];
 
-              return (
-                <li key={index}>
-                  <label>{name !== "" ? name : `Sensor ${index + 1}`}</label>
-                  <input
-                    type="checkbox"
-                    name="moduleSelection"
-                    onChange={() => handleOnChangeSensor(index)}
-                    checked={sensors[index]}
-                  />
-                </li>
-              );
-            })}
-          </ol>
+                    return (
+                      <li key={index} className="list-inline-item pe-1">
+                        <div className="form-group">
+                          <label
+                            className="form-group pe-1"
+                            htmlFor={`${index}`}
+                          >
+                            {name !== "" ? name : `Sensor ${index + 1}`}
+                          </label>
+                          <input
+                            id={`${index}`}
+                            type="checkbox"
+                            name="moduleSelection"
+                            onChange={() => handleOnChangeSensor(index)}
+                            checked={sensors[index]}
+                            className="form-check-input"
+                          />
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
-      ) : (
-        <></>
-      )}
+      </div>
     </>
   );
 };

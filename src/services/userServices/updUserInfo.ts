@@ -15,7 +15,7 @@ const updUserInfo = (jwt: string, user: UserUpd): Promise<UserFromBDFilter> => {
     console.error("missing server URL");
     throw new Error("missing server URL");
   }
-  console.log(id, userName, telephone, email);
+
   return axios
     .put(
       `${serverURL}${updEmlUserURL}`,

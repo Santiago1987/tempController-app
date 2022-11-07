@@ -9,13 +9,13 @@ import {
   MenuItemLink,
   MobileIcon,
   Wrapper,
+  LogoLink,
 } from "./NavbarStyles";
 import {
   FaThermometerHalf,
   FaBars,
   FaDoorOpen,
   FaDoorClosed,
-  FaHome,
   FaTimes,
 } from "react-icons/fa";
 import { IconContext } from "react-icons";
@@ -33,27 +33,21 @@ const Header = () => {
     <Container>
       <Wrapper>
         <IconContext.Provider value={{ style: { fontSize: "2em" } }}>
-          <LogoContainer>
-            <FaThermometerHalf />
-            <h3>C.I.D.I.F.</h3>
-          </LogoContainer>
+          <LogoLink
+            to="/home"
+            onClick={() => setShotMobileMenu(!showMobileMenu)}
+          >
+            <LogoContainer>
+              <FaThermometerHalf />
+              <h3>C.I.D.I.F.</h3>
+            </LogoContainer>
+          </LogoLink>
           <MobileIcon onClick={() => setShotMobileMenu(!showMobileMenu)}>
             {showMobileMenu ? <FaTimes /> : <FaBars />}
           </MobileIcon>
           <Menu open={showMobileMenu}>
             {isLogged ? (
               <>
-                <MenuItem>
-                  <MenuItemLink
-                    to="/home"
-                    onClick={() => setShotMobileMenu(!showMobileMenu)}
-                  >
-                    <div>
-                      <FaHome />
-                      HOME
-                    </div>
-                  </MenuItemLink>
-                </MenuItem>
                 {isAdministrator === "true" ? (
                   <>
                     <MenuItem>

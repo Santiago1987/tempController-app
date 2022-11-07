@@ -2,7 +2,6 @@
 import UserContextProvider from "./containers/context/UserContext";
 import AdministratorProvider from "./containers/context/AdministratorContext";
 import { Routes, Route } from "react-router-dom";
-import "./styles/app.css";
 
 import Home from "./containers/Home/Home";
 import Header from "./components/header/Navbar";
@@ -11,6 +10,9 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 import Module from "./containers/Module/Module";
 import User from "./containers/Users/User";
 import Sensors from "./containers/Sensors/Sensors";
+import RegisterEditModule from "./containers/Module/RegisterEditModule";
+import UserRegisterUpd from "./containers/Register/UserRegisterUpd";
+import UserUpdatePass from "./containers/Users/UserUpdatePass";
 
 function App() {
   return (
@@ -21,7 +23,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/modules" element={<Module />} />
+          <Route path="/modules/regedit" element={<RegisterEditModule />} />
           <Route path="/users" element={<User />} />
+          <Route path="/users/regedit" element={<UserRegisterUpd />} />
+          <Route path="/users/editpass" element={<UserUpdatePass />} />
           <Route path="/sensors" element={<Sensors />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

@@ -1,24 +1,35 @@
 import { useState, useEffect } from "react";
 import UserUpdatePassComponent from "../../components/Users/UserUpdatePassComponent";
 import useUser from "../hooks/User/useUser";
-type props = {
-  id: string;
-  setPasswordHide: (hidd: boolean) => void;
+import { useNavigate, useLocation } from "react-router-dom";
+
+type LocationState = {
+  state: { id: string };
 };
 
-const UserUpdatePass = ({ id, setPasswordHide }: props) => {
+const UserUpdatePass = () => {
   //CONTROL DE PASSWORD
   const [selectedID, setSelectedID] = useState("");
   const [passwordUPD, serPasswordsUPD] = useState({
     passwordOne: "",
     passwordTwo: "",
   });
+  const navigate = useNavigate();
+  const location = useLocation() as LocationState;
 
-  const { updUserPassword } = useUser();
+  const { isLogged, isAdministrator, updUserPassword } = useUser();
 
   useEffect(() => {
-    setSelectedID(id);
-  }, [id]);
+    if (!(isLogged && isAdministrator === "true")) {
+      navigate("/login");
+      return;
+    }
+    if (!(location.state && location.state.id)) {
+      navigate("/users");
+    }
+
+    setSelectedID(location.state.id);
+  }, []);
 
   //--------------------------------------------------------
   const handleOnClickSavePass = (
@@ -32,7 +43,7 @@ const UserUpdatePass = ({ id, setPasswordHide }: props) => {
 
     updUserPassword(selectedID, passwordOne)
       .then((res) => {
-        setPasswordHide(true);
+        navigate("/users");
       })
       .catch((err) => {
         console.log("ERROR ON SAVING PASS", err);
@@ -48,12 +59,7 @@ const UserUpdatePass = ({ id, setPasswordHide }: props) => {
   };
 
   const handleOnClickCancelPass = () => {
-    setPasswordHide(true);
-    serPasswordsUPD({
-      passwordOne: "",
-      passwordTwo: "",
-    });
-    setSelectedID("");
+    navigate("/users");
   };
 
   return (

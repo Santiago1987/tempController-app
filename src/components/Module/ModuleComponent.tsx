@@ -3,54 +3,58 @@ type module = Omit<ModuleFromBD, "sensors">;
 
 interface props {
   module: module;
-  handleOnChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-  display: boolean;
   handleOnClickEdit: (chipID: string) => void;
   handleOnClickDelete: (chipID: string) => void;
-  hideID: boolean;
 }
 
 const ModuleComponent = ({
   module,
-  display,
-  handleOnChange,
   handleOnClickEdit,
   handleOnClickDelete,
-  hideID,
 }: props) => {
   let { chipID, name, ubication, active } = module;
 
   return (
-    <div hidden={display}>
-      <input
-        name="chipID"
-        type="text"
-        value={chipID}
-        hidden={hideID}
-        onChange={handleOnChange}
-      />
-      <label>Nombre</label>
-      <input name="name" value={name} type="text" onChange={handleOnChange} />
-      <label>Ubicacion</label>
-      <input
-        name="ubication"
-        type="text"
-        value={ubication}
-        onChange={handleOnChange}
-      />
-      <label>Activo</label>
-      <input
-        name="active"
-        type="checkbox"
-        checked={active}
-        onChange={handleOnChange}
-      />
-      <button hidden={!hideID} onClick={() => handleOnClickEdit(chipID)}>
-        Editar
-      </button>
-      <button hidden={!hideID} onClick={() => handleOnClickDelete(chipID)}>
-        Delete
-      </button>
+    <div className="shadow bg-white rounded m-2">
+      <div className="d-flexbox align-items-center">
+        <input
+          name="chipID"
+          type="text"
+          value={chipID}
+          hidden
+          onChange={() => {}}
+        />
+        <div className="p-2">
+          <p className="h5">{`Nombre: ${name}`} </p>
+        </div>
+        <div className="p-2">
+          <p className="h5">{`Ubicacion: ${ubication}`} </p>
+        </div>
+        <div className="p-2">
+          <p
+            className="h5"
+            style={active ? { color: "#255c06" } : { color: "#ff3342" }}
+          >
+            {active ? `El modulo esta activo` : `El modulo esta desactivado`}{" "}
+          </p>
+        </div>
+        <div className="d-flex justify-content-end">
+          <button
+            type="button"
+            className="btn btn-primary m-2"
+            onClick={(ev) => handleOnClickEdit(chipID)}
+          >
+            Editar
+          </button>
+          <button
+            type="button"
+            className="btn btn-danger m-2"
+            onClick={() => handleOnClickDelete(chipID)}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

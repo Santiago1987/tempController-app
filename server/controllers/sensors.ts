@@ -13,10 +13,12 @@ export const resgiterTemp = async (
   let reading = request.body as sensorReading;
   let result: any = undefined;
   let { date, temperature, chipID } = reading;
-  console.log("datos ", date, temperature, chipID);
 
-  if (!date) date = new Date();
-
+  if (!date) {
+    date = new Date();
+    date = new Date(date.setHours(date.getHours() - 3));
+  }
+  console.log(date, temperature, chipID);
   try {
     if (!(temperature && chipID)) {
       let err = new Error();
