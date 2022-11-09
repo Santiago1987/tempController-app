@@ -106,7 +106,7 @@ export const loginUser = async (
     const secretword = process.env.TOKEN_WORLD;
     const token = secretword
       ? jwt.sign(userForToken, secretword, {
-          expiresIn: 60 * 60,
+          expiresIn: 60 * 60 * 24,
         })
       : undefined;
 

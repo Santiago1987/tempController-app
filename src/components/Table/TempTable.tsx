@@ -48,8 +48,11 @@ const TempTable = ({ tableData }: props) => {
                 <tbody>
                   {moduleData.map((data, index) => {
                     let { dateformat, temperature } = data;
+
                     let day = moment(dateformat).format("DD/MM");
-                    let time = moment(dateformat).format("HH:MM:ss");
+                    let time = moment(dateformat)
+                      .add(3, "hours")
+                      .format("hh:mm:ss");
 
                     return (
                       <tr key={index}>

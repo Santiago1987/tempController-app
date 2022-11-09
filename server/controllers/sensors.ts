@@ -18,7 +18,7 @@ export const resgiterTemp = async (
     date = new Date();
     date = new Date(date.setHours(date.getHours() - 3));
   }
-  console.log(date, temperature, chipID);
+  //console.log(date, temperature, chipID);
   try {
     if (!(temperature && chipID)) {
       let err = new Error();
@@ -104,10 +104,14 @@ export const temperatureList = async (
 
   if (!toDate) toDate = new Date();
   if (!frDate) frDate = moment(toDate).add(-1, "day").toDate();
-
+  frDate = moment(frDate).add(-3, "hours").toDate();
+  toDate = moment(toDate).add(-3, "hours").toDate();
   try {
     result = (await Sensor.find({
-      date: { $gte: frDate, $lte: toDate },
+      date: {
+        $gte: frDate,
+        $lte: toDate,
+      },
     })) as any;
 
     response.status(200).send(result).end();

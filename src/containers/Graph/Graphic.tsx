@@ -37,7 +37,7 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     moduleData: [],
   });
 
-  const timezone = new Date().getTimezoneOffset();
+  //const timezone = new Date().getTimezoneOffset();
   const [options, setOptions] = useState<any>({
     chart: {
       type: "line",
@@ -62,7 +62,7 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     },
     setOptions: {
       global: {
-        timezoneOffset: timezone,
+        //timezoneOffset: timezone,
       },
       chart: {
         style: {
@@ -99,7 +99,7 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     let [mappedData, tableData] = formatData(data);
     let xAxis: any = {
       type: "datetime",
-      tickInterval: 3600 * 10,
+      //tickInterval: 3600 * 1000,
       dateTimeLabelFormats: {
         day: "%e. %b",
         hour: "%H:%M",
@@ -174,7 +174,7 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     for (const [key, value] of data) {
       let date: Date | number = new Date(key);
 
-      date = date.getTime() - 3600 * 1000 * 3;
+      date = date.getTime();
       //seteos de los intervalos de breaks para que la linea no sea continua
       if (bfdate && date - bfdate > 3600 * 1000) {
         breaks.push({ from: bfdate, to: date, breakSize: 3600 * 1000 });
