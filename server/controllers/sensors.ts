@@ -101,9 +101,12 @@ export const temperatureList = async (
 ) => {
   let { frDate, toDate } = request.query as tempModuleList;
   let result: sensorReading | undefined = undefined;
+  console.log(frDate, toDate);
 
-  if (!toDate) toDate = new Date();
-  if (!frDate) frDate = moment(toDate).add(-1, "day").toDate();
+  if (!toDate) toDate = moment().toDate();
+  if (!frDate) frDate = moment().subtract(-1, "days").toDate();
+
+  //axios formatea las fechas a GMT 0
   frDate = moment(frDate).add(-3, "hours").toDate();
   toDate = moment(toDate).add(-3, "hours").toDate();
   try {
@@ -132,7 +135,6 @@ export const updSensorInfo = async (
 
   try {
     if (!(chipID && sensorNumber)) {
-      console.log(chipID, sensorNumber, name, active);
       let err = new Error();
       err.name = "missingParameters";
       throw err;

@@ -16,7 +16,7 @@ type props = {
   selectedModule:
     | { chipID: string; sensors: (boolean | undefined)[] }
     | undefined;
-  dates: { frDate: string; toDate: string };
+  dates: { frDate: Date | undefined; toDate: Date | undefined };
 };
 
 type tableData = {
@@ -88,6 +88,7 @@ const Graphic = ({ moduleData, selectedModule, dates }: props) => {
     }
 
     let [mappedData, tableData] = formatData(moduleData);
+
     let xAxis: any = {
       type: "datetime",
       //tickInterval: 3600 * 1000,
@@ -99,7 +100,7 @@ const Graphic = ({ moduleData, selectedModule, dates }: props) => {
     };
 
     let [ydata, breaks] = getAxis(mappedData);
-    console.log("tableData", tableData);
+
     setTableData({ titles: Object.keys(ydata), moduleData: tableData });
 
     xAxis = { ...xAxis, breaks };
@@ -148,7 +149,6 @@ const Graphic = ({ moduleData, selectedModule, dates }: props) => {
       }
       tableDta.push({ date, temperature: tmpSingleSensor });
     }
-
     return [dataFormated, tableDta];
   };
 

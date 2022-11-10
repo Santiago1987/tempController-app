@@ -30,6 +30,7 @@ type UserUpd = Omit<UserRegisterUpdInterface, "password">;
 
 // adding a new property to Request type from express
 import { Request } from "express";
+import { ObjectId } from "mongoose";
 import { type } from "os";
 
 interface extreq extends Request {
@@ -93,3 +94,13 @@ export interface moduleSensorsUPD {
   chipID: string;
   sensors: { name: string; active: boolean }[];
 }
+
+//------------------------Settings----------------------
+export type SettingsInterf = {
+  tempLimitSup: number;
+  tempLimitInf: number;
+  frDate: Date;
+  toDate: Date;
+  alertUser: string[];
+  id: string;
+};

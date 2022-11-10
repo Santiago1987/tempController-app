@@ -8,3 +8,12 @@ body {
     cursor: pointer;
     left: 82%;
 }
+
+.loading {
+    left: 20%;
+    top: 20%;
+    font-size: 20rem;
+    background: rgba(#0f172a, 0.8);
+    color: #33beff;
+    position:absolute
+}

@@ -13,6 +13,8 @@ import RegisterEditModule from "./containers/Module/RegisterEditModule";
 import UserRegisterUpd from "./containers/Register/UserRegisterUpd";
 import UserUpdatePass from "./containers/Users/UserUpdatePass";
 import TablePDF from "./containers/PDF/TablePDF";
+import Loading from "./components/Loading/Loading";
+import Settings from "./containers/Settings/Settings";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="/users/editpass" element={<UserUpdatePass />} />
           <Route path="/sensors" element={<Sensors />} />
           <Route path="/print/table" element={<TablePDF />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/loading" element={<Loading />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </AdministratorProvider>

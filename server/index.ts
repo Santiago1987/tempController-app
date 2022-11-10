@@ -9,6 +9,7 @@ import modulesRouter from "./routes/modulesRouter";
 import userExtractor from "./middleware/userExtractor";
 import sensorsRouter from "./routes/sensorsRouter";
 import { loadModulelist } from "./utils/moduleList";
+import settingsRouter from "./routes/settingsRouter";
 
 const app = express();
 config();
@@ -27,6 +28,7 @@ app.use("/api/module", userExtractor);
 app.use("/api/user", usersRouter);
 app.use("/api/module", modulesRouter);
 app.use("/api/sensor", sensorsRouter);
+app.use("/api/settings", settingsRouter);
 
 //ERROR MIDDELWARE
 app.use(notFound);

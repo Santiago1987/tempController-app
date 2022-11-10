@@ -3,6 +3,7 @@ import useLoging from "../hooks/User/useLoging";
 import useUser from "../hooks/User/useUser";
 import { useNavigate } from "react-router-dom";
 import LogingComponent from "../../components/Loggin/LoginComponent";
+import Loading from "../../components/Loading/Loading";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,14 +37,17 @@ const Login = () => {
 
   return (
     <>
-      {isLogingLoading && <strong>Checking credentials</strong>}
-      {!isLogingLoading && (
-        <LogingComponent
-          logValues={logValues}
-          handleLogin={handleLogin}
-          handleOnChange={handleOnChange}
-          hasLoadingError={hasLoadingError}
-        />
+      {isLogingLoading ? (
+        <Loading />
+      ) : (
+        !isLogingLoading && (
+          <LogingComponent
+            logValues={logValues}
+            handleLogin={handleLogin}
+            handleOnChange={handleOnChange}
+            hasLoadingError={hasLoadingError}
+          />
+        )
       )}
     </>
   );

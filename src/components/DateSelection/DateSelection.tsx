@@ -2,8 +2,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 type props = {
-  frDate: string;
-  toDate: string;
+  frDate: Date | undefined;
+  toDate: Date | undefined;
   handleOnChangeFrDate: (date: string) => void;
   handleOnChangeToDate: (date: string) => void;
 };
@@ -24,12 +24,12 @@ const DateSelection = ({
           </label>
           <DatePicker
             id="frDate"
-            selected={new Date(frDate)}
+            selected={frDate ? frDate : new Date()}
             onChange={handleOnChangeFrDate}
             dateFormat="dd/MM/yyyy HH:mm"
             timeIntervals={10}
-            maxDate={new Date(toDate)}
-            startDate={new Date(frDate)}
+            maxDate={toDate ? toDate : new Date()}
+            startDate={frDate ? frDate : new Date()}
             showTimeSelect
             className=""
           />
@@ -40,12 +40,12 @@ const DateSelection = ({
           </label>
           <DatePicker
             id="toDate"
-            selected={new Date(toDate)}
+            selected={toDate ? toDate : new Date()}
             onChange={handleOnChangeToDate}
             dateFormat="dd/MM/yyyy HH:mm"
             timeIntervals={10}
-            minDate={new Date(frDate)}
-            enDate={new Date(toDate)}
+            minDate={frDate ? frDate : new Date()}
+            enDate={toDate ? toDate : new Date()}
             showTimeSelect
             className=""
           />

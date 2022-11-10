@@ -23,7 +23,7 @@ const useSensorActions = () => {
 
   // GET LIST OF TEMPERATURES
   const getTempList = useCallback(
-    (frDate: string, toDate: string): Promise<sensorAfterReading[]> => {
+    (frDate: Date, toDate: Date): Promise<sensorAfterReading[]> => {
       if (!jwt) {
         return Promise.reject(undefined);
       }

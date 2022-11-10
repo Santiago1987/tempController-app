@@ -17,6 +17,7 @@ import Graphic from "../Graph/Graphic";
 import ModuleSelection from "../../components/ModuleSelection/ModuleSelection";
 
 type selecModule = { chipID: string; sensors: (boolean | undefined)[] };
+type dates = { frDate: Date | undefined; toDate: Date | undefined };
 
 const Home: React.FC = () => {
   //USUARIO
@@ -30,9 +31,9 @@ const Home: React.FC = () => {
   const { getTempList } = useSensorActions();
 
   //FECHAS
-  const [dates, setDates] = useState({
-    frDate: moment().format(),
-    toDate: moment().format(),
+  const [dates, setDates] = useState<dates>({
+    frDate: undefined,
+    toDate: undefined,
   });
 
   //LISTA DE MODULOS
@@ -55,7 +56,6 @@ const Home: React.FC = () => {
       navigate("/login");
       return;
     }
-
     //GET LIST OF MODULES
     getModuleList()
       .then((res) => {
@@ -67,12 +67,6 @@ const Home: React.FC = () => {
           if (active) result.push({ ...m });
         }
         setModules(result);
-
-        //FECHAS DEFAULT
-        setDates({
-          frDate: moment().subtract(1, "day").format(),
-          toDate: moment().format(),
-        });
       })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
@@ -81,11 +75,20 @@ const Home: React.FC = () => {
           return;
         }
       });
-  }, [isLogged]);
+
+    //FECHAS DEFAULT
+    if (!(dates.frDate && dates.toDate)) {
+      setDates({
+        frDate: moment().subtract(1, "days").toDate(),
+        toDate: moment().toDate(),
+      });
+    }
+  }, []);
 
   // GETTING DATA SENSORS FROM BD
   useEffect(() => {
     if (modules.length < 1) return;
+    if (!(dates.frDate && dates.toDate)) return;
     let { frDate, toDate } = dates;
 
     getTempList(frDate, toDate)
@@ -112,21 +115,24 @@ const Home: React.FC = () => {
         setModTemps(res[selectedModule.chipID]);
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;
         }
       });
-  }, [dates]);
+  }, [dates, modules]);
 
   // DATE FUNCTIONS
   const handleOnChangeFrDate = (date) => {
-    setDates({ ...dates, frDate: moment(date).format() });
+    if (!date) return;
+    setDates({ ...dates, frDate: moment(date).toDate() });
   };
 
   const handleOnChangeToDate = (date) => {
-    setDates({ ...dates, toDate: moment(date).format() });
+    if (!date) return;
+    setDates({ ...dates, toDate: moment(date).toDate() });
   };
 
   //MODULES FUNCTIONS

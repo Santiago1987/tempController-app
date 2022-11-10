@@ -6,8 +6,8 @@ const tempListURL = process.env.REACT_APP_SENSOR_LIST;
 
 const tempListService = (
   jwt: string,
-  frDate: string,
-  toDate: string
+  frDate: Date,
+  toDate: Date
 ): Promise<sensorAfterReading[]> => {
   if (!jwt) {
     console.error("missing jwt");

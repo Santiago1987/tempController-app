@@ -83,6 +83,17 @@ const Header = () => {
                         </div>
                       </MenuItemLink>
                     </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink
+                        to="/settings"
+                        onClick={() => setShotMobileMenu(!showMobileMenu)}
+                      >
+                        <div>
+                          <FaDoorClosed />
+                          SETTINGS
+                        </div>
+                      </MenuItemLink>
+                    </MenuItem>
                   </>
                 ) : (
                   <></>
