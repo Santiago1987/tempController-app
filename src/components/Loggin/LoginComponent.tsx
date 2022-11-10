@@ -12,16 +12,29 @@ import {
   Button,
 } from "./LoginComponentSyles";
 import { FaThermometerHalf } from "react-icons/fa";
+import Mensaje from "../Mensajes/Mensaje";
+import { messageType } from "../../typeEnum";
 
 type Props = {
   logValues: { username: string; password: string };
   handleLogin: (ev: React.FormEvent<HTMLFormElement>) => void;
   handleOnChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  hasLoadingError: string;
 };
 
-const LogingComponent = ({ logValues, handleLogin, handleOnChange }: Props) => {
+const LogingComponent = ({
+  logValues,
+  handleLogin,
+  handleOnChange,
+  hasLoadingError,
+}: Props) => {
   return (
     <Container>
+      {hasLoadingError !== "" ? (
+        <Mensaje tipo={messageType.error} message={hasLoadingError} />
+      ) : (
+        <></>
+      )}
       <Wrapper>
         <Form onSubmit={handleLogin}>
           <LoginLogo>

@@ -7,7 +7,11 @@ import useUser from "../../containers/hooks/User/useUser";
 import useModuleActions from "../hooks/Module/useModuleActions";
 import useSensorActions from "../hooks/Sensor/useSensorActions";
 import mapTempListFromBd from "../../utils/mapTempListFromBD";
-import { sensorMappingResult, ModuleFromBD } from "../../../types";
+import {
+  MapSensorList,
+  ModuleFromBD,
+  sensorMappingResult,
+} from "../../../types";
 import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
 import ModuleSelection from "../../components/ModuleSelection/ModuleSelection";
@@ -36,6 +40,9 @@ const Home: React.FC = () => {
 
   //LISTA DE TEMPERATURAS POR MODULO COMO KEY DEL JSON
   const [temps, setTemps] = useState<sensorMappingResult | []>([]);
+
+  //LISTA DE TEMPS DE UN SOLO MODULO
+  const [modTemps, setModTemps] = useState<MapSensorList[]>([]);
 
   //MODULO SELECCIONADO EN EL COMBOBOX
   const [selectedModule, setSelectedModule] = useState<selecModule | undefined>(
@@ -84,10 +91,13 @@ const Home: React.FC = () => {
     getTempList(frDate, toDate)
       .then(mapTempListFromBd)
       .then((res) => {
+        //GUARDADO DE TODA LA DATA => chipID key{ fecha, temps[]}
         setTemps(res);
 
         if (!selectedModule) {
+          //se selecciona por defecto el primer modulo
           let { chipID, sensors } = modules[0];
+          setModTemps(res[chipID]);
           let sen: (boolean | undefined)[] = [];
 
           for (let s of sensors) {
@@ -97,7 +107,9 @@ const Home: React.FC = () => {
             chipID,
             sensors: sen,
           });
+          return;
         }
+        setModTemps(res[selectedModule.chipID]);
       })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
@@ -126,7 +138,9 @@ const Home: React.FC = () => {
     let mod = modules.find((m) => m.chipID === value);
     if (!mod) return;
 
-    let { sensors } = mod;
+    let { sensors, chipID } = mod;
+
+    setModTemps(temps[chipID]);
 
     let actives = sensors.map((s) => {
       if (s.active) return true;
@@ -165,7 +179,7 @@ const Home: React.FC = () => {
         </div>
         <div className="row">
           <Graphic
-            dataComplete={temps}
+            moduleData={modTemps}
             selectedModule={selectedModule}
             dates={dates}
           />

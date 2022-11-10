@@ -1,6 +1,9 @@
 import moment from "moment";
+import { FaPrint } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 type singleModule = {
-  dateformat: Date;
+  date: Date;
   temperature: number[];
 }[];
 
@@ -11,11 +14,20 @@ type props = {
 const TempTable = ({ tableData }: props) => {
   let { titles, moduleData } = tableData;
 
+  const navigate = useNavigate();
+
+  const handleOnClickPrint = () => {
+    navigate("/print/table", { state: tableData });
+  };
+
   return (
     <>
       {moduleData ? (
         <>
           <div className="shadow bg-white rounded mt-1">
+            <div className="print" onClick={handleOnClickPrint}>
+              <FaPrint />
+            </div>
             <table className="table table-striped">
               <thead>
                 <tr>
@@ -47,12 +59,10 @@ const TempTable = ({ tableData }: props) => {
               <table className="table table-striped">
                 <tbody>
                   {moduleData.map((data, index) => {
-                    let { dateformat, temperature } = data;
+                    let { date, temperature } = data;
 
-                    let day = moment(dateformat).format("DD/MM");
-                    let time = moment(dateformat)
-                      .add(3, "hours")
-                      .format("hh:mm:ss");
+                    let day = moment(date).format("DD/MM");
+                    let time = moment(date).add(3, "hours").format("hh:mm:ss");
 
                     return (
                       <tr key={index}>

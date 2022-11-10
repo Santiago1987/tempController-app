@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import ErrorMsg from "../../components/errorMsg/ErrorMsg";
 import useLoging from "../hooks/User/useLoging";
 import useUser from "../hooks/User/useUser";
 import { useNavigate } from "react-router-dom";
@@ -43,9 +42,9 @@ const Login = () => {
           logValues={logValues}
           handleLogin={handleLogin}
           handleOnChange={handleOnChange}
+          hasLoadingError={hasLoadingError}
         />
       )}
-      {hasLoadingError && <ErrorMsg message="Invalid creadentials" />}
     </>
   );
 };

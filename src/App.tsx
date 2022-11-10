@@ -1,4 +1,3 @@
-//import React from "react";
 import UserContextProvider from "./containers/context/UserContext";
 import AdministratorProvider from "./containers/context/AdministratorContext";
 import { Routes, Route } from "react-router-dom";
@@ -13,6 +12,7 @@ import Sensors from "./containers/Sensors/Sensors";
 import RegisterEditModule from "./containers/Module/RegisterEditModule";
 import UserRegisterUpd from "./containers/Register/UserRegisterUpd";
 import UserUpdatePass from "./containers/Users/UserUpdatePass";
+import TablePDF from "./containers/PDF/TablePDF";
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
           <Route path="/users/regedit" element={<UserRegisterUpd />} />
           <Route path="/users/editpass" element={<UserUpdatePass />} />
           <Route path="/sensors" element={<Sensors />} />
+          <Route path="/print/table" element={<TablePDF />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </AdministratorProvider>

@@ -28,19 +28,19 @@ const useUser = () => {
 
   const [logState, setLogState] = useState({
     loading: false,
-    error: false,
+    error: "",
   });
 
   // Logeo de usuario
   const login = useCallback(
     (username: string, password: string): void => {
-      setLogState({ loading: true, error: false });
+      setLogState({ loading: true, error: "" });
 
       loginService(username, password)
         .then((res) => {
           if (res?.token) {
             window.localStorage.setItem("token", res.token);
-            setLogState({ loading: false, error: false });
+            setLogState({ loading: false, error: "" });
             setJWT(res.token);
             setIsAdministrator(res.administrator === true ? "true" : "false");
             window.localStorage.setItem("adm", String(res.administrator));
@@ -49,7 +49,10 @@ const useUser = () => {
         })
         .catch((err) => {
           window.localStorage.removeItem("token");
-          setLogState({ loading: false, error: true });
+          setLogState({
+            loading: false,
+            error: "Usuario o contraseña incorrectos",
+          });
           console.error(err.name);
         });
     },
@@ -78,7 +81,7 @@ const useUser = () => {
   //User list
   const getUserList = useCallback((): Promise<UserRegisterUpdInterface[]> => {
     if (!jwt) {
-      setLogState({ loading: false, error: true });
+      setLogState({ loading: false, error: "la session a expirado" });
       return Promise.reject(undefined);
     }
 
@@ -111,7 +114,7 @@ const useUser = () => {
   //DELETE USER
   const deleteUser = useCallback(
     (id: string): Promise<boolean> => {
-      setLogState({ loading: true, error: false });
+      setLogState({ loading: true, error: "" });
 
       if (!jwt) {
         return Promise.reject(false);

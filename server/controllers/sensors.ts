@@ -18,7 +18,7 @@ export const resgiterTemp = async (
     date = new Date();
     date = new Date(date.setHours(date.getHours() - 3));
   }
-  //console.log(date, temperature, chipID);
+  console.log(date, temperature, chipID);
   try {
     if (!(temperature && chipID)) {
       let err = new Error();

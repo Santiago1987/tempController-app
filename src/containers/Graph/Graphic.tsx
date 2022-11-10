@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { moduleData, sensorMappingResult } from "../../../types";
+import { moduleData, MapSensorList } from "../../../types";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HC_brokenAxis from "highcharts/modules/broken-axis";
@@ -12,26 +12,21 @@ HC_brokenAxis(Highcharts);
 HC_exporting(Highcharts);
 
 type props = {
-  dataComplete: sensorMappingResult | [];
+  moduleData: MapSensorList[];
   selectedModule:
     | { chipID: string; sensors: (boolean | undefined)[] }
     | undefined;
   dates: { frDate: string; toDate: string };
 };
 
-type singleModule = {
-  dateformat: Date;
-  temperature: number[];
-}[];
-
 type tableData = {
   titles: string[];
-  moduleData: singleModule;
+  moduleData: MapSensorList[];
 };
 
 //datacomplete ===> [chipID:[{dia, temperatura: [array de sensores]]}]
 
-const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
+const Graphic = ({ moduleData, selectedModule, dates }: props) => {
   const [tableData, setTableData] = useState<tableData>({
     titles: [],
     moduleData: [],
@@ -84,19 +79,15 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
 
   // DATA FORMATING
   useEffect(() => {
-    if (!(selectedModule && dataComplete)) return;
+    if (!selectedModule) return;
 
-    let { chipID } = selectedModule;
-
-    //data ===> [date, temperatura[sensores]]
-    let data = dataComplete[chipID] as singleModule;
-    if (!data) {
+    if (!moduleData) {
       setOptions({ ...options, series: [], xAxis: {} });
       setTableData({ titles: [], moduleData: [] });
       return;
     }
 
-    let [mappedData, tableData] = formatData(data);
+    let [mappedData, tableData] = formatData(moduleData);
     let xAxis: any = {
       type: "datetime",
       //tickInterval: 3600 * 1000,
@@ -108,7 +99,7 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     };
 
     let [ydata, breaks] = getAxis(mappedData);
-
+    console.log("tableData", tableData);
     setTableData({ titles: Object.keys(ydata), moduleData: tableData });
 
     xAxis = { ...xAxis, breaks };
@@ -127,35 +118,35 @@ const Graphic = ({ dataComplete, selectedModule, dates }: props) => {
     }
 
     setOptions({ ...options, series, xAxis });
-  }, [dataComplete, selectedModule]);
+  }, [moduleData, selectedModule]);
 
   //recibe todas las temps de un modulo y devuelve por sensor
-  const formatData = (data: singleModule): any => {
+  const formatData = (data: MapSensorList[]): any => {
     if (!data) return [];
     if (!selectedModule) return [];
     let { sensors } = selectedModule;
 
     //table
-    let tableDta: singleModule = [];
+    let tableDta: MapSensorList[] = [];
 
     let dataFormated: moduleData = new Map();
 
     for (let temp of data) {
-      let { dateformat, temperature } = temp;
+      let { date, temperature } = temp;
       let tmpSingleSensor: number[] = [];
 
       for (let i = 0; i < temperature.length; i++) {
         if (sensors[i]) {
-          let array = dataFormated.get(dateformat);
+          let array = dataFormated.get(date);
 
           tmpSingleSensor.push(temperature[i]);
 
           if (!array) array = [];
           array.push({ sensor: i, temperature: temperature[i] });
-          dataFormated.set(dateformat, array);
+          dataFormated.set(date, array);
         }
-        tableDta.push({ dateformat, temperature: tmpSingleSensor });
       }
+      tableDta.push({ date, temperature: tmpSingleSensor });
     }
 
     return [dataFormated, tableDta];

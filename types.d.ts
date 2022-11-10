@@ -68,7 +68,7 @@ export interface sensorAfterReading {
 }
 
 export interface MapSensorList {
-  dateformat: string;
+  date: Date;
   temperature: number[];
 }
 

@@ -1,4 +1,4 @@
-import moment from "moment";
+//import moment from "moment";
 import { sensorAfterReading, sensorMappingResult } from "../../types";
 
 const mapTempListFromBD = (listTemp: sensorAfterReading[]) => {
@@ -7,11 +7,11 @@ const mapTempListFromBD = (listTemp: sensorAfterReading[]) => {
   for (let temps of listTemp) {
     let { chipID, date, temperature } = temps;
 
-    let dateformat = moment(date).format();
+    //let dateformat = moment(date).format();
 
     if (!result[chipID]) result[chipID] = [];
 
-    result[chipID].push({ dateformat, temperature });
+    result[chipID].push({ date, temperature });
   }
   return result;
 };
