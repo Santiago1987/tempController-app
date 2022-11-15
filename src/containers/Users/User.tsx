@@ -90,23 +90,28 @@ const User = () => {
 
   return (
     <>
-      <h2>Usuarios</h2>
-      <button onClick={handleOnClickRegister}>Registrar nuevo usuario</button>
-      {isLoading ? (
-        <h2>Loading....</h2>
-      ) : (
-        userList.map((us) => {
-          return (
-            <UserComponent
-              key={us.id}
-              user={{ ...us, password: "" }}
-              handleOnClickEdit={handleOnClickEdit}
-              handleOnClickDelete={handleOnClickDelete}
-              handleOnClickChangePass={handleOnClickChangePass}
-            />
-          );
-        })
-      )}
+      <div className="container main-container">
+        <h2 className="main-title">Usuarios</h2>
+
+        <button className="btn create-btn m-1" onClick={handleOnClickRegister}>
+          Registrar nuevo usuario
+        </button>
+        {isLoading ? (
+          <h2>Loading....</h2>
+        ) : (
+          userList.map((us) => {
+            return (
+              <UserComponent
+                key={us.id}
+                user={{ ...us, password: "" }}
+                handleOnClickEdit={handleOnClickEdit}
+                handleOnClickDelete={handleOnClickDelete}
+                handleOnClickChangePass={handleOnClickChangePass}
+              />
+            );
+          })
+        )}
+      </div>
     </>
   );
 };

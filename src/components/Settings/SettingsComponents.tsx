@@ -25,8 +25,8 @@ const SettingsComponents = ({
 
   return (
     <>
-      <div className="container">
-        <p className="w-50 p-3 mx-auto h2">Settings</p>
+      <div className="main-container container">
+        <p className="main-title h2">Settings</p>
         <form onSubmit={handleOnSubmit}>
           <input
             type="text"
@@ -36,38 +36,40 @@ const SettingsComponents = ({
             onChange={(ev) => {}}
           />
           <div>
-            <p className="w-50 p-3 mx-auto h2">Fechas por default</p>
-            <div className="form-group p-3">
-              <label htmlFor="frDate">Desde</label>
-              <DatePicker
-                id="frDate"
-                name="frdate"
-                selected={frDate ? frDate : new Date()}
-                onChange={handleOnChange}
-                dateFormat="dd/MM/yyyy HH:mm"
-                timeIntervals={10}
-                maxDate={toDate ? toDate : new Date()}
-                startDate={frDate ? frDate : new Date()}
-                showTimeSelect
-              />
-            </div>
-            <div className="form-group p-3">
-              <label htmlFor="toDate">Hasta</label>
-              <DatePicker
-                id="toDate"
-                name="toDate"
-                selected={toDate ? toDate : new Date()}
-                onChange={handleOnChange}
-                dateFormat="dd/MM/yyyy HH:mm"
-                timeIntervals={10}
-                maxDate={frDate ? frDate : new Date()}
-                startDate={toDate ? toDate : new Date()}
-                showTimeSelect
-              />
-            </div>
+            <fieldset>
+              <p className="h3">Fechas por default</p>
+              <div className="form-group p-3">
+                <label htmlFor="frDate">Desde</label>
+                <DatePicker
+                  id="frDate"
+                  name="frdate"
+                  selected={frDate ? frDate : new Date()}
+                  onChange={handleOnChange}
+                  dateFormat="dd/MM/yyyy HH:mm"
+                  timeIntervals={10}
+                  maxDate={toDate ? toDate : new Date()}
+                  startDate={frDate ? frDate : new Date()}
+                  showTimeSelect
+                />
+              </div>
+              <div className="form-group p-3">
+                <label htmlFor="toDate">Hasta</label>
+                <DatePicker
+                  id="toDate"
+                  name="toDate"
+                  selected={toDate ? toDate : new Date()}
+                  onChange={handleOnChange}
+                  dateFormat="dd/MM/yyyy HH:mm"
+                  timeIntervals={10}
+                  maxDate={frDate ? frDate : new Date()}
+                  startDate={toDate ? toDate : new Date()}
+                  showTimeSelect
+                />
+              </div>
+            </fieldset>
           </div>
           <div>
-            <p className="w-50 p-3 mx-auto h2">Temperaturas limites</p>
+            <p className="h3">Temperaturas limites</p>
             <div className="form-group p-3">
               <label htmlFor="tempSup">Temperatura máxima</label>
               <input
@@ -94,9 +96,7 @@ const SettingsComponents = ({
             </div>
           </div>
           <div>
-            <p className="w-50 p-3 mx-auto h2">
-              Seleccion de usuarios para las alertas
-            </p>
+            <p className="h3">Seleccion de usuarios para las alertas</p>
             <div className="form-group p-3">
               <label htmlFor="modCombo" className="p-2 fw-bold">
                 Usuarios

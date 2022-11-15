@@ -5,6 +5,7 @@ export const Container = styled.div`
     width: 100%;
     height: 70px;
     background-color: #23394d;
+    z-index: 9999;
 `;
 
 export const Wrapper = styled.div`
@@ -15,6 +16,7 @@ export const Wrapper = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
     margin: auto;
+    z-index: 9999;
 `;
 
 export const LogoLink = styled(Link)`
@@ -31,14 +33,15 @@ export const LogoContainer = styled.div`
     display: flex;
     align-items: center;
     font-size: 1.2rem;
-    font-family: sans-serif;
+    font-family: "RobotoCondensed-Bold", sans-serif;
 
     h3{
-       color: #fff; 
+       color: #fff;
+       margin: 0;
     }
 
     svg{
-        fill: #e8792a;
+        fill: #79ade8;
         margin-right: 0.5rem;
     }
 `;
@@ -48,6 +51,7 @@ export const Menu = styled.ul`
     display: flex;
     justify-content: space-between;
     list-style: none;
+    z-index: 9999;
 
     @media screen and (max-width: 960px){
         background-color: #23394d;
@@ -60,6 +64,7 @@ export const Menu = styled.ul`
         flex-direction: column;
         align-items: center;
         transition: 0.5s all ease;
+        z-index:9999;
     }
 `;
 
@@ -82,17 +87,15 @@ export const MenuItemLink = styled(Link)`
     height: 100%;
     padding: 0.5rem 2.5rem;
     color: #fff;
-    font-family: sans-serif;
+    font-family: "RobotoCondensed-Regular", sans-serif;
     font-size: 1rem;
-    font-weight: 300;
     cursor: pointer;
     transition: 0.5s all ease;
     text-decoration: none;
-    font-weight: bold;
 
     &:hover {
         color: #fff;
-        background-color: #e8792a;
+        background-color: #79ade8;
         transition: 0.5 all easy;
 
         div{
@@ -110,7 +113,7 @@ export const MenuItemLink = styled(Link)`
 
         svg {
             display: none;
-            fill:  #e8792a;
+            fill:  #79ade8;
             margin-right: 0.5rem;
         }
 
@@ -167,7 +170,7 @@ export const MobileIcon = styled.div`
         cursor: pointer;
 
         svg{
-            fill: #e8792a;
+            fill: #79ade8;
             margin-right: 0.5rem;
         }
     }

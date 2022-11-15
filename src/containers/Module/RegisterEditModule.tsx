@@ -4,6 +4,7 @@ import useModule from "../hooks/Module/useModule";
 import { useEffect, useState } from "react";
 import useUser from "../hooks/User/useUser";
 import { useNavigate, useLocation } from "react-router-dom";
+/**import { Alert } from "react-bootstrap";*/
 
 type module = Omit<ModuleFromBD, "sensors">;
 
@@ -27,7 +28,7 @@ const RegisterEditModule = () => {
   //Register mode
   const [isRegister, setIsRegister] = useState(true);
   //Title
-  const [title, setTitle] = useState("Registro de Modulo");
+  const [title, setTitle] = useState("Registro de Módulo");
 
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
@@ -44,7 +45,7 @@ const RegisterEditModule = () => {
       setUbication(ubication);
       setActive(active);
 
-      setTitle("Edicion de modulo");
+      setTitle("Edición de modulo");
     }
   }, []);
 
@@ -98,50 +99,52 @@ const RegisterEditModule = () => {
 
   return (
     <>
-      <div className="container">
-        <p className="w-50 p-3 mx-auto h2">{title}</p>
-        <form className="w-50 p-3 mx-auto" onSubmit={handleOnSubmit}>
+      {/*<Alert show={}>
+      <Alert.Heading></Alert.Heading>
+  </Alert>*/}
+      <div className="container main-container">
+        <p className="h2 main-title">{title}</p>
+        <form className="" onSubmit={handleOnSubmit}>
           <div>
-            <div hidden={!isRegister} className="form-group px-3">
-              <label htmlFor="chipID">MAC</label>
-              <input
-                id="chipID"
-                name="chipID"
-                type="text"
-                value={registerModule.chipID}
-                onChange={handleOnChange}
-                className="form-control"
-                placeholder="Numero de MAC"
-              />
+            <div hidden={!isRegister} className="form-group">
+              <div className="form-floating">
+                <input
+                  id="chipID"
+                  name="chipID"
+                  type="text"
+                  value={registerModule.chipID}
+                  onChange={handleOnChange}
+                  className="form-control  shadow-none"
+                  placeholder="MAC ID"
+                />
+                <label htmlFor="chipID">MAC ID</label>
+              </div>
             </div>
-            <div className="form-group p-3">
-              <label htmlFor="name">Nombre</label>
+            <div className="form-floating">
               <input
-                className="form-control"
+                className="form-control  shadow-none"
                 id="name"
                 name="name"
                 value={registerModule.name}
                 type="text"
                 onChange={handleOnChange}
-                placeholder="Nombre del modulo"
+                placeholder="Nombre del módulo"
               />
+              <label htmlFor="name">Nombre del módulo</label>
             </div>
-            <div className="form-group p-3">
-              <label htmlFor="ubication">Ubicacion</label>
+            <div className="form-floating">
               <input
                 id="ubication"
                 name="ubication"
                 type="text"
-                className="form-control"
+                className="form-control shadow-none"
                 value={registerModule.ubication}
                 onChange={handleOnChange}
-                placeholder="Ubicacion del modulo"
+                placeholder="Ubicación del módulo"
               />
+              <label htmlFor="ubication">Ubicación del módulo</label>
             </div>
-            <div className="form-group p-3">
-              <label className="form-check-label" htmlFor="active">
-                Activo
-              </label>
+            <div className="form-check active-check p-3">
               <input
                 id="active"
                 name="active"
@@ -150,19 +153,18 @@ const RegisterEditModule = () => {
                 checked={registerModule.active}
                 onChange={handleOnChange}
               />
+              <div className="fake-input"></div>
+              <label className="form-check-label" htmlFor="active">
+                Activo
+              </label>
             </div>
-            <div className="w-75 p-3 mx-auto">
-              <button
-                type="submit"
-                className="btn btn-primary btn-lg m-1"
-                style={{ width: "200px" }}
-              >
-                Guardar cambios
+            <div className="btn-submit-container">
+              <button type="submit" className="btn submit-btn">
+                Guardar
               </button>
               <button
                 type="button"
-                className="btn btn-dark btn-lg m-1"
-                style={{ width: "200px" }}
+                className="btn cancel-btn"
                 onClick={handleOnClickCancelRegister}
               >
                 Cancelar

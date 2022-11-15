@@ -4,6 +4,7 @@ import useModuleActions from "../hooks/Module/useModuleActions";
 import { ModuleFromBD } from "../../../types";
 import useUser from "../hooks/User/useUser";
 import ModuleComponent from "../../components/Module/ModuleComponent";
+import { FaPlus } from "react-icons/fa";
 
 type modList = Omit<ModuleFromBD, "sensors">;
 
@@ -98,15 +99,15 @@ const Module = () => {
   return (
     <>
       <div className="container">
-        <div className="w-50 mx-auto">
-          <div className="d-flexbox flex-column justify-content-center">
-            <p className="w-50 p-3 mx-auto h2">Lista de modulos</p>
+        <div className="modules-container">
+          <div className="d-flexbox flex-column justify-content-center module-list">
+            <p className="h2">Lista de módulos</p>
             <button
               type="button"
-              className="btn btn-primary m-1"
+              className="btn create-btn m-1"
               onClick={handleOnClickRegister}
             >
-              Registrar nuevo modulo
+              <FaPlus /> Nuevo modulo
             </button>
             {isLoading ? (
               <h2>Loading....</h2>

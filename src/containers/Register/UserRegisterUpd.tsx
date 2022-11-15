@@ -24,7 +24,7 @@ const UserRegisterUpd = () => {
     useRegister();
 
   //Title
-  const [title, setTitle] = useState("Registro de usuarios");
+  const [title, setTitle] = useState("Registro de usuario");
 
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
@@ -42,7 +42,7 @@ const UserRegisterUpd = () => {
       setselectedID(id);
       setPassword("");
 
-      setTitle("Edicion de usuario");
+      setTitle("Edición de usuario");
       return;
     }
     setIsRegister(true);
