@@ -1,4 +1,5 @@
 import { ModuleFromBD } from "../../../types";
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
 type module = Omit<ModuleFromBD, "sensors">;
 
 interface props {
@@ -16,7 +17,23 @@ const ModuleComponent = ({
 
   return (
     <div className="shadow bg-white rounded m-2">
-      <div className="d-flexbox align-items-center">
+      <div className="position-relative">
+        <div className="d-flex justify-content-end position-absolute card-btns-container">
+          <button
+            type="button"
+            className="card-btns"
+            onClick={(ev) => handleOnClickEdit(chipID)}
+          >
+            <FaPencilAlt />
+          </button>
+          <button
+            type="button"
+            className="card-btns"
+            onClick={() => handleOnClickDelete(chipID)}
+          >
+            <FaTimes />
+          </button>
+        </div>
         <input
           name="chipID"
           type="text"
@@ -25,34 +42,17 @@ const ModuleComponent = ({
           onChange={() => {}}
         />
         <div className="p-2">
-          <p className="h5">{`Nombre: ${name}`} </p>
+          <small>Nombre</small>
+          <p className="h5">{name} </p>
         </div>
         <div className="p-2">
-          <p className="h5">{`Ubicacion: ${ubication}`} </p>
+          <small>Ubicación</small>
+          <p className="h5">{ubication} </p>
         </div>
         <div className="p-2">
-          <p
-            className="h5"
-            style={active ? { color: "#255c06" } : { color: "#ff3342" }}
-          >
-            {active ? `El modulo esta activo` : `El modulo esta desactivado`}{" "}
+          <p className={`h5 blinker ${active ? "active" : "inactive"}`}>
+            {active ? `Activado` : `Desactivado`}{" "}
           </p>
-        </div>
-        <div className="d-flex justify-content-end">
-          <button
-            type="button"
-            className="btn btn-primary m-2"
-            onClick={(ev) => handleOnClickEdit(chipID)}
-          >
-            Editar
-          </button>
-          <button
-            type="button"
-            className="btn btn-danger m-2"
-            onClick={() => handleOnClickDelete(chipID)}
-          >
-            Delete
-          </button>
         </div>
       </div>
     </div>

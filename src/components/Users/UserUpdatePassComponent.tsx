@@ -19,50 +19,47 @@ const UserUpdatePassComponent = ({
 }: props) => {
   return (
     <>
-      <div className="container">
-        <p className="w-50 p-3 mx-auto h2">Cambio de contraseña</p>
+      <div className="container main-container">
+        <p className="main-title h2">Cambio de contraseña</p>
         <form
-          className="w-50 p-3 mx-auto"
+          className=""
           onSubmit={(ev) => handleOnClickSavePass(ev, passwordOne, passwordTwo)}
         >
-          <div>
-            <div className="form-group p-3">
-              <input
-                className="form-control"
-                type="text"
-                name="passwordOne"
-                value={passwordOne}
-                onChange={handleOnChangePass}
-                placeholder="Ingrese la contraseña"
-              />
-            </div>
-            <div className="form-group p-3">
-              <input
-                className="form-control"
-                type="text"
-                name="passwordTwo"
-                value={passwordTwo}
-                onChange={handleOnChangePass}
-                placeholder="Repita la contraseña"
-              />
-            </div>
-            <div className="w-75 p-3 mx-auto">
-              <button
-                type="submit"
-                className="btn btn-primary btn-lg m-1"
-                style={{ width: "200px" }}
-              >
-                Guardar cambios
-              </button>
-              <button
-                type="button"
-                className="btn btn-dark btn-lg m-1"
-                style={{ width: "200px" }}
-                onClick={handleOnClickCancelPass}
-              >
-                Cancelar
-              </button>
-            </div>
+          <div className="form-floating">
+            <input
+              id="passwordOne"
+              className="form-control shadow-none"
+              type="text"
+              name="passwordOne"
+              value={passwordOne}
+              onChange={handleOnChangePass}
+              placeholder="Ingrese la contraseña"
+            />
+            <label htmlFor="">Ingrese la contraseña</label>
+          </div>
+          <div className="form-floating">
+            <input
+              id="passwordTwo"
+              className="form-control"
+              type="text"
+              name="passwordTwo"
+              value={passwordTwo}
+              onChange={handleOnChangePass}
+              placeholder="Repita la contraseña"
+            />
+            <label htmlFor="passwordTwo">Repita la contraseña</label>
+          </div>
+          <div className="btn-submit-container">
+            <button type="submit" className="btn submit-btn">
+              Guardar
+            </button>
+            <button
+              type="button"
+              className="btn cancel-btn"
+              onClick={handleOnClickCancelPass}
+            >
+              Cancelar
+            </button>
           </div>
         </form>
       </div>

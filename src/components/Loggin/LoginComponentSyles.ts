@@ -46,7 +46,7 @@ export const LoginLogo = styled.span`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-color: #e8792a;
+  background-color: #79ade8;
   margin: 0 auto;
 `;
 
@@ -57,6 +57,7 @@ export const LoginTitle = styled.span`
   text-align: center;
   text-transform: uppercase;
   display: block;
+  font-family: 'RobotoCondensed-Bold', sans-serif;
 `;
 
 export const WrapperInput = styled.div`
@@ -67,6 +68,7 @@ export const WrapperInput = styled.div`
 `;
 
 export const Input = styled.input`
+  font-family: 'RobotoCondensed-Regular', sans-serif;
   font-size: 20px;
   color: #fff;
   line-height: 1.2;
@@ -74,7 +76,6 @@ export const Input = styled.input`
   width: 100%;
   height: 45px;
   background: 0 0;
-  padding: 0 5px 0 38px;
   outline: none;
   border: none;
   overflow: visible;
@@ -127,17 +128,18 @@ export const ButtonContainner = styled.div`
 `;
 
 export const Button = styled.button`
-  font-size: 16px;
+  font-size: 24px;
   color: #23394d;
   line-height: 1.2;
-  padding: 0 20px;
+  padding: 0 30px;
   min-width: 120px;
   height: 50px;
   border-radius: 25px;
   position: relative;
   z-index: 1;
   transition: 0.5 all ease;
-  background: #e8792a;
+  background: #79ade8;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'RobotoCondensed-Bold', sans-serif;
+  text-transform: uppercase;
 `;

@@ -59,31 +59,47 @@ const SensorsComponent = ({ module }: props) => {
 
   return (
     <>
-      <h3>{`Modulo: ${moduleInfo.name}`}</h3>
-      <label>Lista de Sensores</label>
-      <ul>
-        {sensores.map((s, index) => {
-          return (
-            <li key={index}>
-              <label>{`Sensor ${index + 1}`}</label>
-              <input
-                type="text"
-                value={s.name}
-                name="name"
-                onChange={(ev) => handleOnChangeSensor(ev, index)}
-                placeholder="Nombre del sensor"
-              />
-              <input
-                type="checkbox"
-                checked={s.active}
-                name="active"
-                onChange={(ev) => handleOnChangeSensor(ev, index)}
-              />
-            </li>
-          );
-        })}
-      </ul>
-      <button onClick={handleClikcOnSave}>Guardar los cambios</button>
+      <div className="shadow bg-white rounded m-2">
+        <div className="position-relative p-3">
+          <p className="module-title">{`Módulo: ${moduleInfo.name}`}</p>
+          <div>
+            {sensores.map((s, index) => {
+              return (
+                <div
+                  className="d-flex justify-content-between align-items-center flex-wrap"
+                  key={index}
+                >
+                  <div className="form-floating w-75">
+                    <input
+                      className="form-control shadow-none"
+                      type="text"
+                      value={s.name}
+                      name="name"
+                      onChange={(ev) => handleOnChangeSensor(ev, index)}
+                      placeholder={`Sensor ${index + 1}`}
+                    />
+                    <label>{`Sensor ${index + 1}`}</label>
+                  </div>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={s.active}
+                      name="active"
+                      onChange={(ev) => handleOnChangeSensor(ev, index)}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+          <div className="btn-submit-container sensor-submit">
+            <button className="btn submit-btn" onClick={handleClikcOnSave}>
+              Guardar los cambios
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

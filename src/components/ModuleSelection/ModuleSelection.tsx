@@ -1,5 +1,6 @@
 import { ModuleFromBD } from "../../../types";
 import { useState, useEffect } from "react";
+import { FaChevronDown } from "react-icons/fa";
 
 type props = {
   moduleList: ModuleFromBD[];
@@ -34,19 +35,20 @@ const ModuleSelection = ({
 
   return (
     <>
-      <div className="col shadow bg-white rounded mt-1 ms-1">
-        <p className="h4 fw-bold mt-2 px-2">Seleccion de modulos y sensores</p>
+      <div className="col-lg-12 mt-1">
+        <p className="h5 mt-2 px-2">Selección de módulos y sensores</p>
         <div>
-          <div className="d-flex align-items-center">
-            <label htmlFor="modCombo" className="p-2 fw-bold">
-              Modulo Seleccionado:
-            </label>
+          <div className="d-flex flex-wrap align-items-center">
+            <span className="select-icon">
+              <FaChevronDown />
+            </span>
             <select
               id="modCombo"
               name="moduleComboBox"
-              className="form-select w-50"
+              className="form-select bg-transparent border-radius-0 border shadow-none"
               onChange={handleOnChangeModule}
             >
+              <option disabled>Seleccionar opcion</option>
               {moduleList.map((m) => (
                 <option key={m.chipID} value={m.chipID}>
                   {m.name}
@@ -57,30 +59,30 @@ const ModuleSelection = ({
           <div className="d-flex align-items-center">
             {sensors ? (
               <div>
-                <label className="px-2 fw-bold fs-5">Sensores</label>
-                <ul className="list-inline px-2">
+                <ul className="list-inline row px-2">
                   {sensors.map((sen, index) => {
                     //SENSOR DESACTIVADO
                     if (sen === undefined) return <div key={index}></div>;
                     let name = sensorsNames[index];
 
                     return (
-                      <li key={index} className="list-inline-item pe-1">
-                        <div className="form-group">
-                          <label
-                            className="form-group pe-1"
-                            htmlFor={`${index}`}
-                          >
-                            {name !== "" ? name : `Sensor ${index + 1}`}
-                          </label>
+                      <li key={index} className="col-6 pe-1">
+                        <div className="form-check">
                           <input
                             id={`${index}`}
                             type="checkbox"
                             name="moduleSelection"
                             onChange={() => handleOnChangeSensor(index)}
                             checked={sensors[index]}
-                            className="form-check-input"
+                            className="form-check-input module-check"
                           />
+                          <div className="fake-input"></div>
+                          <label
+                            className="form-check-label pe-1"
+                            htmlFor={`${index}`}
+                          >
+                            {name !== "" ? name : `Sensor ${index + 1}`}
+                          </label>
                         </div>
                       </li>
                     );

@@ -15,6 +15,7 @@ import {
 import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
 import ModuleSelection from "../../components/ModuleSelection/ModuleSelection";
+import { FaTimes, FaFilter } from "react-icons/fa";
 
 type selecModule = { chipID: string; sensors: (boolean | undefined)[] };
 type dates = { frDate: Date | undefined; toDate: Date | undefined };
@@ -36,6 +37,10 @@ const Home: React.FC = () => {
     toDate: undefined,
   });
 
+  const [isCollapseFr, setIsCollapseFr] = useState(true);
+  const [isCollapseTo, setIsCollapseTo] = useState(true);
+
+  const [isCollapsePanel, setIsCollapsePanel] = useState(true);
   //LISTA DE MODULOS
   const [modules, setModules] = useState<ModuleFromBD[]>([]);
 
@@ -165,23 +170,57 @@ const Home: React.FC = () => {
     setSelectedModule({ ...selectedModule, sensors });
   };
 
+  const handleOnClickCollapse = () => {
+    setIsCollapseFr(!isCollapseFr);
+  };
+
+  const handleOnClickCollapseTo = () => {
+    setIsCollapseTo(!isCollapseTo);
+  };
+
+  const handleOnClickCollapsePanel = () => {
+    setIsCollapsePanel(!isCollapsePanel);
+  };
+
   return (
     <>
       <div className="container">
-        <div className="row">
-          <DateSelection
-            frDate={dates.frDate}
-            toDate={dates.toDate}
-            handleOnChangeFrDate={handleOnChangeFrDate}
-            handleOnChangeToDate={handleOnChangeToDate}
-          />
-          <ModuleSelection
-            moduleList={modules}
-            handleOnChangeModule={handleOnChangeModule}
-            moduleID={selectedModule?.chipID}
-            sensors={selectedModule?.sensors}
-            handleOnChangeSensor={handleOnChangeSensor}
-          />
+        <span
+          className="action-btn filter-btn"
+          onClick={handleOnClickCollapsePanel}
+        >
+          <FaFilter /> Filtros
+        </span>
+        <div
+          className={`collapsable-panel shadow ${
+            isCollapsePanel ? `is-collapsed` : ``
+          }`}
+        >
+          <span
+            className="close-panel"
+            onClick={() => setIsCollapsePanel(true)}
+          >
+            <FaTimes />
+          </span>
+          <div className="row">
+            <DateSelection
+              frDate={dates.frDate}
+              toDate={dates.toDate}
+              isCollapseFr={isCollapseFr}
+              isCollapseTo={isCollapseTo}
+              handleOnClickCollapse={handleOnClickCollapse}
+              handleOnChangeFrDate={handleOnChangeFrDate}
+              handleOnChangeToDate={handleOnChangeToDate}
+              handleOnClickCollapseTo={handleOnClickCollapseTo}
+            />
+            <ModuleSelection
+              moduleList={modules}
+              handleOnChangeModule={handleOnChangeModule}
+              moduleID={selectedModule?.chipID}
+              sensors={selectedModule?.sensors}
+              handleOnChangeSensor={handleOnChangeSensor}
+            />
+          </div>
         </div>
         <div className="row">
           <Graphic

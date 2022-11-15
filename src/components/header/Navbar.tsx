@@ -14,9 +14,13 @@ import {
 import {
   FaThermometerHalf,
   FaBars,
-  FaDoorOpen,
-  FaDoorClosed,
+  FaSignInAlt,
+  FaSignOutAlt,
   FaTimes,
+  FaMicrochip,
+  FaUsers,
+  FaBroadcastTower,
+  FaCog,
 } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
@@ -33,10 +37,7 @@ const Header = () => {
     <Container>
       <Wrapper>
         <IconContext.Provider value={{ style: { fontSize: "2em" } }}>
-          <LogoLink
-            to="/home"
-            onClick={() => setShotMobileMenu(!showMobileMenu)}
-          >
+          <LogoLink to="/home">
             <LogoContainer>
               <FaThermometerHalf />
               <h3>C.I.D.I.F.</h3>
@@ -56,8 +57,8 @@ const Header = () => {
                         onClick={() => setShotMobileMenu(!showMobileMenu)}
                       >
                         <div>
-                          <FaDoorClosed />
-                          MODULOS
+                          <FaMicrochip />
+                          MÓDULOS
                         </div>
                       </MenuItemLink>
                     </MenuItem>
@@ -67,7 +68,7 @@ const Header = () => {
                         onClick={() => setShotMobileMenu(!showMobileMenu)}
                       >
                         <div>
-                          <FaDoorClosed />
+                          <FaUsers />
                           USUARIOS
                         </div>
                       </MenuItemLink>
@@ -78,7 +79,7 @@ const Header = () => {
                         onClick={() => setShotMobileMenu(!showMobileMenu)}
                       >
                         <div>
-                          <FaDoorClosed />
+                          <FaBroadcastTower />
                           SENSORES
                         </div>
                       </MenuItemLink>
@@ -89,7 +90,7 @@ const Header = () => {
                         onClick={() => setShotMobileMenu(!showMobileMenu)}
                       >
                         <div>
-                          <FaDoorClosed />
+                          <FaCog />
                           SETTINGS
                         </div>
                       </MenuItemLink>
@@ -102,7 +103,7 @@ const Header = () => {
                 <MenuItem>
                   <MenuItemLink to="/login" onClick={handleLogOut}>
                     <div>
-                      <FaDoorClosed />
+                      <FaSignOutAlt />
                       LOGOUT
                     </div>
                   </MenuItemLink>
@@ -116,7 +117,7 @@ const Header = () => {
                     onClick={() => setShotMobileMenu(!showMobileMenu)}
                   >
                     <div>
-                      <FaDoorOpen />
+                      <FaSignInAlt />
                       LOGIN
                     </div>
                   </MenuItemLink>

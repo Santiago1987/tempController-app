@@ -183,7 +183,7 @@ const Graphic = ({ moduleData, selectedModule, dates }: props) => {
 
   return (
     <>
-      <div className="shadow bg-white rounded mt-1">
+      <div className="mt-1">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
       <TempTable tableData={tableData} />

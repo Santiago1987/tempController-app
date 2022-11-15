@@ -30,6 +30,7 @@ const Mensaje = ({ tipo, message }: props) => {
       }}
     >
       {message}
+
     </div>
   );
 };

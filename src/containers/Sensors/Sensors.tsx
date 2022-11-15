@@ -42,9 +42,12 @@ const Sensors = () => {
       {isLoading ? (
         <h1>Loading.....</h1>
       ) : (
-        moduleList.map((m) => {
-          return <SensorsComponent key={m.chipID} module={m} />;
-        })
+        <div className="container main-container">
+          <p className="h2 main-title">Sensores</p>
+          {moduleList.map((m) => {
+            return <SensorsComponent key={m.chipID} module={m} />;
+          })}
+        </div>
       )}
     </>
   );
