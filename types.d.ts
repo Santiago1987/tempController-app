@@ -99,8 +99,13 @@ export interface moduleSensorsUPD {
 export type SettingsInterf = {
   tempLimitSup: number;
   tempLimitInf: number;
-  frDate: Date;
-  toDate: Date;
+  hoursLess: number;
   alertUser: string[];
-  id: string;
+  sendMail: boolean;
+  sendWasap: boolean;
 };
+
+export type SettingAlert = Pick<
+  SettingsInterf,
+  "tempLimitSup" | "tempLimitInf" | "alertUser" | "sendMail" | "sendWasap"
+>;

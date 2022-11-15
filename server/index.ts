@@ -10,10 +10,12 @@ import userExtractor from "./middleware/userExtractor";
 import sensorsRouter from "./routes/sensorsRouter";
 import { loadModulelist } from "./utils/moduleList";
 import settingsRouter from "./routes/settingsRouter";
+import { loadSettings } from "./utils/settingStatus";
 
 const app = express();
 config();
 loadModulelist(); //function to get preload of modules list
+loadSettings(); //logeo de settings
 
 const connectionString = process.env.MONGODB_URI || "";
 

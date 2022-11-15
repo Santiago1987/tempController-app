@@ -1,10 +1,11 @@
 import { NextFunction, Response, Request } from "express";
 import Settings from "../models/settings";
-import { SettingsInterf } from "../../types";
+import { SettingsInterf, extreq } from "../../types";
+import { loadSettings } from "../utils/settingStatus";
 
-type req = {
+interface req extends extreq {
   body: SettingsInterf;
-};
+}
 
 // GUARDAR SETTINGS
 export const saveSettings = async (
@@ -12,22 +13,27 @@ export const saveSettings = async (
   response: Response,
   next: NextFunction
 ) => {
-  const { body } = request as req;
-  let saveSettings: any = undefined;
+  const { body, userID } = request as req;
+  //let saveSettings: any = undefined;
 
-  let { tempLimitInf, tempLimitSup, frDate, toDate, alertUser } = body;
+  let { tempLimitInf, tempLimitSup, hoursLess, alertUser } = body;
 
   try {
-    const settings = new Settings({
-      tempLimitInf,
-      tempLimitSup,
-      frDate,
-      toDate,
-      alertUser,
-    });
+    if (userID === undefined) {
+      let err = new Error();
+      err.name = "missingParameters";
+      throw err;
+      return;
+    }
 
-    saveSettings = await settings.save();
-    response.status(200).send(saveSettings).end();
+    const record = await Settings.findOneAndUpdate(
+      { userID },
+      { $set: { tempLimitInf, tempLimitSup, hoursLess, alertUser } },
+      { new: true, upsert: true }
+    );
+
+    loadSettings();
+    response.status(200).send(record).end();
   } catch (err) {
     next(err);
     return;
@@ -52,29 +58,30 @@ export const getSettings = async (
     return;
   }
 };
-
+//SIN USO
 export const updSettings = async (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  const { body } = request as req;
+  const { body, userID } = request as req;
   let updSettings: any = undefined;
 
-  let { id, tempLimitInf, tempLimitSup, frDate, toDate, alertUser } = body;
+  let { tempLimitInf, tempLimitSup, hoursLess, alertUser } = body;
 
   try {
-    if (!id) {
+    if (!userID) {
       let err = new Error();
       err.name = "missingParameters";
       throw err;
     }
 
     updSettings = await Settings.findOneAndUpdate(
-      { _di: id },
-      { $set: { tempLimitInf, tempLimitSup, frDate, toDate, alertUser } },
+      { _di: userID },
+      { $set: { tempLimitInf, tempLimitSup, hoursLess, alertUser } },
       { new: true }
     );
+    loadSettings();
     response.status(200).send(updSettings).end();
     return;
   } catch (err) {

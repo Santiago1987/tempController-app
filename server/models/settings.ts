@@ -1,11 +1,13 @@
 import { model, Schema } from "mongoose";
 
 const settingsSchema = new Schema({
+  userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
   tempLimitSup: { type: Number, required: false },
   tempLimitInf: { type: Number, required: false },
-  frDate: { type: Date, required: false },
-  toDate: { type: Date, required: false },
-  alertUser: [{ type: String, ref: "User", required: false }],
+  hoursLess: { type: Number, required: false },
+  alertUser: { type: [Schema.Types.ObjectId], ref: "User" },
+  sendMail: { type: Boolean, required: false },
+  sendWasap: { type: Boolean, required: false },
 });
 
 settingsSchema.set("toJSON", {

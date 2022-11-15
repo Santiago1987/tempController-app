@@ -18,12 +18,12 @@ const saveSettings = (
     throw new Error("missing server URL");
   }
 
-  let { tempLimitInf, tempLimitSup, frDate, toDate, alertUser } = settings;
+  let { tempLimitInf, tempLimitSup, hoursLess, alertUser } = settings;
 
   return axios
     .post(
       `${serverURL}${saveSettingsURL}`,
-      { tempLimitInf, tempLimitSup, frDate, toDate, alertUser },
+      { tempLimitInf, tempLimitSup, hoursLess, alertUser },
       {
         headers: {
           "Content-Type": "application/json",

@@ -3,7 +3,11 @@ import Module from "../models/module";
 export let moduleList: string[] = [];
 
 export const loadModulelist = async () => {
-  let list = await Module.find();
-  moduleList = list.map((m) => m.chipID);
+  try {
+    let list = await Module.find();
+    moduleList = list.map((m) => m.chipID);
+  } catch (err) {
+    console.error(err);
+  }
   return;
 };
