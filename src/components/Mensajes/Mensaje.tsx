@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { messageType } from "../../typeEnum";
 
 type props = {
@@ -7,20 +6,10 @@ type props = {
 };
 
 const Mensaje = ({ tipo, message }: props) => {
-  const [hidden, setHidden] = useState(true);
-
-  useEffect(() => {
-    setHidden(false);
-    setTimeout(() => {
-      setHidden(true);
-    }, 5000);
-  }, []);
-
   return (
     <div
       className={`alert ${tipo}`}
       role="alert"
-      hidden={hidden}
       style={{
         width: "80%",
         position: "absolute",
@@ -30,7 +19,6 @@ const Mensaje = ({ tipo, message }: props) => {
       }}
     >
       {message}
-
     </div>
   );
 };

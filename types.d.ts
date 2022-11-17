@@ -109,3 +109,7 @@ export type SettingAlert = Pick<
   SettingsInterf,
   "tempLimitSup" | "tempLimitInf" | "alertUser" | "sendMail" | "sendWasap"
 >;
+
+//-------------------------------
+import { messageType } from "./src/typeEnum";
+export type alert = { type: messageType | undefined; message: string };

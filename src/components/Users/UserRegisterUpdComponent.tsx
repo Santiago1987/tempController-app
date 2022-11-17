@@ -16,7 +16,7 @@ const UserRegisterUpdComponent = ({
   isRegister,
   title,
 }: props) => {
-  let { id, userName, email, telephone } = userInfo;
+  let { id, userName, email, telephone, password } = userInfo;
 
   return (
     <>
@@ -78,7 +78,7 @@ const UserRegisterUpdComponent = ({
               id="password"
               type="password"
               name="password"
-              value={telephone}
+              value={password}
               onChange={handleOnChangeUser}
               placeholder="Contraseña mayor a 8 caracteres"
             />

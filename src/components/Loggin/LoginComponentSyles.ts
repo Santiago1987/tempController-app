@@ -19,7 +19,7 @@ export const Wrapper = styled.div`
   margin: auto;
   background-color: #23394d;
   margin-top: 1rem;
-  height: 70vh;
+  height: 700px;
 
   @media screen and (max-width: 960px) {
     width: 370px;
@@ -57,7 +57,7 @@ export const LoginTitle = styled.span`
   text-align: center;
   text-transform: uppercase;
   display: block;
-  font-family: 'RobotoCondensed-Bold', sans-serif;
+  font-family: "RobotoCondensed-Bold", sans-serif;
 `;
 
 export const WrapperInput = styled.div`
@@ -68,7 +68,7 @@ export const WrapperInput = styled.div`
 `;
 
 export const Input = styled.input`
-  font-family: 'RobotoCondensed-Regular', sans-serif;
+  font-family: "RobotoCondensed-Regular", sans-serif;
   font-size: 20px;
   color: #fff;
   line-height: 1.2;
@@ -140,6 +140,6 @@ export const Button = styled.button`
   transition: 0.5 all ease;
   background: #79ade8;
   cursor: pointer;
-  font-family: 'RobotoCondensed-Bold', sans-serif;
+  font-family: "RobotoCondensed-Bold", sans-serif;
   text-transform: uppercase;
 `;

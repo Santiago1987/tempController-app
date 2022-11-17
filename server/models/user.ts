@@ -6,6 +6,7 @@ const userSchema = new Schema({
   passwordHash: { type: String, required: true },
   administrator: { type: Boolean, required: true },
   telephone: { type: String, required: false },
+  adminID: { type: Schema.Types.ObjectId, ref: "User", required: false },
 });
 
 userSchema.set("toJSON", {
@@ -14,6 +15,7 @@ userSchema.set("toJSON", {
     delete returnedObject._id;
     delete returnedObject.__v;
     delete returnedObject.passwordHash;
+    delete returnedObject.adminID;
   },
 });
 

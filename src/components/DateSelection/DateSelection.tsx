@@ -29,11 +29,14 @@ const DateSelection = ({
         <p className="h5 mt-2">Rango de fechas</p>
 
         <div className="d-flex flex-column align-items-center border my-2">
-          <div className="d-flex justify-content-between w-100 action-btn-container">
+          <div
+            className="d-flex justify-content-between w-100 action-btn-container"
+            onClick={handleOnClickCollapse}
+          >
             <label htmlFor="frDate" className="w-25">
               Desde
             </label>
-            <span className="action-btn" onClick={handleOnClickCollapse}>
+            <span className="action-btn">
               {isCollapseFr ? <FaChevronDown /> : <FaChevronUp />}
             </span>
           </div>
@@ -54,11 +57,14 @@ const DateSelection = ({
         </div>
         <div className="d-flex flex-column align-items-center border my-2">
           <div className="d-flex flex-column align-items-center w-100">
-            <div className="d-flex justify-content-between w-100 action-btn-container">
+            <div
+              className="d-flex justify-content-between w-100 action-btn-container"
+              onClick={handleOnClickCollapseTo}
+            >
               <label htmlFor="toDate" className="w-25">
                 Hasta
               </label>
-              <span className="action-btn" onClick={handleOnClickCollapseTo}>
+              <span className="action-btn">
                 {isCollapseFr ? <FaChevronDown /> : <FaChevronUp />}
               </span>
             </div>

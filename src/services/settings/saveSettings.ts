@@ -4,10 +4,7 @@ import { SettingsInterf } from "../../../types";
 const serverURL = process.env.REACT_APP_SERVER_URL;
 const saveSettingsURL = process.env.REACT_APP_SETTINGS_SAVE;
 
-const saveSettings = (
-  jwt: string,
-  settings: SettingsInterf
-): Promise<SettingsInterf> => {
+const saveSettings = (jwt: string, settings: any): Promise<SettingsInterf> => {
   if (!jwt) {
     console.error("missing parameters");
     throw new Error("missing parameters");
@@ -18,12 +15,21 @@ const saveSettings = (
     throw new Error("missing server URL");
   }
 
-  let { tempLimitInf, tempLimitSup, hoursLess, alertUser } = settings;
-
+  let {
+    tempLimitInf,
+    tempLimitSup,
+    hoursLess,
+    alertUser,
+    sendMail,
+    sendWasap,
+  } = settings;
+  tempLimitInf = tempLimitInf === "" ? undefined : tempLimitInf;
+  tempLimitSup = tempLimitSup === "" ? undefined : tempLimitSup;
+  hoursLess = hoursLess === "" ? undefined : hoursLess;
   return axios
     .post(
       `${serverURL}${saveSettingsURL}`,
-      { tempLimitInf, tempLimitSup, hoursLess, alertUser },
+      { tempLimitInf, tempLimitSup, hoursLess, alertUser, sendMail, sendWasap },
       {
         headers: {
           "Content-Type": "application/json",

@@ -10,15 +10,11 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import useUser from "../hooks/User/useUser";
 import moment from "moment";
-
-type singleModule = {
-  dateformat: Date;
-  temperature: number[];
-}[];
+import { MapSensorList } from "../../../types";
 
 type data = {
   titles: string[];
-  moduleData: singleModule;
+  moduleData: MapSensorList[];
 };
 
 type LocationState = {
@@ -125,9 +121,10 @@ const TablePDF = () => {
                 </>
               </View>
               {data.moduleData.map((data, index) => {
-                let { dateformat, temperature } = data;
-                let day = moment(dateformat).format("DD/MM");
-                let time = moment(dateformat).format("HH:MM:ss");
+                let { date, temperature } = data;
+                console.log("date", date);
+                let day = moment(date).add(3, "hours").format("DD/MM");
+                let time = moment(date).add(3, "hours").format("HH:mm:ss");
                 return (
                   <View key={index} style={styles.tile}>
                     <>

@@ -21,12 +21,12 @@ const Settings = () => {
   const [userList, setUserList] = useState<userList>([]);
   const {
     settingRedu,
-    setID,
+    setHoursLess,
     setTempLimitSup,
     setTempLimitInf,
-    setFrDate,
-    setToDate,
     setUsers,
+    setWasap,
+    setEmail,
   } = useSettings();
 
   const { getSettingsBD } = useSetttingsActions();
@@ -40,13 +40,14 @@ const Settings = () => {
 
     getSettingsBD()
       .then((res) => {
-        let { id, tempLimitSup, tempLimitInf, frDate, toDate, alertUser } = res;
-        setID(id);
+        let { tempLimitSup, tempLimitInf, alertUser, sendMail, sendWasap } =
+          res;
+
         setTempLimitSup(tempLimitSup);
         setTempLimitInf(tempLimitInf);
-        setFrDate(frDate);
-        setToDate(toDate);
         setUsers(alertUser);
+        setWasap(sendWasap);
+        setEmail(sendMail);
       })
       .catch((err) => {
         console.log(err);
@@ -78,15 +79,17 @@ const Settings = () => {
   }, []);
 
   const handleOnChange = (ev: React.ChangeEvent<HTMLInputElement>): void => {
-    let { name, value } = ev.target;
+    let { name, value }: { name: string; value: any } = ev.target;
 
     let formMod = {
-      id: setID,
-      frdate: setFrDate,
-      toDate: setToDate,
       tempSup: setTempLimitSup,
       tempInf: setTempLimitInf,
+      hoursLess: setHoursLess,
+      wasap: setWasap,
+      email: setEmail,
     };
+    value = name === "wasap" ? !settingRedu.sendWasap : value;
+    value = name === "email" ? !settingRedu.sendMail : value;
     formMod[name](value);
   };
 

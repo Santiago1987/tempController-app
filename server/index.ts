@@ -11,11 +11,13 @@ import sensorsRouter from "./routes/sensorsRouter";
 import { loadModulelist } from "./utils/moduleList";
 import settingsRouter from "./routes/settingsRouter";
 import { loadSettings } from "./utils/settingStatus";
+import { loadAdministratorList } from "./utils/administratorsList";
 
 const app = express();
 config();
 loadModulelist(); //function to get preload of modules list
 loadSettings(); //logeo de settings
+loadAdministratorList(); //carga todos los usuarios administrativos;
 
 const connectionString = process.env.MONGODB_URI || "";
 

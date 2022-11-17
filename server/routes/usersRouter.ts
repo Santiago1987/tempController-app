@@ -12,7 +12,7 @@ import userExtractor from "../middleware/userExtractor";
 const usersRouter = Router();
 
 // register new user
-usersRouter.post("/register", saveUser);
+usersRouter.post("/register", userExtractor, saveUser);
 
 // user login
 usersRouter.post("/login", loginUser);

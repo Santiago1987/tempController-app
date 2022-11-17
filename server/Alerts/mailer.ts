@@ -1,20 +1,23 @@
 import nodemailer from "nodemailer";
 import moment from "moment";
-
+import { config } from "dotenv";
+config();
 type monitor = { date: Date; temperature: number; type: "inf" | "sup" }[];
 
-const accountUser = process.env.MAILJET_ACCOUNT_API;
+const accountUser = process.env.MAILLER_ACCOUNT_USER;
 const accountPass = process.env.MAILJET_ACCOUNT_PASS;
 
 const sendEmail = async (list: monitor, alertUser: string, chipID: string) => {
+  console.log(accountUser, accountPass);
   try {
     let transporter = nodemailer.createTransport({
-      host: "in-v3.mailjet.com",
+      /*host: "in-v3.mailjet.com",
       port: 587,
-      secure: false, // true for 465, false for other ports
+      secure: false, // true for 465, false for other ports*/
+      service: "gmail",
       auth: {
-        username: accountUser,
-        password: accountPass,
+        user: accountUser,
+        pass: accountPass,
       },
     });
 
@@ -32,7 +35,7 @@ const sendEmail = async (list: monitor, alertUser: string, chipID: string) => {
     }
 
     let mailOptions = {
-      from: '"CIDIF ALERT SYSTEM" <testmails@mailinator.com>', // sender address
+      from: '"CIDIF ALERT SYSTEM" <stest7584@gmail.com>', // sender address
       to: alertUser, // list of receivers
       subject: "Temperature Alert", // Subject line
       text: text, // plain text body

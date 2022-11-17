@@ -11,14 +11,23 @@ import {
   MapSensorList,
   ModuleFromBD,
   sensorMappingResult,
+  alert,
 } from "../../../types";
 import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
 import ModuleSelection from "../../components/ModuleSelection/ModuleSelection";
 import { FaTimes, FaFilter } from "react-icons/fa";
+import Loading from "../../components/Loading/Loading";
+import { messageType } from "../../typeEnum";
+import Mensaje from "../../components/Mensajes/Mensaje";
+import useSettingsActions from "../hooks/Settings/useSettingsActions";
 
 type selecModule = { chipID: string; sensors: (boolean | undefined)[] };
 type dates = { frDate: Date | undefined; toDate: Date | undefined };
+type tempLimits = {
+  tempLimitInf: number | string;
+  tempLimitSup: number | string;
+};
 
 const Home: React.FC = () => {
   //USUARIO
@@ -55,6 +64,19 @@ const Home: React.FC = () => {
     undefined
   );
 
+  //SETTINGS
+  const { getSettingsBD } = useSettingsActions();
+  const [tempLimits, setTempLimits] = useState<tempLimits>({
+    tempLimitInf: "",
+    tempLimitSup: "",
+  });
+
+  //USADO PARA LOS MENSAJES
+  const [alert, setAlert] = useState<alert>({ type: undefined, message: "" });
+
+  //LOADING DATA ?
+  const [isLoading, setIsLoading] = useState(false);
+
   // CHECK IF USER IS LOGGED
   useEffect(() => {
     if (!isLogged) {
@@ -79,15 +101,45 @@ const Home: React.FC = () => {
           navigate("/login");
           return;
         }
+        //Mensaje de error
+        setAlert({
+          type: messageType.error,
+          message: "Error al cargar los modulos",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
       });
 
-    //FECHAS DEFAULT
-    if (!(dates.frDate && dates.toDate)) {
-      setDates({
-        frDate: moment().subtract(1, "days").toDate(),
-        toDate: moment().toDate(),
+    //GET SETTINGS FOR THE USER
+    let lesshour = 24;
+    getSettingsBD()
+      .then((res) => {
+        let { tempLimitInf, tempLimitSup, hoursLess } = res;
+        //LIMITE DE TEMPS
+        setTempLimits({ tempLimitInf, tempLimitSup });
+
+        //HORAS
+        lesshour = hoursLess ? hoursLess : lesshour;
+      })
+      .catch((err) => {
+        setAlert({
+          type: messageType.error,
+          message: "Error al cargar la configuracion",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+      })
+      .finally(() => {
+        //SETEOS DE FECHAS
+        if (!(dates.frDate && dates.toDate)) {
+          setDates({
+            frDate: moment().subtract(lesshour, "hours").toDate(),
+            toDate: moment().toDate(),
+          });
+        }
       });
-    }
   }, []);
 
   // GETTING DATA SENSORS FROM BD
@@ -95,7 +147,9 @@ const Home: React.FC = () => {
     if (modules.length < 1) return;
     if (!(dates.frDate && dates.toDate)) return;
     let { frDate, toDate } = dates;
+    setIsLoading(true);
 
+    //LLAMADO A LA BD PARA OBETENER LA DATA
     getTempList(frDate, toDate)
       .then(mapTempListFromBd)
       .then((res) => {
@@ -126,6 +180,17 @@ const Home: React.FC = () => {
           navigate("/login");
           return;
         }
+        //Mensaje de error
+        setAlert({
+          type: messageType.error,
+          message: "Error al cargar los datos",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [dates, modules]);
 
@@ -184,7 +249,13 @@ const Home: React.FC = () => {
 
   return (
     <>
+      {isLoading ? <Loading /> : <></>}
       <div className="container">
+        {alert.type ? (
+          <Mensaje tipo={alert.type} message={alert.message} />
+        ) : (
+          <></>
+        )}
         <span
           className="action-btn filter-btn"
           onClick={handleOnClickCollapsePanel}
@@ -227,6 +298,7 @@ const Home: React.FC = () => {
             moduleData={modTemps}
             selectedModule={selectedModule}
             dates={dates}
+            tempLimits={tempLimits}
           />
         </div>
       </div>

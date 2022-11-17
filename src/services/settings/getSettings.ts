@@ -23,7 +23,28 @@ const getSettings = (jwt: string): Promise<SettingsInterf> => {
       },
     })
     .then((res) => {
-      return res.data;
+      let {
+        tempLimitSup,
+        tempLimitInf,
+        hoursLess,
+        alertUser,
+        sendMail,
+        sendWasap,
+      } = res.data;
+      tempLimitSup ??= "";
+      tempLimitInf ??= "";
+      hoursLess ??= "";
+      alertUser ??= [];
+      sendMail ??= false;
+      sendWasap ??= false;
+      return {
+        tempLimitSup,
+        tempLimitInf,
+        hoursLess,
+        alertUser,
+        sendMail,
+        sendWasap,
+      };
     });
 };
 

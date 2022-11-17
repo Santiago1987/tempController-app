@@ -37,18 +37,13 @@ const Login = () => {
 
   return (
     <>
-      {isLogingLoading ? (
-        <Loading />
-      ) : (
-        !isLogingLoading && (
-          <LogingComponent
-            logValues={logValues}
-            handleLogin={handleLogin}
-            handleOnChange={handleOnChange}
-            hasLoadingError={hasLoadingError}
-          />
-        )
-      )}
+      {isLogingLoading ? <Loading /> : <></>}
+      <LogingComponent
+        logValues={logValues}
+        handleLogin={handleLogin}
+        handleOnChange={handleOnChange}
+        hasLoadingError={hasLoadingError}
+      />
     </>
   );
 };

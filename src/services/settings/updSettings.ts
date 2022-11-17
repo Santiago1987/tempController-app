@@ -15,12 +15,12 @@ const updSettings = (jwt: string, settings: SettingsInterf) => {
     throw new Error("missing server URL");
   }
 
-  let { id, tempLimitInf, tempLimitSup, frDate, toDate, alertUser } = settings;
+  let { tempLimitInf, tempLimitSup, alertUser } = settings;
 
   return axios
     .put(
       `${serverURL}${updSettingsURL}`,
-      { id, tempLimitInf, tempLimitSup, frDate, toDate, alertUser },
+      { tempLimitInf, tempLimitSup, alertUser },
       {
         headers: {
           "Content-Type": "application/json",

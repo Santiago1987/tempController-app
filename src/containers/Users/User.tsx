@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import { UserRegisterUpdInterface } from "../../../types";
+import { UserRegisterUpdInterface, alert } from "../../../types";
 import UserComponent from "../../components/Users/UserComponent";
 import useUser from "../hooks/User/useUser";
+import Mensaje from "../../components/Mensajes/Mensaje";
+
+type LocationState = {
+  state: alert;
+};
 
 const User = () => {
   //LIST DE USUARIOS
@@ -13,16 +18,31 @@ const User = () => {
   const { isLogged, logout, getUserList, deleteUser, isAdministrator } =
     useUser();
   const navigate = useNavigate();
+  const location = useLocation() as LocationState;
 
   //BANDERA PARA INDICAR CUANDO ESTA BUSCANDO EN BD
   const [isLoading, seIsLoading] = useState(false);
 
   const [reloadUserList, setReloadUserList] = useState(false);
 
+  //USADO PARA LOS MENSAJES
+  const [alert, setAlert] = useState<alert>({ type: undefined, message: "" });
+
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
       navigate("/login");
       return;
+    }
+
+    //EN CASO DE REGISTRO O EDICION
+    if (location.state) {
+      let { type, message } = location.state;
+      setAlert({ type, message });
+
+      setTimeout(() => {
+        setAlert({ type: undefined, message: "" });
+        location.state = { type: undefined, message: "" };
+      }, 5000);
     }
 
     seIsLoading(true);
@@ -90,9 +110,13 @@ const User = () => {
 
   return (
     <>
-      <div className="container main-container">
+      <div className="container main-container position-relative">
+        {alert.type ? (
+          <Mensaje tipo={alert.type} message={alert.message} />
+        ) : (
+          <></>
+        )}
         <h2 className="main-title">Usuarios</h2>
-
         <button className="btn create-btn m-1" onClick={handleOnClickRegister}>
           Registrar nuevo usuario
         </button>

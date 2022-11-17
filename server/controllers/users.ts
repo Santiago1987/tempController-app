@@ -8,18 +8,17 @@ import { extreq } from "../../types";
 
 // register new user
 export const saveUser = async (
-  request: Request,
+  request: extreq,
   response: Response,
   next: NextFunction
 ) => {
-  const { body } = request;
+  const { body, userID } = request;
   let { userName, password, email, administrator, telephone } = body;
-
   email ??= "";
   telephone ??= "";
 
   try {
-    if (!(userName && password)) {
+    if (!(userName && password && userID)) {
       let err = new Error();
       err.name = "missingParameters";
       throw err;
@@ -49,6 +48,7 @@ export const saveUser = async (
       passwordHash,
       administrator,
       telephone,
+      adminID: userID,
     });
     savedUser = await user.save();
 
@@ -68,6 +68,7 @@ export const loginUser = async (
 ) => {
   const { body } = request;
   const { userName, password } = body;
+
   let user: UserFromBD | null = null;
 
   if (!(password && userName)) {

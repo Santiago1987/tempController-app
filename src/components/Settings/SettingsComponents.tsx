@@ -1,5 +1,4 @@
 import { SettingsInterf } from "../../../types";
-import DatePicker from "react-datepicker";
 
 type userList = {
   id: string;
@@ -21,101 +20,120 @@ const SettingsComponents = ({
   handleOnChangeUser,
   handleOnSubmit,
 }: props) => {
-  let { id, tempLimitSup, tempLimitInf, frDate, toDate } = settings;
+  let { tempLimitSup, tempLimitInf, hoursLess, sendWasap, sendMail } = settings;
 
   return (
     <>
       <div className="main-container container">
         <p className="main-title h2">Settings</p>
-        <form onSubmit={handleOnSubmit}>
-          <input
-            type="text"
-            name="id"
-            value={id}
-            hidden
-            onChange={(ev) => {}}
-          />
-          <div>
-            <fieldset>
-              <p className="h3">Fechas por default</p>
-              <div className="form-group p-3">
-                <label htmlFor="frDate">Desde</label>
-                <DatePicker
-                  id="frDate"
-                  name="frdate"
-                  selected={frDate ? frDate : new Date()}
-                  onChange={handleOnChange}
-                  dateFormat="dd/MM/yyyy HH:mm"
-                  timeIntervals={10}
-                  maxDate={toDate ? toDate : new Date()}
-                  startDate={frDate ? frDate : new Date()}
-                  showTimeSelect
-                />
+        <div className="mt-2 mx-auto">
+          <div className="">
+            <form onSubmit={handleOnSubmit}>
+              <div>
+                <fieldset>
+                  <p className="h3">Fecha</p>
+                  <div className="form-floating w-50">
+                    <input
+                      id="hoursLess"
+                      className="form-control shadow-none"
+                      type="text"
+                      name="hoursLess"
+                      value={hoursLess}
+                      onChange={handleOnChange}
+                    />
+                    <label htmlFor="hoursLess">
+                      Hs menos con respecto al presente
+                    </label>
+                  </div>
+                </fieldset>
               </div>
-              <div className="form-group p-3">
-                <label htmlFor="toDate">Hasta</label>
-                <DatePicker
-                  id="toDate"
-                  name="toDate"
-                  selected={toDate ? toDate : new Date()}
-                  onChange={handleOnChange}
-                  dateFormat="dd/MM/yyyy HH:mm"
-                  timeIntervals={10}
-                  maxDate={frDate ? frDate : new Date()}
-                  startDate={toDate ? toDate : new Date()}
-                  showTimeSelect
-                />
+              <div>
+                <fieldset>
+                  <p className="h3">Temperaturas limites</p>
+                  <div className="d-flex justify-content-between">
+                    <div className="form-floating w-50 me-1">
+                      <input
+                        id="tempSup"
+                        className="form-control shadow-none"
+                        type="text"
+                        name="tempSup"
+                        value={tempLimitSup}
+                        onChange={handleOnChange}
+                      />
+                      <label htmlFor="tempSup">Máxima</label>
+                    </div>
+                    <div className="form-floating w-50 ms-1">
+                      <input
+                        id="tempInf"
+                        className="form-control shadow-none"
+                        type="text"
+                        name="tempInf"
+                        value={tempLimitInf}
+                        onChange={handleOnChange}
+                      />
+                      <label htmlFor="tempInf">Mínima</label>
+                    </div>
+                  </div>
+                </fieldset>
               </div>
-            </fieldset>
+              <div>
+                <fieldset>
+                  <p className="h3">Alertas</p>
+                  <div className="">
+                    <div className="form-check active-check my-2">
+                      <input
+                        id="wasap"
+                        name="wasap"
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={sendWasap}
+                        onChange={handleOnChange}
+                      />
+                      <div className="fake-input"></div>
+                      <label className="form-check-label" htmlFor="wasap">
+                        WhatsApp
+                      </label>
+                    </div>
+                    <div className="form-check active-check my-2">
+                      <input
+                        id="email"
+                        name="email"
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={sendMail}
+                        onChange={handleOnChange}
+                      />
+                      <div className="fake-input"></div>
+                      <label className="form-check-label" htmlFor="email">
+                        Email
+                      </label>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-start">
+                    <div className="form-group w-100">
+                      <label htmlFor="modCombo" className="fw-bold">
+                        Usuarios
+                      </label>
+                      <select
+                        id="modCombo"
+                        name="moduleComboBox"
+                        className="form-select shadow-none"
+                        onChange={handleOnChangeUser}
+                        multiple
+                      >
+                        {userList.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.userName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </form>
           </div>
-          <div>
-            <p className="h3">Temperaturas limites</p>
-            <div className="form-group p-3">
-              <label htmlFor="tempSup">Temperatura máxima</label>
-              <input
-                id="tempSup"
-                className="form-control"
-                type="number"
-                name="tempSup"
-                value={tempLimitSup}
-                onChange={handleOnChange}
-                placeholder="Limite maximo de temperatura"
-              />
-            </div>
-            <div className="form-group p-3">
-              <label htmlFor="tempInf">Temperatura minima</label>
-              <input
-                id="tempInf"
-                className="form-control"
-                type="number"
-                name="tempInf"
-                value={tempLimitInf}
-                onChange={handleOnChange}
-                placeholder="Limite minimo de temperatura"
-              />
-            </div>
-          </div>
-          <div>
-            <p className="h3">Seleccion de usuarios para las alertas</p>
-            <div className="form-group p-3">
-              <label htmlFor="modCombo" className="p-2 fw-bold">
-                Usuarios
-              </label>
-              <select
-                id="modCombo"
-                name="moduleComboBox"
-                className="form-select w-50"
-                onChange={handleOnChangeUser}
-              >
-                {userList.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.userName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
     </>
   );

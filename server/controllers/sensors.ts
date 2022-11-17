@@ -4,7 +4,7 @@ import Sensor from "../models/sensor";
 import Module from "../models/module";
 import { moduleList } from "../utils/moduleList";
 import { ModuleFromBD, sensorReading } from "../../types";
-import alertMonitoring from "../Alerts/alertMonitoring";
+//import alertMonitoring from "../Alerts/alertMonitoring";
 
 export const resgiterTemp = async (
   request: Request,
@@ -39,16 +39,16 @@ export const resgiterTemp = async (
       throw err;
     }
 
-    /*const regis = new Sensor({
+    const regis = new Sensor({
       date,
       temperature: TArr,
       chipID,
     });
 
-    await regis.save().then((res) => (result = res));*/
+    await regis.save().then((res) => (result = res));
 
     //monitoreo de temperatuas para alertas
-    alertMonitoring({ date, temperature: TArr, chipID });
+    //alertMonitoring({ date, temperature: TArr, chipID });
 
     response.status(200).send(result).end();
   } catch (err) {

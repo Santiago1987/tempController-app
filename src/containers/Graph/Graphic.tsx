@@ -10,6 +10,10 @@ import moment from "moment";
 //HIGHCHARTS MODULES
 HC_brokenAxis(Highcharts);
 HC_exporting(Highcharts);
+type tempLimits = {
+  tempLimitInf: number | string;
+  tempLimitSup: number | string;
+};
 
 type props = {
   moduleData: MapSensorList[];
@@ -17,6 +21,7 @@ type props = {
     | { chipID: string; sensors: (boolean | undefined)[] }
     | undefined;
   dates: { frDate: Date | undefined; toDate: Date | undefined };
+  tempLimits: tempLimits;
 };
 
 type tableData = {
@@ -26,7 +31,7 @@ type tableData = {
 
 //datacomplete ===> [chipID:[{dia, temperatura: [array de sensores]]}]
 
-const Graphic = ({ moduleData, selectedModule, dates }: props) => {
+const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
   const [tableData, setTableData] = useState<tableData>({
     titles: [],
     moduleData: [],

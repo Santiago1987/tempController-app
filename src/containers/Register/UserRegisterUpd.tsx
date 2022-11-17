@@ -4,6 +4,7 @@ import useUser from "../hooks/User/useUser";
 import useRegister from "../hooks/User/useRegister";
 import UserRegisterUpdComponent from "../../components/Users/UserRegisterUpdComponent";
 import { useNavigate, useLocation } from "react-router-dom";
+import { messageType } from "../../typeEnum";
 
 type LocationState = {
   state: UserRegisterUpdInterface;
@@ -65,10 +66,20 @@ const UserRegisterUpd = () => {
     if (isRegister) {
       registerUser({ ...registerValues, id: "" })
         .then(() => {
-          navigate("/users", { state: true });
+          navigate("/users", {
+            state: {
+              type: messageType.success,
+              message: "Usuario registrado correctamente",
+            },
+          });
         })
         .catch((err) => {
-          navigate("/users", { state: false });
+          navigate("/users", {
+            state: {
+              type: messageType.error,
+              message: "Error al registrar el usuario",
+            },
+          });
           console.log("ERROR", err);
         });
       return;
@@ -77,10 +88,20 @@ const UserRegisterUpd = () => {
     //EDICION DE USUARIO
     updUserInfo({ ...registerValues, id })
       .then((res) => {
-        navigate("/users", { state: true });
+        navigate("/users", {
+          state: {
+            type: messageType.success,
+            message: "Usuario actualizado",
+          },
+        });
       })
       .catch((err) => {
-        navigate("/users", { state: false });
+        navigate("/users", {
+          state: {
+            type: messageType.error,
+            message: "Error al actualizar",
+          },
+        });
         console.log(`Error editing: ${err}`);
       });
     return;
