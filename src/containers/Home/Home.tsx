@@ -12,6 +12,7 @@ import {
   ModuleFromBD,
   sensorMappingResult,
   alert,
+  sentorTitles,
 } from "../../../types";
 import DateSelection from "../../components/DateSelection/DateSelection";
 import Graphic from "../Graph/Graphic";
@@ -22,7 +23,11 @@ import { messageType } from "../../typeEnum";
 import Mensaje from "../../components/Mensajes/Mensaje";
 import useSettingsActions from "../hooks/Settings/useSettingsActions";
 
-type selecModule = { chipID: string; sensors: (boolean | undefined)[] };
+type selecModule = {
+  chipID: string;
+  modName: string;
+  sensors: (boolean | undefined)[];
+};
 type dates = { frDate: Date | undefined; toDate: Date | undefined };
 type tempLimits = {
   tempLimitInf: number | string;
@@ -52,6 +57,9 @@ const Home: React.FC = () => {
   const [isCollapsePanel, setIsCollapsePanel] = useState(true);
   //LISTA DE MODULOS
   const [modules, setModules] = useState<ModuleFromBD[]>([]);
+
+  //TITLES
+  const [titles, setTitles] = useState<sentorTitles>({});
 
   //LISTA DE TEMPERATURAS POR MODULO COMO KEY DEL JSON
   const [temps, setTemps] = useState<sensorMappingResult | []>([]);
@@ -87,20 +95,22 @@ const Home: React.FC = () => {
     getModuleList()
       .then((res) => {
         let result: ModuleFromBD[] = [];
-
         //SOLO MODULOS ACTIVOS
         for (let m of res) {
           let { active } = m;
           if (active) result.push({ ...m });
         }
         setModules(result);
+
+        setTitles(mappingTitles(result));
       })
       .catch((err) => {
-        if (err.response.data.error === "token expired") {
+        if (err.response && err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;
         }
+        console.log("err", err);
         //Mensaje de error
         setAlert({
           type: messageType.error,
@@ -158,7 +168,8 @@ const Home: React.FC = () => {
 
         if (!selectedModule) {
           //se selecciona por defecto el primer modulo
-          let { chipID, sensors } = modules[0];
+          let { chipID, sensors, name } = modules[0];
+
           setModTemps(res[chipID]);
           let sen: (boolean | undefined)[] = [];
 
@@ -167,6 +178,7 @@ const Home: React.FC = () => {
           }
           setSelectedModule({
             chipID,
+            modName: name,
             sensors: sen,
           });
           return;
@@ -194,6 +206,22 @@ const Home: React.FC = () => {
       });
   }, [dates, modules]);
 
+  //MAPPING TITLE
+  const mappingTitles = (moddata: ModuleFromBD[]): sentorTitles => {
+    let result: sentorTitles = {};
+
+    for (let mod of moddata) {
+      let { sensors } = mod;
+      for (let index in sensors) {
+        let { name } = sensors[index];
+        if (!result[mod.chipID]) result[mod.chipID] = [];
+        result[mod.chipID][index] = name;
+      }
+    }
+
+    return result;
+  };
+
   // DATE FUNCTIONS
   const handleOnChangeFrDate = (date) => {
     if (!date) return;
@@ -214,7 +242,7 @@ const Home: React.FC = () => {
     let mod = modules.find((m) => m.chipID === value);
     if (!mod) return;
 
-    let { sensors, chipID } = mod;
+    let { sensors, chipID, name } = mod;
 
     setModTemps(temps[chipID]);
 
@@ -223,7 +251,7 @@ const Home: React.FC = () => {
       return undefined;
     });
 
-    setSelectedModule({ chipID: value, sensors: actives });
+    setSelectedModule({ chipID: value, modName: name, sensors: actives });
   };
 
   const handleOnChangeSensor = (index: number) => {
@@ -299,6 +327,7 @@ const Home: React.FC = () => {
             selectedModule={selectedModule}
             dates={dates}
             tempLimits={tempLimits}
+            sensorTitles={titles}
           />
         </div>
       </div>

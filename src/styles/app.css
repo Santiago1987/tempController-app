@@ -463,13 +463,13 @@ margin: 0;
     margin-top: 32px;
   }
 
-  @media only screen and (min-width: 576px) {
+  @media only screen and (min-width: 1080px) {
     .table-mobile {
         display: none;
     }
   }
 
-  @media only screen and (max-width: 576px) {
+  @media only screen and (max-width: 1080px) {
     .table-normal {
         display: none;
     }

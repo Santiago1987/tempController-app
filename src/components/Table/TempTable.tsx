@@ -8,11 +8,15 @@ type singleModule = {
 }[];
 
 type props = {
-  tableData: { titles: string[]; moduleData: singleModule };
+  tableData: {
+    titles: string[];
+    moduleData: singleModule;
+    sensorTitles: string[];
+  };
 };
 
 const TempTable = ({ tableData }: props) => {
-  let { titles, moduleData } = tableData;
+  let { titles, moduleData, sensorTitles } = tableData;
 
   const navigate = useNavigate();
 
@@ -53,7 +57,7 @@ const TempTable = ({ tableData }: props) => {
                           aria-expanded="true"
                           aria-controls={`collapse-${index}`}
                         >
-                          <p>{`Sensor ${+e + 1}`}</p>
+                          <p>{sensorTitles[index]}</p>
                           <div onClick={handleOnClickPrint}>
                             <FaPrint />
                           </div>
@@ -136,7 +140,9 @@ const TempTable = ({ tableData }: props) => {
                           scope="col"
                           key={index}
                           style={{ width: "12%", textAlign: "center" }}
-                        >{`Sensor ${+e + 1}`}</th>
+                        >
+                          {sensorTitles[index]}
+                        </th>
                       ))}
                     </tr>
                   </thead>

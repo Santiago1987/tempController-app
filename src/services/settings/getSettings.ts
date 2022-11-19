@@ -31,6 +31,7 @@ const getSettings = (jwt: string): Promise<SettingsInterf> => {
         sendMail,
         sendWasap,
       } = res.data;
+
       tempLimitSup ??= "";
       tempLimitInf ??= "";
       hoursLess ??= "";

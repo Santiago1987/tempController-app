@@ -82,7 +82,7 @@ export const getSettings = async (
       throw err;
     }
 
-    settings = await Settings.find({ userID: administratorID });
+    settings = await Settings.findOne({ userID: administratorID });
 
     if (!settings) {
       response.status(401).json({ error: "invalid user" }).end();

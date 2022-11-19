@@ -95,6 +95,10 @@ export interface moduleSensorsUPD {
   sensors: { name: string; active: boolean }[];
 }
 
+export interface sentorTitles {
+  [chipID: string]: string[];
+}
+
 //------------------------Settings----------------------
 export type SettingsInterf = {
   tempLimitSup: number;

@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import useSetttingsActions from "../hooks/Settings/useSettingsActions";
 import useSettings from "../hooks/Settings/useSettings";
 import SettingsComponents from "../../components/Settings/SettingsComponents";
+import Loading from "../../components/Loading/Loading";
+import { alert } from "../../../types";
+import Mensaje from "../../components/Mensajes/Mensaje";
+import { messageType } from "../../typeEnum";
 
 type userList = {
   id: string;
@@ -29,7 +33,10 @@ const Settings = () => {
     setEmail,
   } = useSettings();
 
-  const { getSettingsBD } = useSetttingsActions();
+  const { getSettingsBD, saveSettingsBD } = useSetttingsActions();
+
+  //USADO PARA LOS MENSAJES
+  const [alert, setAlert] = useState<alert>({ type: undefined, message: "" });
 
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
@@ -40,14 +47,20 @@ const Settings = () => {
 
     getSettingsBD()
       .then((res) => {
-        let { tempLimitSup, tempLimitInf, alertUser, sendMail, sendWasap } =
-          res;
-
+        let {
+          tempLimitSup,
+          tempLimitInf,
+          alertUser,
+          sendMail,
+          sendWasap,
+          hoursLess,
+        } = res;
         setTempLimitSup(tempLimitSup);
         setTempLimitInf(tempLimitInf);
         setUsers(alertUser);
         setWasap(sendWasap);
         setEmail(sendMail);
+        setHoursLess(hoursLess);
       })
       .catch((err) => {
         console.log(err);
@@ -56,6 +69,14 @@ const Settings = () => {
           navigate("/login");
           return;
         }
+        setAlert({
+          type: messageType.error,
+          message: "Error al cargar la configuracion",
+        });
+
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
       });
 
     getUserList()
@@ -74,6 +95,14 @@ const Settings = () => {
           navigate("/login");
           return;
         }
+        setAlert({
+          type: messageType.error,
+          message: "No se pudieron obetener los usuarios",
+        });
+
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -103,13 +132,38 @@ const Settings = () => {
 
   const handleOnSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
+    saveSettingsBD(settingRedu)
+      .then(() => {
+        setAlert({
+          type: messageType.success,
+          message: "Los cambios fueron guardados",
+        });
+
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+      })
+      .catch((err) => {
+        setAlert({
+          type: messageType.error,
+          message: "Error al guardar los cambios",
+        });
+
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+      });
   };
 
   return (
     <>
-      {isLoading ? (
-        <h2>Loading....</h2>
-      ) : (
+      <div className="main-container container position-relative">
+        {isLoading ? <Loading /> : <></>}
+        {alert.type ? (
+          <Mensaje tipo={alert.type} message={alert.message} />
+        ) : (
+          <></>
+        )}
         <SettingsComponents
           settings={settingRedu}
           userList={userList}
@@ -117,7 +171,7 @@ const Settings = () => {
           handleOnChangeUser={handleOnChangeUser}
           handleOnSubmit={handleOnSubmit}
         />
-      )}
+      </div>
     </>
   );
 };

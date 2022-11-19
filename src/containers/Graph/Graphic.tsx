@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { moduleData, MapSensorList } from "../../../types";
+import { moduleData, MapSensorList, sentorTitles } from "../../../types";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import HC_brokenAxis from "highcharts/modules/broken-axis";
@@ -18,23 +18,32 @@ type tempLimits = {
 type props = {
   moduleData: MapSensorList[];
   selectedModule:
-    | { chipID: string; sensors: (boolean | undefined)[] }
+    | { chipID: string; modName: string; sensors: (boolean | undefined)[] }
     | undefined;
   dates: { frDate: Date | undefined; toDate: Date | undefined };
   tempLimits: tempLimits;
+  sensorTitles: sentorTitles;
 };
 
 type tableData = {
   titles: string[];
   moduleData: MapSensorList[];
+  sensorTitles: string[];
 };
 
 //datacomplete ===> [chipID:[{dia, temperatura: [array de sensores]]}]
 
-const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
+const Graphic = ({
+  moduleData,
+  selectedModule,
+  dates,
+  tempLimits,
+  sensorTitles,
+}: props) => {
   const [tableData, setTableData] = useState<tableData>({
     titles: [],
     moduleData: [],
+    sensorTitles: [],
   });
 
   //const timezone = new Date().getTimezoneOffset();
@@ -45,19 +54,11 @@ const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
       spacingTop: 10,
       spacingLeft: 10,
       spacingRight: 10,
-    },
-    title: {
-      text: "Temperaturas registradas ",
-      style: {},
+      zooming: { type: "xy" },
     },
     plotOptions: {
       series: {
         cursor: "pointer",
-        events: {
-          click: function () {
-            alert("You just clicked the graph");
-          },
-        },
       },
     },
     setOptions: {
@@ -85,12 +86,17 @@ const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
   // DATA FORMATING
   useEffect(() => {
     if (!selectedModule) return;
+    console.log("mode", sensorTitles);
+    let title = {
+      text: `Modulo: ${selectedModule.modName}`,
+    };
 
     if (!moduleData) {
       setOptions({ ...options, series: [], xAxis: {} });
-      setTableData({ titles: [], moduleData: [] });
+      setTableData({ titles: [], moduleData: [], sensorTitles: [] });
       return;
     }
+    let { chipID } = selectedModule;
 
     let [mappedData, tableData] = formatData(moduleData);
 
@@ -105,8 +111,11 @@ const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
     };
 
     let [ydata, breaks] = getAxis(mappedData);
-
-    setTableData({ titles: Object.keys(ydata), moduleData: tableData });
+    setTableData({
+      titles: Object.keys(ydata),
+      moduleData: tableData,
+      sensorTitles: sensorTitles[chipID],
+    });
 
     xAxis = { ...xAxis, breaks };
 
@@ -114,16 +123,33 @@ const Graphic = ({ moduleData, selectedModule, dates, tempLimits }: props) => {
 
     for (let sen in ydata) {
       if (!ydata[sen]) return;
+
       series.push({
         type: "line",
-        name: `Sensor ${+sen + 1}`,
+        name: `Sensor ${
+          sensorTitles[chipID] ? sensorTitles[chipID][sen] : +sen + 1
+        }`,
         pointPadding: 0,
         groupPadding: 0,
         data: ydata[sen],
       });
     }
 
-    setOptions({ ...options, series, xAxis });
+    //TEMPS LIMITES
+    /*let { tempLimitInf, tempLimitSup } = tempLimits;
+    let { yAxis } = options;
+    if (tempLimitInf && tempLimitSup) {
+      let plotBands = [
+        {
+          color: "#c6e7f6",
+          from: tempLimitInf,
+          to: tempLimitSup,
+        },
+      ];
+
+      yAxis = { ...yAxis, plotBands };
+    }*/
+    setOptions({ ...options, series, xAxis, title });
   }, [moduleData, selectedModule]);
 
   //recibe todas las temps de un modulo y devuelve por sensor

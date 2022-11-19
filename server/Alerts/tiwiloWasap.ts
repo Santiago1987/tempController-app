@@ -20,7 +20,7 @@ const sendwasap = (list: monitor, alertUser: string, chipID: string) => {
   client(accountSid, authToken)
     .messages.create({
       body: text,
-      from: "whatsapp:+14155238886",
+      from: "whatsapp:+14246221474",
       to: "whatsapp:+5493517722072",
     })
     .then((message) => console.log(message.sid))

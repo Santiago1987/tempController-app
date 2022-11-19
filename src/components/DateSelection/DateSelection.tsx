@@ -1,3 +1,4 @@
+import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
@@ -43,12 +44,12 @@ const DateSelection = ({
           <div className={isCollapseFr ? `collapse` : ""}>
             <DatePicker
               id="frDate"
-              selected={frDate ? frDate : new Date()}
+              selected={frDate ? frDate : moment().toDate()}
               onChange={handleOnChangeFrDate}
               dateFormat="dd/MM/yyyy HH:mm"
               timeIntervals={10}
-              maxDate={toDate ? toDate : new Date()}
-              startDate={frDate ? frDate : new Date()}
+              maxDate={toDate ? toDate : moment().toDate()}
+              startDate={frDate ? frDate : moment().toDate()}
               showTimeSelect
               className=""
               inline
@@ -71,12 +72,12 @@ const DateSelection = ({
             <div className={isCollapseTo ? `collapse` : ""}>
               <DatePicker
                 id="toDate"
-                selected={toDate ? toDate : new Date()}
+                selected={toDate ? toDate : moment().toDate()}
                 onChange={handleOnChangeToDate}
                 dateFormat="dd/MM/yyyy HH:mm"
                 timeIntervals={10}
-                minDate={frDate ? frDate : new Date()}
-                enDate={toDate ? toDate : new Date()}
+                minDate={frDate ? frDate : moment().toDate()}
+                enDate={toDate ? toDate : moment().toDate()}
                 showTimeSelect
                 className=""
                 inline

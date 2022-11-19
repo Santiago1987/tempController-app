@@ -2,7 +2,7 @@ import { sensorAfterReading } from "../../types";
 import { settingStatus } from "../utils/settingStatus";
 import sendEmail from "./mailer";
 import moment from "moment";
-//import sendwasap from "./tiwiloWasap";
+import sendwasap from "./tiwiloWasap";
 
 /*type monitor = {
     [chipID:string] :[
@@ -23,7 +23,7 @@ type history = {
 let alertHistory: history = {};
 
 const alertMonitoring = ({ date, temperature, chipID }: sensorAfterReading) => {
-  let { tempLimitSup, tempLimitInf, sendWasap } = settingStatus;
+  let { tempLimitSup, tempLimitInf } = settingStatus;
 
   let alertUser = "santiagora1987@gmail.com";
   let monitoring: monitor = [];
@@ -59,15 +59,15 @@ const alertMonitoring = ({ date, temperature, chipID }: sensorAfterReading) => {
 
   //ALERTA POR MAIL
   console.log("monitoring", monitoring);
-  if (true) {
+  if (false) {
     sendEmail(monitoring, alertUser, chipID);
     alertHistory[chipID] = { last: moment().toDate().getTime() };
     console.log("alertHistory", alertHistory);
   }
 
   //ALERTA POR WASAP
-  if (sendWasap) {
-    //sendwasap(monitoring, "", chipID);
+  if (true) {
+    sendwasap(monitoring, "", chipID);
     alertHistory[chipID] = { last: moment().toDate().getTime() };
     console.log("alertHistory", alertHistory);
   }

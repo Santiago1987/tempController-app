@@ -40,6 +40,8 @@ const SensorsComponent = ({ module }: props) => {
 
     let { name, value, checked } = ev.target;
 
+    if (name === "name" && value.length > 20) return;
+
     auxsens[index][name] = name === "name" ? value : checked;
     setSensores(auxsens);
     setFlag(!flag);
