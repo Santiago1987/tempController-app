@@ -15,6 +15,8 @@ import { MapSensorList } from "../../../types";
 type data = {
   titles: string[];
   moduleData: MapSensorList[];
+  sensorTitles: string[];
+  modName: string;
 };
 
 type LocationState = {
@@ -29,6 +31,7 @@ const TablePDF = () => {
   const navigate = useNavigate();
   const location = useLocation() as LocationState;
 
+  let cont = 0;
   useEffect(() => {
     if (!isLogged) {
       navigate("/login");
@@ -46,6 +49,11 @@ const TablePDF = () => {
     tile: {
       flexDirection: "row",
       marginHorizontal: "auto",
+    },
+    modtitle: {
+      margin: "auto",
+      fontWeight: "bold",
+      padding: "5px",
     },
     dateTitle: {
       width: "7%",
@@ -103,7 +111,7 @@ const TablePDF = () => {
           <Document>
             <Page size="A4">
               <View>
-                <Text>Temperaturas Registradas</Text>
+                <Text style={styles.modtitle}>{`Modulo: ${data.modName}`}</Text>
               </View>
               <View style={styles.tile}>
                 <>
@@ -113,23 +121,27 @@ const TablePDF = () => {
                   <Text key={"hora"} style={styles.timeTitle}>
                     Hora
                   </Text>
-                  {data.titles.map((e) => (
-                    <Text key={e} style={styles.sensorTitle}>{`Sensor ${
-                      +e + 1
-                    }`}</Text>
+                  {data.titles.map((e, index) => (
+                    <Text key={index} style={styles.sensorTitle}>
+                      {data.sensorTitles[index]}
+                    </Text>
                   ))}
                 </>
               </View>
               {data.moduleData.map((data, index) => {
                 let { date, temperature } = data;
-                console.log("date", date);
+                cont++;
                 let day = moment(date).add(3, "hours").format("DD/MM");
                 let time = moment(date).add(3, "hours").format("HH:mm:ss");
                 return (
                   <View key={index} style={styles.tile}>
                     <>
-                      <Text style={styles.date}>{day}</Text>
-                      <Text style={styles.time}>{time}</Text>
+                      <Text key={cont} style={styles.date}>
+                        {day}
+                      </Text>
+                      <Text key={cont} style={styles.time}>
+                        {time}
+                      </Text>
                       {temperature.map((temp, index) => (
                         <Text key={index} style={styles.sensor}>
                           {temp}

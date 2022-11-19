@@ -31,6 +31,8 @@ const Settings = () => {
     setUsers,
     setWasap,
     setEmail,
+    setMinTemp,
+    setMaxTemp,
   } = useSettings();
 
   const { getSettingsBD, saveSettingsBD } = useSetttingsActions();
@@ -54,13 +56,18 @@ const Settings = () => {
           sendMail,
           sendWasap,
           hoursLess,
+          minTemp,
+          maxTemp,
         } = res;
+
         setTempLimitSup(tempLimitSup);
         setTempLimitInf(tempLimitInf);
         setUsers(alertUser);
         setWasap(sendWasap);
         setEmail(sendMail);
         setHoursLess(hoursLess);
+        setMinTemp(minTemp);
+        setMaxTemp(maxTemp);
       })
       .catch((err) => {
         console.log(err);
@@ -116,6 +123,8 @@ const Settings = () => {
       hoursLess: setHoursLess,
       wasap: setWasap,
       email: setEmail,
+      minTemp: setMinTemp,
+      maxTemp: setMaxTemp,
     };
     value = name === "wasap" ? !settingRedu.sendWasap : value;
     value = name === "email" ? !settingRedu.sendMail : value;

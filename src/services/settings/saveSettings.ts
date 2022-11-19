@@ -22,14 +22,27 @@ const saveSettings = (jwt: string, settings: any): Promise<SettingsInterf> => {
     alertUser,
     sendMail,
     sendWasap,
+    maxTemp,
+    minTemp,
   } = settings;
   tempLimitInf = tempLimitInf === "" ? undefined : tempLimitInf;
   tempLimitSup = tempLimitSup === "" ? undefined : tempLimitSup;
   hoursLess = hoursLess === "" ? undefined : hoursLess;
+  maxTemp = maxTemp === "" ? undefined : maxTemp;
+  minTemp = minTemp === "" ? undefined : minTemp;
   return axios
     .post(
       `${serverURL}${saveSettingsURL}`,
-      { tempLimitInf, tempLimitSup, hoursLess, alertUser, sendMail, sendWasap },
+      {
+        tempLimitInf,
+        tempLimitSup,
+        hoursLess,
+        alertUser,
+        sendMail,
+        sendWasap,
+        maxTemp,
+        minTemp,
+      },
       {
         headers: {
           "Content-Type": "application/json",

@@ -12,6 +12,7 @@ type props = {
     titles: string[];
     moduleData: singleModule;
     sensorTitles: string[];
+    modName: string;
   };
 };
 

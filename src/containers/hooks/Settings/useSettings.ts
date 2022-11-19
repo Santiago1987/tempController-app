@@ -4,15 +4,15 @@ import { SettingsInterf } from "../../../../types";
 type settingsReducerActions =
   | {
       type: "temp_limit_sup";
-      payload: number;
+      payload: number | "";
     }
   | {
       type: "temp_limit_inf";
-      payload: number;
+      payload: number | "";
     }
   | {
       type: "set_hours_less";
-      payload: number;
+      payload: number | "";
     }
   | {
       type: "set_users";
@@ -25,15 +25,25 @@ type settingsReducerActions =
   | {
       type: "set_send_wasap";
       payload: boolean;
+    }
+  | {
+      type: "set_minTemp";
+      payload: number | "";
+    }
+  | {
+      type: "set_maxTemp";
+      payload: number | "";
     };
 
-const initStateSettings = {
-  tempLimitSup: 999,
-  tempLimitInf: -999,
-  hoursLess: 0,
+const initStateSettings: SettingsInterf = {
+  tempLimitSup: "",
+  tempLimitInf: "",
+  hoursLess: "",
   alertUser: [],
   sendMail: false,
   sendWasap: false,
+  maxTemp: "",
+  minTemp: "",
 };
 
 const settingsReducer = (
@@ -53,6 +63,10 @@ const settingsReducer = (
       return { ...state, sendMail: payload };
     case "set_send_wasap":
       return { ...state, sendWasap: payload };
+    case "set_minTemp":
+      return { ...state, minTemp: payload };
+    case "set_maxTemp":
+      return { ...state, maxTemp: payload };
   }
 };
 
@@ -62,15 +76,15 @@ const useSettings = () => {
     initStateSettings
   );
 
-  const setTempLimitSup = useCallback((tempLimitSup: number) => {
+  const setTempLimitSup = useCallback((tempLimitSup: number | "") => {
     setSettingRedu({ type: "temp_limit_sup", payload: tempLimitSup });
   }, []);
 
-  const setTempLimitInf = useCallback((tempLimitInf: number) => {
+  const setTempLimitInf = useCallback((tempLimitInf: number | "") => {
     setSettingRedu({ type: "temp_limit_inf", payload: tempLimitInf });
   }, []);
 
-  const setHoursLess = useCallback((hours: number) => {
+  const setHoursLess = useCallback((hours: number | "") => {
     setSettingRedu({ type: "set_hours_less", payload: hours });
   }, []);
 
@@ -86,6 +100,14 @@ const useSettings = () => {
     setSettingRedu({ type: "set_send_wasap", payload: wasap });
   }, []);
 
+  const setMinTemp = useCallback((temp: number | "") => {
+    setSettingRedu({ type: "set_minTemp", payload: temp });
+  }, []);
+
+  const setMaxTemp = useCallback((temp: number | "") => {
+    setSettingRedu({ type: "set_maxTemp", payload: temp });
+  }, []);
+
   return {
     settingRedu,
     setTempLimitSup,
@@ -94,6 +116,8 @@ const useSettings = () => {
     setUsers,
     setEmail,
     setWasap,
+    setMinTemp,
+    setMaxTemp,
   };
 };
 

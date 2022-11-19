@@ -30,8 +30,13 @@ type selecModule = {
 };
 type dates = { frDate: Date | undefined; toDate: Date | undefined };
 type tempLimits = {
-  tempLimitInf: number | string;
-  tempLimitSup: number | string;
+  tempLimitInf: number | "";
+  tempLimitSup: number | "";
+};
+
+type tempRange = {
+  minTemp: number | "";
+  maxTemp: number | "";
 };
 
 const Home: React.FC = () => {
@@ -71,6 +76,9 @@ const Home: React.FC = () => {
   const [selectedModule, setSelectedModule] = useState<selecModule | undefined>(
     undefined
   );
+
+  //TEMP RANGE
+  const [yRange, setYRange] = useState<tempRange>({ minTemp: "", maxTemp: "" });
 
   //SETTINGS
   const { getSettingsBD } = useSettingsActions();
@@ -125,12 +133,16 @@ const Home: React.FC = () => {
     let lesshour = 24;
     getSettingsBD()
       .then((res) => {
-        let { tempLimitInf, tempLimitSup, hoursLess } = res;
+        let { tempLimitInf, tempLimitSup, hoursLess, minTemp, maxTemp } = res;
+
         //LIMITE DE TEMPS
         setTempLimits({ tempLimitInf, tempLimitSup });
 
         //HORAS
         lesshour = hoursLess ? hoursLess : lesshour;
+
+        //TEMP RANGE
+        setYRange({ minTemp, maxTemp });
       })
       .catch((err) => {
         setAlert({
@@ -187,7 +199,7 @@ const Home: React.FC = () => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response.data.error === "token expired") {
+        if (err.response && err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;
@@ -328,6 +340,7 @@ const Home: React.FC = () => {
             dates={dates}
             tempLimits={tempLimits}
             sensorTitles={titles}
+            yRange={yRange}
           />
         </div>
       </div>

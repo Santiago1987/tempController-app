@@ -27,12 +27,6 @@ export const resgiterTemp = async (
       throw err;
     }
 
-    let listStr = temperature.replaceAll("'", "").split(" ");
-    let TArr: number[] = [];
-    for (let n of listStr) {
-      TArr.push(parseFloat(n));
-    }
-
     if (!Boolean(moduleList.find((id) => id === chipID))) {
       let err = new Error();
       err.name = "moduleNotExists";
@@ -41,7 +35,7 @@ export const resgiterTemp = async (
 
     const regis = new Sensor({
       date,
-      temperature: TArr,
+      temperature: temperature,
       chipID,
     });
 
@@ -105,7 +99,6 @@ export const temperatureList = async (
 ) => {
   let { frDate, toDate } = request.query as tempModuleList;
   let result: sensorReading | undefined = undefined;
-  console.log(frDate, toDate);
 
   if (!toDate) toDate = moment().toDate();
   if (!frDate) frDate = moment().subtract(-1, "days").toDate();

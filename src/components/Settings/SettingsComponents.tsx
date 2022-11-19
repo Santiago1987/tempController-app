@@ -20,7 +20,15 @@ const SettingsComponents = ({
   handleOnChangeUser,
   handleOnSubmit,
 }: props) => {
-  let { tempLimitSup, tempLimitInf, hoursLess, sendWasap, sendMail } = settings;
+  let {
+    tempLimitSup,
+    tempLimitInf,
+    hoursLess,
+    sendWasap,
+    sendMail,
+    minTemp,
+    maxTemp,
+  } = settings;
 
   return (
     <>
@@ -52,6 +60,17 @@ const SettingsComponents = ({
                 <div className="d-flex justify-content-between">
                   <div className="form-floating w-50 me-1">
                     <input
+                      id="tempInf"
+                      className="form-control shadow-none"
+                      type="text"
+                      name="tempInf"
+                      value={tempLimitInf}
+                      onChange={handleOnChange}
+                    />
+                    <label htmlFor="tempInf">Minima</label>
+                  </div>
+                  <div className="form-floating w-50 ms-1">
+                    <input
                       id="tempSup"
                       className="form-control shadow-none"
                       type="text"
@@ -61,16 +80,30 @@ const SettingsComponents = ({
                     />
                     <label htmlFor="tempSup">Máxima</label>
                   </div>
-                  <div className="form-floating w-50 ms-1">
+                </div>
+                <p className="h3">Rango de temperaturas</p>
+                <div className="d-flex justify-content-between">
+                  <div className="form-floating w-50 me-1">
                     <input
-                      id="tempInf"
+                      id="minTemp"
                       className="form-control shadow-none"
                       type="text"
-                      name="tempInf"
-                      value={tempLimitInf}
+                      name="minTemp"
+                      value={minTemp}
                       onChange={handleOnChange}
                     />
-                    <label htmlFor="tempInf">Mínima</label>
+                    <label htmlFor="tempSup">Mínima</label>
+                  </div>
+                  <div className="form-floating w-50 ms-1">
+                    <input
+                      id="maxTemp"
+                      className="form-control shadow-none"
+                      type="text"
+                      name="maxTemp"
+                      value={maxTemp}
+                      onChange={handleOnChange}
+                    />
+                    <label htmlFor="tempInf">Máxima</label>
                   </div>
                 </div>
               </fieldset>

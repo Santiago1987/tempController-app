@@ -11,8 +11,13 @@ import moment from "moment";
 HC_brokenAxis(Highcharts);
 HC_exporting(Highcharts);
 type tempLimits = {
-  tempLimitInf: number | string;
-  tempLimitSup: number | string;
+  tempLimitInf: number | "";
+  tempLimitSup: number | "";
+};
+
+type tempRange = {
+  minTemp: number | "";
+  maxTemp: number | "";
 };
 
 type props = {
@@ -23,12 +28,14 @@ type props = {
   dates: { frDate: Date | undefined; toDate: Date | undefined };
   tempLimits: tempLimits;
   sensorTitles: sentorTitles;
+  yRange: tempRange;
 };
 
 type tableData = {
   titles: string[];
   moduleData: MapSensorList[];
   sensorTitles: string[];
+  modName: string;
 };
 
 //datacomplete ===> [chipID:[{dia, temperatura: [array de sensores]]}]
@@ -39,11 +46,13 @@ const Graphic = ({
   dates,
   tempLimits,
   sensorTitles,
+  yRange,
 }: props) => {
   const [tableData, setTableData] = useState<tableData>({
     titles: [],
     moduleData: [],
     sensorTitles: [],
+    modName: "",
   });
 
   //const timezone = new Date().getTimezoneOffset();
@@ -86,17 +95,22 @@ const Graphic = ({
   // DATA FORMATING
   useEffect(() => {
     if (!selectedModule) return;
-    console.log("mode", sensorTitles);
+
     let title = {
       text: `Modulo: ${selectedModule.modName}`,
     };
 
     if (!moduleData) {
       setOptions({ ...options, series: [], xAxis: {} });
-      setTableData({ titles: [], moduleData: [], sensorTitles: [] });
+      setTableData({
+        titles: [],
+        moduleData: [],
+        sensorTitles: [],
+        modName: "NO DATA",
+      });
       return;
     }
-    let { chipID } = selectedModule;
+    let { chipID, modName } = selectedModule;
 
     let [mappedData, tableData] = formatData(moduleData);
 
@@ -115,6 +129,7 @@ const Graphic = ({
       titles: Object.keys(ydata),
       moduleData: tableData,
       sensorTitles: sensorTitles[chipID],
+      modName,
     });
 
     xAxis = { ...xAxis, breaks };
@@ -126,8 +141,10 @@ const Graphic = ({
 
       series.push({
         type: "line",
-        name: `Sensor ${
-          sensorTitles[chipID] ? sensorTitles[chipID][sen] : +sen + 1
+        name: `${
+          sensorTitles[chipID]
+            ? sensorTitles[chipID][sen]
+            : "Sensor: " + sen + 1
         }`,
         pointPadding: 0,
         groupPadding: 0,
@@ -136,7 +153,8 @@ const Graphic = ({
     }
 
     //TEMPS LIMITES
-    /*let { tempLimitInf, tempLimitSup } = tempLimits;
+    let { tempLimitInf, tempLimitSup } = tempLimits;
+
     let { yAxis } = options;
     if (tempLimitInf && tempLimitSup) {
       let plotBands = [
@@ -148,9 +166,31 @@ const Graphic = ({
       ];
 
       yAxis = { ...yAxis, plotBands };
-    }*/
-    setOptions({ ...options, series, xAxis, title });
+    } else if (tempLimitInf || tempLimitSup) {
+      let plotLines = [
+        {
+          color: "#FF0000",
+          width: 2,
+          value: tempLimitInf !== "" ? tempLimitInf : tempLimitSup,
+        },
+      ];
+
+      yAxis = { ...yAxis, plotLines };
+    }
+
+    setOptions({ ...options, series, xAxis, title, yAxis });
   }, [moduleData, selectedModule]);
+
+  //TEMP RANGE
+  useEffect(() => {
+    let { minTemp, maxTemp } = yRange;
+    let min = minTemp === "" ? null : minTemp;
+    let max = maxTemp === "" ? null : maxTemp;
+    setOptions({
+      ...options,
+      yAxis: { min, max },
+    });
+  }, [yRange]);
 
   //recibe todas las temps de un modulo y devuelve por sensor
   const formatData = (data: MapSensorList[]): any => {

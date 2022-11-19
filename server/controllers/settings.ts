@@ -18,7 +18,26 @@ export const saveSettings = async (
   const { body, userID } = request as req;
   //let saveSettings: any = undefined;
 
-  let { tempLimitInf, tempLimitSup, hoursLess, alertUser } = body;
+  let set: any = {};
+  let unset: any = {};
+
+  //objet keys no funciona porque undefined values no los considera
+  let fields = [
+    "tempLimitInf",
+    "tempLimitSup",
+    "hoursLess",
+    "alertUser",
+    "maxTemp",
+    "minTemp",
+  ];
+
+  for (let f of fields) {
+    if (body[f] === undefined) {
+      unset[f] = "";
+    } else {
+      set[f] = body[f];
+    }
+  }
 
   try {
     if (userID === undefined) {
@@ -30,7 +49,10 @@ export const saveSettings = async (
 
     const record = await Settings.findOneAndUpdate(
       { userID },
-      { $set: { tempLimitInf, tempLimitSup, hoursLess, alertUser } },
+      {
+        $set: set,
+        $unset: unset,
+      },
       { new: true, upsert: true }
     );
 

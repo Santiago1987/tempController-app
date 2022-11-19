@@ -8,6 +8,8 @@ const settingsSchema = new Schema({
   alertUser: { type: [Schema.Types.ObjectId], ref: "User" },
   sendMail: { type: Boolean, required: false },
   sendWasap: { type: Boolean, required: false },
+  maxTemp: { type: Number, required: false },
+  minTemp: { type: Number, required: false },
 });
 
 settingsSchema.set("toJSON", {

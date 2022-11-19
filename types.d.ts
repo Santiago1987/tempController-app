@@ -58,7 +58,7 @@ export interface Sensor {
 
 export interface sensorReading {
   date: Date;
-  temperature: string;
+  temperature: number[];
   chipID: string;
 }
 
@@ -101,12 +101,14 @@ export interface sentorTitles {
 
 //------------------------Settings----------------------
 export type SettingsInterf = {
-  tempLimitSup: number;
-  tempLimitInf: number;
-  hoursLess: number;
+  tempLimitSup: number | "";
+  tempLimitInf: number | "";
+  hoursLess: number | "";
   alertUser: string[];
   sendMail: boolean;
   sendWasap: boolean;
+  maxTemp: number | "";
+  minTemp: number | "";
 };
 
 export type SettingAlert = Pick<

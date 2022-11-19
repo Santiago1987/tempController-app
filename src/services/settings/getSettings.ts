@@ -30,6 +30,8 @@ const getSettings = (jwt: string): Promise<SettingsInterf> => {
         alertUser,
         sendMail,
         sendWasap,
+        maxTemp,
+        minTemp,
       } = res.data;
 
       tempLimitSup ??= "";
@@ -38,6 +40,8 @@ const getSettings = (jwt: string): Promise<SettingsInterf> => {
       alertUser ??= [];
       sendMail ??= false;
       sendWasap ??= false;
+      maxTemp ??= "";
+      minTemp ??= "";
       return {
         tempLimitSup,
         tempLimitInf,
@@ -45,6 +49,8 @@ const getSettings = (jwt: string): Promise<SettingsInterf> => {
         alertUser,
         sendMail,
         sendWasap,
+        minTemp,
+        maxTemp,
       };
     });
 };
