@@ -113,7 +113,7 @@ const Home: React.FC = () => {
         setTitles(mappingTitles(result));
       })
       .catch((err) => {
-        if (err.response && err.response.data.error === "token expired") {
+        if (err.response.data && err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;

@@ -45,7 +45,7 @@ const alertMonitoring = async ({
         procced = false;
       }
     }
-    console.log("procced", procced);
+
     if (procced) {
       if (temperature[tempind] > tempLimitSup) {
         monitoring[tempind] = {
@@ -70,7 +70,7 @@ const alertMonitoring = async ({
       }
     }
   }
-  console.log("alertHistory", alertHistory);
+
   if (monitoring.length < 1) return;
 
   let userData = await User.find();
@@ -87,15 +87,23 @@ const alertMonitoring = async ({
       }
       return undefined;
     });
-    console.log("mailList", mailList);
+
     sendEmail(monitoring, mailList, name);
   }
 
   //ALERTA POR WASAP
   if (sendWasap) {
-    sendwasap(monitoring, "", name);
+    let telList = userData.map((us) => {
+      let { telephone, id } = us;
+      if (!(telephone && id)) return undefined;
 
-    console.log("alertHistory", alertHistory);
+      if (alertUser.includes(id)) {
+        return telephone;
+      }
+      return undefined;
+    });
+
+    sendwasap(monitoring, telList, name);
   }
 
   //ULTIMO ENVIO

@@ -37,7 +37,7 @@ const sendEmail = async (
         stringTO += `${mail},`;
       }
     }
-    console.log("stringTO ", stringTO);
+
     if (stringTO === "") return;
 
     for (let index in list) {

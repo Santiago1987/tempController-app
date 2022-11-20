@@ -33,13 +33,13 @@ export const resgiterTemp = async (
       throw err;
     }
 
-    /*const regis = new Sensor({
+    const regis = new Sensor({
       date,
       temperature,
       chipID,
     });
 
-    await regis.save().then((res) => (result = res));*/
+    await regis.save().then((res) => (result = res));
 
     //monitoreo de temperatuas para alertas
     alertMonitoring({ date, temperature: temperature, chipID });
