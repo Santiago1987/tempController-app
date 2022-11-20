@@ -6,8 +6,8 @@ type monitor = { date: Date; temperature: number; type: "inf" | "sup" }[];
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-const sendwasap = (list: monitor, alertUser: string, chipID: string) => {
-  let text = `Modulo ${chipID}: `;
+const sendwasap = (list: monitor, alertUser: string, moduleName: string) => {
+  let text = `Modulo ${moduleName}: `;
   for (let index in list) {
     let { date, temperature, type } = list[index];
     text += ` Sensor ${+index + 1} ${
@@ -16,11 +16,11 @@ const sendwasap = (list: monitor, alertUser: string, chipID: string) => {
           en el dia ${moment(date).format("DD/MM/YY HH:MM")}`;
   }
 
-  //console.log("email enviado ", text);
+  console.log(accountSid, authToken);
   client(accountSid, authToken)
     .messages.create({
       body: text,
-      from: "whatsapp:+14246221474",
+      from: "whatsapp:+14155238886",
       to: "whatsapp:+5493517722072",
     })
     .then((message) => console.log(message.sid))

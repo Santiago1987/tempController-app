@@ -30,6 +30,7 @@ type UserUpd = Omit<UserRegisterUpdInterface, "password">;
 
 // adding a new property to Request type from express
 import { Request } from "express";
+import { pick } from "highcharts";
 import { ObjectId } from "mongoose";
 import { type } from "os";
 
@@ -48,6 +49,13 @@ export interface ModuleFromBD {
   active: boolean;
   ubication: string;
   sensors: { name: string; active: boolean }[];
+}
+
+//----------Module utils backend------
+export interface ModuleUtils {
+  chipID: string;
+  name: string;
+  sensors: string[];
 }
 
 //------------------------Sensores--------

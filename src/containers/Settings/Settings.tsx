@@ -135,8 +135,18 @@ const Settings = () => {
     ev: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     let { value } = ev.target;
+    let { alertUser } = settingRedu;
 
-    console.log(value);
+    if (alertUser.includes(value)) {
+      alertUser = alertUser.filter((us) => us !== value);
+      console.log("alertUser", alertUser);
+      setUsers(alertUser);
+      return;
+    }
+
+    alertUser.push(value);
+    console.log("alertUser", alertUser);
+    setUsers(alertUser);
   };
 
   const handleOnSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {

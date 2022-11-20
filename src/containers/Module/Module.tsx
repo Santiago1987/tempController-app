@@ -38,7 +38,7 @@ const Module = () => {
         setModuleList(result);
       })
       .catch((err) => {
-        if (err.response.data.error === "token expired") {
+        if (err.response && err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;

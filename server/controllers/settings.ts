@@ -29,6 +29,8 @@ export const saveSettings = async (
     "alertUser",
     "maxTemp",
     "minTemp",
+    "sendWasap",
+    "sendMail",
   ];
 
   for (let f of fields) {

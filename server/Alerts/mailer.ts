@@ -2,18 +2,23 @@ import nodemailer from "nodemailer";
 import moment from "moment";
 import { config } from "dotenv";
 config();
-type monitor = { date: Date; temperature: number; type: "inf" | "sup" }[];
+type monitor = {
+  date: Date;
+  sensorName: string;
+  temperature: number;
+  type: "inf" | "sup";
+}[];
 
 const accountUser = process.env.MAILLER_ACCOUNT_USER;
 const accountPass = process.env.MAILJET_ACCOUNT_PASS;
 
-const sendEmail = async (list: monitor, alertUser: string, chipID: string) => {
-  console.log(accountUser, accountPass);
+const sendEmail = async (
+  list: monitor,
+  mailList: (string | undefined)[],
+  moduleName: string
+) => {
   try {
     let transporter = nodemailer.createTransport({
-      /*host: "in-v3.mailjet.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports*/
       service: "gmail",
       auth: {
         user: accountUser,
@@ -22,23 +27,32 @@ const sendEmail = async (list: monitor, alertUser: string, chipID: string) => {
     });
 
     const ver = await transporter.verify();
-    console.log("ver ", ver);
 
-    let text = `Modulo ${chipID}: `;
+    if (!ver) return;
+    let text = `Modulo ${moduleName}: `;
+
+    let stringTO = "";
+    for (let mail of mailList) {
+      if (mail) {
+        stringTO += `${mail},`;
+      }
+    }
+    console.log("stringTO ", stringTO);
+    if (stringTO === "") return;
 
     for (let index in list) {
-      let { date, temperature, type } = list[index];
-      text += ` Sensor ${index} ${
+      let { date, temperature, type, sensorName } = list[index];
+      text += `<p> Sensor ${sensorName} ${
         type === "sup" ? "supero" : "descendio"
       } de la temperatura limite: ${temperature} 
-        en el dia ${moment(date).format("DD/MM/YY HH:MM")}`;
+        en el dia ${moment(date).format("DD/MM/YY HH:MM")}</p>`;
     }
 
     let mailOptions = {
       from: '"CIDIF ALERT SYSTEM" <stest7584@gmail.com>', // sender address
-      to: alertUser, // list of receivers
+      to: stringTO, // list of receivers
       subject: "Temperature Alert", // Subject line
-      text: text, // plain text body
+      html: `<h1>C.I.D.I.F</h1>${text}`,
     };
 
     await transporter.sendMail(mailOptions, (error, info) => {

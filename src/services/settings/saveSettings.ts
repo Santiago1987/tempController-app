@@ -30,6 +30,7 @@ const saveSettings = (jwt: string, settings: any): Promise<SettingsInterf> => {
   hoursLess = hoursLess === "" ? undefined : hoursLess;
   maxTemp = maxTemp === "" ? undefined : maxTemp;
   minTemp = minTemp === "" ? undefined : minTemp;
+
   return axios
     .post(
       `${serverURL}${saveSettingsURL}`,
