@@ -35,7 +35,6 @@ const UserComponent = ({
             <FaTimes />
           </button>
         </div>
-
         <div className="p-2">
           <small>Nombre de usuario</small>
           <p className="h5">{userName} </p>

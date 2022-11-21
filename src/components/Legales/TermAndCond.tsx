@@ -1,7 +1,7 @@
 const TermAndCond = () => {
   return (
     <div className="container">
-      <p className="h1">TERMINOS y CONDICIONES</p>
+      <p className="h1 mt-2">TERMINOS y CONDICIONES</p>
       <p>
         Bienvenido a <span style={{ fontWeight: "bold" }}>C.I.D.I.F.</span>
         (Control inteligente de instalacions frigoríficas). Nos complace
