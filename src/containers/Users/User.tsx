@@ -5,6 +5,8 @@ import { UserRegisterUpdInterface, alert } from "../../../types";
 import UserComponent from "../../components/Users/UserComponent";
 import useUser from "../hooks/User/useUser";
 import Mensaje from "../../components/Mensajes/Mensaje";
+import { messageType } from "../../typeEnum";
+import Loading from "../../components/Loading/Loading";
 
 type LocationState = {
   state: alert;
@@ -80,13 +82,30 @@ const User = () => {
     if (!id) return;
 
     deleteUser(id)
-      .then((res) => reloadUsers())
+      .then((res) => {
+        reloadUsers();
+
+        //MENSAJE
+        setAlert({ type: messageType.success, message: "Usuario borrado" });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+      })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
           logout();
           navigate("/login");
           return;
         }
+
+        //MENSAJE
+        setAlert({
+          type: messageType.error,
+          message: "Error, no se pudo borrar el usuario",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
         console.log("Error", err);
       });
   };
@@ -120,21 +139,18 @@ const User = () => {
         <button className="btn create-btn m-1" onClick={handleOnClickRegister}>
           Registrar nuevo usuario
         </button>
-        {isLoading ? (
-          <h2>Loading....</h2>
-        ) : (
-          userList.map((us) => {
-            return (
-              <UserComponent
-                key={us.id}
-                user={{ ...us, password: "" }}
-                handleOnClickEdit={handleOnClickEdit}
-                handleOnClickDelete={handleOnClickDelete}
-                handleOnClickChangePass={handleOnClickChangePass}
-              />
-            );
-          })
-        )}
+        {isLoading ? <Loading /> : null}
+        {userList.map((us) => {
+          return (
+            <UserComponent
+              key={us.id}
+              user={{ ...us, password: "" }}
+              handleOnClickEdit={handleOnClickEdit}
+              handleOnClickDelete={handleOnClickDelete}
+              handleOnClickChangePass={handleOnClickChangePass}
+            />
+          );
+        })}
       </div>
     </>
   );

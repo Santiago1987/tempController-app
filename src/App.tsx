@@ -15,6 +15,9 @@ import UserUpdatePass from "./containers/Users/UserUpdatePass";
 import TablePDF from "./containers/PDF/TablePDF";
 import Loading from "./components/Loading/Loading";
 import Settings from "./containers/Settings/Settings";
+import FooterBar from "./components/Footer/FooterBar";
+import TermAndCond from "./components/Legales/TermAndCond";
+import Contact from "./components/Legales/Contact";
 
 function App() {
   return (
@@ -33,8 +36,11 @@ function App() {
           <Route path="/print/table" element={<TablePDF />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/loading" element={<Loading />} />
+          <Route path="/terms" element={<TermAndCond />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
+        <FooterBar />
       </AdministratorProvider>
     </UserContextProvider>
   );

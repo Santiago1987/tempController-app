@@ -474,3 +474,23 @@ margin: 0;
         display: none;
     }
   }
+
+  /**------FOOTER----**/
+  .footer-container{
+    width: 100%;
+    height: 70px;
+    background-color: #23394d;
+    z-index: 9999;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: start;
+  }
+
+  .footer-container a{
+    padding-left: 10px;
+    cursor: pointer;
+    color: #fff;
+  }

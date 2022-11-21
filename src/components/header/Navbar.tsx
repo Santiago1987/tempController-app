@@ -91,7 +91,7 @@ const Header = () => {
                       >
                         <div>
                           <FaCog />
-                          SETTINGS
+                          CONFIGURACIONES
                         </div>
                       </MenuItemLink>
                     </MenuItem>

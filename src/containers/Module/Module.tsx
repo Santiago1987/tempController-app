@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import useModuleActions from "../hooks/Module/useModuleActions";
-import { ModuleFromBD } from "../../../types";
+import { ModuleFromBD, alert } from "../../../types";
 import useUser from "../hooks/User/useUser";
 import ModuleComponent from "../../components/Module/ModuleComponent";
 import { FaPlus } from "react-icons/fa";
+import Loading from "../../components/Loading/Loading";
+import Mensaje from "../../components/Mensajes/Mensaje";
+import { messageType } from "../../typeEnum";
 
 type modList = Omit<ModuleFromBD, "sensors">;
+
+type LocationState = {
+  state: alert;
+};
 
 const Module = () => {
   //LISTA DE MODULOS
@@ -15,6 +22,7 @@ const Module = () => {
   //CONTROL DE LOGEO
   const { isLogged, logout, isAdministrator } = useUser();
   const navigate = useNavigate();
+  const location = useLocation() as LocationState;
 
   //BANDERA PARA INDICAR CUANDO ESTA BUSCANDO EN BD
   const [isLoading, seIsLoading] = useState(false);
@@ -22,11 +30,26 @@ const Module = () => {
   //ACCIONES CON LOS MODULOS
   const { getModuleList, deleteModule } = useModuleActions();
 
+  //USADO PARA LOS MENSAJES
+  const [alert, setAlert] = useState<alert>({ type: undefined, message: "" });
+
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
       navigate("/login");
       return;
     }
+
+    //EN CASO DE REGISTRO O EDICION
+    if (location.state) {
+      let { type, message } = location.state;
+      setAlert({ type, message });
+
+      setTimeout(() => {
+        setAlert({ type: undefined, message: "" });
+        location.state = { type: undefined, message: "" };
+      }, 5000);
+    }
+
     seIsLoading(true);
     getModuleList()
       .then((res) => {
@@ -43,6 +66,14 @@ const Module = () => {
           navigate("/login");
           return;
         }
+        //MENSAJE
+        setAlert({
+          type: messageType.error,
+          message: "Error al cargar los datos",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
       })
       .finally(() => seIsLoading(false));
   }, []);
@@ -71,9 +102,6 @@ const Module = () => {
     if (!id) return;
 
     deleteModule(id)
-      .then((res) => {
-        seIsLoading(true);
-      })
       .then(getModuleList)
       .then((res) => {
         let result = res.map((m) => {
@@ -82,6 +110,12 @@ const Module = () => {
         });
 
         setModuleList(result);
+
+        //MENSAJE
+        setAlert({ type: messageType.success, message: "Modulo borrado" });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
       })
       .catch((err) => {
         if (err.response.data.error === "token expired") {
@@ -89,6 +123,15 @@ const Module = () => {
           navigate("/login");
           return;
         }
+
+        //MENSAJE
+        setAlert({
+          type: messageType.error,
+          message: "Error, no se pudo borrar el modulo",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
         console.log("Error", err);
       })
       .finally(() => seIsLoading(false));
@@ -98,7 +141,11 @@ const Module = () => {
 
   return (
     <>
-      <div className="container">
+      {isLoading ? <Loading /> : null}
+      <div className="container position-relative">
+        {alert.type ? (
+          <Mensaje tipo={alert.type} message={alert.message} />
+        ) : null}
         <div className="modules-container">
           <div className="d-flexbox flex-column justify-content-center module-list">
             <p className="h2">Lista de módulos</p>
@@ -109,20 +156,16 @@ const Module = () => {
             >
               <FaPlus /> Nuevo modulo
             </button>
-            {isLoading ? (
-              <h2>Loading....</h2>
-            ) : (
-              modulList.map((mod, index) => {
-                return (
-                  <ModuleComponent
-                    key={index}
-                    module={mod}
-                    handleOnClickEdit={handleOnClickEdit}
-                    handleOnClickDelete={handleOnClickDelete}
-                  />
-                );
-              })
-            )}
+            {modulList.map((mod, index) => {
+              return (
+                <ModuleComponent
+                  key={index}
+                  module={mod}
+                  handleOnClickEdit={handleOnClickEdit}
+                  handleOnClickDelete={handleOnClickDelete}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

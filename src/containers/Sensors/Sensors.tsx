@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ModuleFromBD } from "../../../types";
+import { ModuleFromBD, alert } from "../../../types";
+import Loading from "../../components/Loading/Loading";
+import Mensaje from "../../components/Mensajes/Mensaje";
 import SensorsComponent from "../../components/Sensors/SensorsComponent";
 import useModuleActions from "../hooks/Module/useModuleActions";
 import useUser from "../hooks/User/useUser";
+import { messageType } from "../../typeEnum";
 
 const Sensors = () => {
   const { isLogged, logout, isAdministrator } = useUser();
@@ -14,6 +17,9 @@ const Sensors = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [moduleList, setModuleList] = useState<ModuleFromBD[]>([]);
+
+  //USADO PARA LOS MENSAJES
+  const [alert, setAlert] = useState<alert>({ type: undefined, message: "" });
 
   useEffect(() => {
     if (!(isLogged && isAdministrator === "true")) {
@@ -33,22 +39,33 @@ const Sensors = () => {
           navigate("/login");
           return;
         }
+        //MENSAJE
+        setAlert({
+          type: messageType.error,
+          message: "Error, no se pudo cargar los sensores",
+        });
+        setTimeout(() => {
+          setAlert({ type: undefined, message: "" });
+        }, 5000);
+        console.log("Error", err);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   return (
     <>
-      {isLoading ? (
-        <h1>Loading.....</h1>
-      ) : (
-        <div className="container main-container">
-          <p className="h2 main-title">Sensores</p>
-          {moduleList.map((m) => {
-            return <SensorsComponent key={m.chipID} module={m} />;
-          })}
-        </div>
-      )}
+      {isLoading ? <Loading /> : null}
+      <div className="container main-container position-relative">
+        {alert.type ? (
+          <Mensaje tipo={alert.type} message={alert.message} />
+        ) : null}
+        <p className="h2 main-title">Sensores</p>
+        {moduleList.map((m) => {
+          return <SensorsComponent key={m.chipID} module={m} />;
+        })}
+      </div>
     </>
   );
 };

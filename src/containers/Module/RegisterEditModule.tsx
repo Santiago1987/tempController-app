@@ -4,7 +4,7 @@ import useModule from "../hooks/Module/useModule";
 import { useEffect, useState } from "react";
 import useUser from "../hooks/User/useUser";
 import { useNavigate, useLocation } from "react-router-dom";
-/**import { Alert } from "react-bootstrap";*/
+import { messageType } from "../../typeEnum";
 
 type module = Omit<ModuleFromBD, "sensors">;
 
@@ -72,10 +72,20 @@ const RegisterEditModule = () => {
         sensors: [{ name: "", active: false }],
       })
         .then((res) => {
-          navigate("/modules", { state: true });
+          navigate("/modules", {
+            state: {
+              type: messageType.success,
+              message: "Modulo registrado correctamente",
+            },
+          });
         })
         .catch((err) => {
-          navigate("/modules", { state: false });
+          navigate("/modules", {
+            state: {
+              type: messageType.error,
+              message: "Error al registrar el modulo",
+            },
+          });
           console.log("ERROR", err);
         });
       return;
@@ -84,10 +94,20 @@ const RegisterEditModule = () => {
     //EDICION DE MODULO
     updateModule({ ...registerModule, sensors: [{ name: "", active: false }] })
       .then((res) => {
-        navigate("/modules", { state: true });
+        navigate("/modules", {
+          state: {
+            type: messageType.success,
+            message: "Los cambios fueron guardados",
+          },
+        });
       })
       .catch((err) => {
-        navigate("/modules", { state: false });
+        navigate("/modules", {
+          state: {
+            type: messageType.error,
+            message: "Error al guardar los cambios",
+          },
+        });
         console.log("ERROR", err);
       });
   };
