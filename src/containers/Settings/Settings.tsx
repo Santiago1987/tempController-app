@@ -139,7 +139,7 @@ const Settings = () => {
 
     if (alertUser.includes(value)) {
       alertUser = alertUser.filter((us) => us !== value);
-      console.log("alertUser", alertUser);
+
       setUsers(alertUser);
       return;
     }

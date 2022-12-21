@@ -14,6 +14,8 @@
 body {
     background-color: #e7e7e7;
     font-family: 'RobotoCondensed-Regular', sans-serif;
+    position: relative;
+    min-height: 100vh;
 }
 
 .print {
@@ -481,8 +483,8 @@ margin: 0;
     height: 70px;
     background-color: #23394d;
     z-index: 9999;
-    position: fixed;
-    bottom: 0;
+    position: absolute;
+    bottom: -75px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
