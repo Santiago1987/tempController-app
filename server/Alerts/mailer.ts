@@ -45,7 +45,9 @@ const sendEmail = async (
       text += `<p> Sensor ${sensorName} ${
         type === "sup" ? "supero" : "descendio"
       } de la temperatura limite: ${temperature} 
-        en el dia ${moment(date).format("DD/MM/YY HH:MM")}</p>`;
+        en el dia ${moment(date)
+          .add(3, "hours")
+          .format("DD/MM/YY h:mm:ss a")}</p>`;
     }
 
     let mailOptions = {

@@ -47,7 +47,7 @@ const alertMonitoring = async ({
     }
 
     if (procced) {
-      if (temperature[tempind] > tempLimitSup) {
+      if (tempLimitSup !== "" && temperature[tempind] > tempLimitSup) {
         monitoring[tempind] = {
           date,
           temperature: temperature[tempind],
@@ -58,7 +58,7 @@ const alertMonitoring = async ({
         alertHistory[chipID][tempind] = { last: moment().toDate().getTime() };
       }
 
-      if (temperature[tempind] < tempLimitInf) {
+      if (tempLimitInf !== "" && temperature[tempind] < tempLimitInf) {
         monitoring[tempind] = {
           date,
           temperature: temperature[tempind],

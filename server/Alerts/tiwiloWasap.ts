@@ -22,7 +22,9 @@ const sendwasap = (
     text += ` Sensor ${sensorName} ${
       type === "sup" ? "supero" : "descendio"
     } de la temperatura limite: ${temperature} 
-          en el dia ${moment(date).format("DD/MM/YY HH:MM")}`;
+          en el dia ${moment(date)
+            .add(3, "hours")
+            .format("DD/MM/YY h:mm:ss a")}`;
   }
 
   for (let cel of telList) {
