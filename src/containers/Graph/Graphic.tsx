@@ -166,7 +166,7 @@ const Graphic = ({
       ];
 
       yAxis = { ...yAxis, plotBands };
-    } else if (tempLimitInf || tempLimitSup) {
+    } else if (tempLimitInf !== "" || tempLimitSup !== "") {
       let plotLines = [
         {
           color: "#FF0000",

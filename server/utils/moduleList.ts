@@ -22,5 +22,6 @@ export const loadModulelist = async () => {
   } catch (err) {
     console.error(err);
   }
+
   return;
 };

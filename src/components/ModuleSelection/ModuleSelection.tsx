@@ -17,7 +17,7 @@ const ModuleSelection = ({
   sensors,
   handleOnChangeSensor,
 }: props) => {
-  const [sensorsNames, setSensorsNames] = useState<string[]>([]);
+  const [sensorsNames, setSensorsNames] = useState<(string | undefined)[]>([]);
 
   useEffect(() => {
     let module = moduleList.find((m) => m.chipID === moduleID);
@@ -25,11 +25,10 @@ const ModuleSelection = ({
 
     let { sensors } = module;
 
-    let senact: string[] = [];
+    let senact: (string | undefined)[] = [];
     for (let sen of sensors) {
-      if (sen.active) senact.push(sen.name);
+      senact.push(sen.active ? sen.name : undefined);
     }
-
     setSensorsNames(senact);
   }, [moduleID]);
 
@@ -62,7 +61,7 @@ const ModuleSelection = ({
                 <ul className="list-inline row px-2">
                   {sensors.map((sen, index) => {
                     //SENSOR DESACTIVADO
-                    if (sen === undefined) return <div key={index}></div>;
+                    if (sen === undefined) return null;
                     let name = sensorsNames[index];
 
                     return (

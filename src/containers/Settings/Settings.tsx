@@ -145,7 +145,7 @@ const Settings = () => {
     }
 
     alertUser.push(value);
-    console.log("alertUser", alertUser);
+
     setUsers(alertUser);
   };
 

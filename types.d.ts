@@ -11,13 +11,6 @@ export type UserFromBDFilter = Omit<UserFromBD, "passwordHash">;
 
 export type UserManag = Omit<UserFromBD, "passwordHash" | "administrator">;
 
-type UserForHook = {
-  userName: string;
-  password: string;
-  email: string;
-  telephone: string;
-};
-
 interface UserRegisterUpdInterface {
   id: string;
   userName: string;
